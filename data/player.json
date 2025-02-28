@@ -1,0 +1,41 @@
+{
+  "maxHp": 30,
+  "strength": 7,
+  "dexterity": 5,
+  "toughness": 6,
+  "perception": 4,
+  "intelligence": 5,
+  "wisdom": 3,
+  "charisma": 4,
+  "speed": 100,
+  "defense": 1,
+  "accuracy": 80,
+  "maxMana": 50,
+  "manaRegen": 2,
+  "hpRegen": 1,
+  "pv": 3,
+  "dv": 2,
+  "inventory": [
+    "health_potion",
+    "sword",
+    "leather_armor",
+    "gold_coins",
+    "steel_sword",
+    "chainmail",
+    "orc_talisman"
+  ],
+  "knownSpells": [
+    "nature",
+    "light",
+    "firebolt",
+    "townportal",
+    "icespear",
+    "healing",
+    "summonhydra",
+    "frostbolt",
+    "fireball",
+    "lightning",
+    "flameaura",
+    "frostaura"
+  ]
+}

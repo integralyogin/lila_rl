@@ -1,0 +1,99 @@
+{
+  "buildings": [
+    {
+      "type": "Abandoned Cabin",
+      "x": 20,
+      "y": 15,
+      "width": 6,
+      "height": 5,
+      "color": "#654321"
+    },
+    {
+      "type": "Ranger Outpost",
+      "x": 35,
+      "y": 12,
+      "width": 7,
+      "height": 6,
+      "color": "#2e8b57"
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Forest Ranger",
+      "x": 38,
+      "y": 14,
+      "char": "@",
+      "color": "#228b22",
+      "cls": "npc",
+      "dialogue": [
+        "Welcome to the Northern Forest. I patrol these woods to keep travelers safe.",
+        "We've had reports of strange creatures deeper in the woods lately.",
+        "If you're planning to explore further north, make sure you're well prepared.",
+        "The abandoned cabin to the west belonged to an old herbalist. Might still be some useful supplies there.",
+        "Come back to my outpost if you need shelter during your travels."
+      ]
+    },
+    {
+      "name": "Lost Merchant",
+      "x": 22,
+      "y": 17,
+      "char": "@",
+      "color": "#daa520",
+      "cls": "npc",
+      "dialogue": [
+        "*looks nervous* Oh! Another person! Thank goodness!",
+        "I was traveling north with my goods when I got separated from my caravan.",
+        "Been hiding out in this cabin for days now. Too afraid to venture out alone.",
+        "If you're heading back to town, would you mind if I follow? I can pay you for your trouble.",
+        "Just... listen for a moment. Do you hear that? The woods seem to whisper at night..."
+      ]
+    }
+  ],
+  "hardcoded_items": [
+    {
+      "name": "Ranger's Bow",
+      "char": ")",
+      "color": "#cd853f",
+      "type": "weapon",
+      "damage": 5,
+      "x_offset": 8,
+      "y_offset": -5
+    },
+    {
+      "name": "Healing Herbs",
+      "char": "%",
+      "color": "#32cd32",
+      "type": "potion",
+      "effect": "healing",
+      "power": 15,
+      "x_offset": -6,
+      "y_offset": 4
+    },
+    {
+      "name": "Nature Spellbook",
+      "char": "+",
+      "color": "#00fa9a",
+      "type": "spellbook",
+      "spellId": "nature",
+      "spellName": "Nature's Blessing",
+      "description": "Channels the power of the forest to heal and protect.",
+      "element": "nature",
+      "manaCost": 7,
+      "range": 3,
+      "x_offset": -10,
+      "y_offset": -4
+    }
+  ],
+  "townExit": {
+    "x_offset": 0,
+    "y_offset": 10,
+    "signMessage": "Return to Town",
+    "destination_x": 0,
+    "destination_y": -8
+  },
+  "dungeonEntrance": {
+    "x_offset": 0,
+    "y_offset": -15,
+    "signMessage": "Deep Forest Cave - Strange noises echo from within..."
+  }
+}

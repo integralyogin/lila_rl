@@ -1,0 +1,88 @@
+{
+  "buildings": [
+    {
+      "type": "Forest Cabin",
+      "x": 15,
+      "y": 5,
+      "width": 6,
+      "height": 5,
+      "color": "#5d4037"
+    },
+    {
+      "type": "Hunter's Lodge",
+      "x": 30,
+      "y": 10,
+      "width": 8,
+      "height": 6,
+      "color": "#5d4037"
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Hunter",
+      "x": 32,
+      "y": 12,
+      "char": "@",
+      "color": "#8d6e63",
+      "cls": "npc",
+      "dialogue": [
+        "Greetings, traveler. Don't often see strangers this far from town.",
+        "I hunt these woods for game and rare ingredients.",
+        "Been seeing strange lights in the Snow Cavern to the east. Something unnatural.",
+        "If you're headed that way, take this hunting bow. It might come in handy.",
+        "Just be careful. Not everything in these woods is as it seems..."
+      ]
+    },
+    {
+      "name": "Hermit",
+      "x": 17,
+      "y": 7,
+      "char": "@",
+      "color": "#4db6ac",
+      "cls": "npc",
+      "dialogue": [
+        "*mutters to self* Visitor? After all these years?",
+        "I came here to escape the noise of town. To commune with nature.",
+        "The spirits of this forest speak to me. They tell me secrets...",
+        "There's ancient magic in this place. Older than the wizard's tower.",
+        "Listen closely and you might hear the whispers too. Careful what you wish for though."
+      ]
+    }
+  ],
+  "hardcoded_items": [
+    {
+      "name": "Hunting Bow",
+      "char": ")",
+      "color": "#8d6e63",
+      "type": "weapon",
+      "damage": 5,
+      "x_offset": 3,
+      "y_offset": -2
+    },
+    {
+      "name": "Frost Spellbook",
+      "char": "+",
+      "color": "#80deea",
+      "type": "spellbook",
+      "spellId": "frostbolt",
+      "spellName": "Frost Bolt",
+      "description": "A freezing spell that slows enemies.",
+      "element": "ice",
+      "manaCost": 4,
+      "baseDamage": 6,
+      "range": 5,
+      "x_offset": -2,
+      "y_offset": -2
+    }
+  ],
+  "dungeonEntrance": {
+    "x_offset": 10,
+    "y_offset": 5,
+    "signMessage": "Snow Cavern - Only enter if well prepared!"
+  },
+  "townExit": {
+    "x_offset": 0,
+    "y_offset": 22,
+    "signMessage": "Return to town"
+  }
+}

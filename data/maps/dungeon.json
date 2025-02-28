@@ -1,0 +1,7 @@
+{
+  "roomMinSize": 4,
+  "roomMaxSize": 10,
+  "maxRooms": 15,
+  "monsterDensity": 0.3,
+  "itemDensity": 0.2
+}

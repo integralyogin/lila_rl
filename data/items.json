@@ -1,0 +1,93 @@
+[
+  {
+    "id": "health_potion",
+    "name": "Health Potion",
+    "char": "!",
+    "color": "#f00",
+    "type": "potion",
+    "effect": "healing",
+    "power": 5,
+    "value": 20
+  },
+  {
+    "id": "sword",
+    "name": "Sword",
+    "char": "/",
+    "color": "#aaa",
+    "type": "weapon",
+    "slot": "weapon",
+    "statModifiers": {
+      "strength": 2
+    },
+    "value": 30
+  },
+  {
+    "id": "leather_armor",
+    "name": "Leather Armor",
+    "char": "[",
+    "color": "#8b4513",
+    "type": "armor",
+    "slot": "armor",
+    "statModifiers": {
+      "defense": 1
+    },
+    "value": 25
+  },
+  {
+    "id": "steel_sword",
+    "name": "Steel Sword",
+    "char": "/",
+    "color": "#ddd",
+    "type": "weapon",
+    "slot": "weapon",
+    "statModifiers": {
+      "strength": 6
+    },
+    "value": 60
+  },
+  {
+    "id": "chainmail",
+    "name": "Chainmail",
+    "char": "[",
+    "color": "#bbb",
+    "type": "armor",
+    "slot": "armor",
+    "statModifiers": {
+      "defense": 3
+    },
+    "value": 50
+  },
+  {
+    "id": "gold_coins",
+    "name": "Gold Coins",
+    "char": "$",
+    "color": "#ffd700",
+    "type": "gold",
+    "value": 50
+  },
+  {
+    "id": "orc_talisman",
+    "name": "Orc Talisman",
+    "char": "*",
+    "color": "#cd7f32",
+    "type": "charm",
+    "slot": "accessory",
+    "statModifiers": {
+      "strength": 1,
+      "defense": 1
+    },
+    "value": 45
+  },
+  {
+    "id": "orcish_axe",
+    "name": "Orcish Axe",
+    "char": "\\",
+    "color": "#8b0000",
+    "type": "weapon",
+    "slot": "weapon",
+    "statModifiers": {
+      "strength": 5
+    },
+    "value": 70
+  }
+]

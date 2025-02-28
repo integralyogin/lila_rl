@@ -1,0 +1,93 @@
+{
+  "roomMinSize": 6,
+  "roomMaxSize": 10,
+  "maxRooms": 12,
+  "monsterDensity": 0.4,
+  "itemDensity": 0.25,
+  "monsters": [
+    {
+      "id": "goblin",
+      "weight": 50
+    },
+    {
+      "id": "orc",
+      "weight": 30
+    },
+    {
+      "id": "troll",
+      "weight": 20
+    }
+  ],
+  "items": [
+    {
+      "id": "health_potion",
+      "weight": 35
+    },
+    {
+      "id": "sword",
+      "weight": 20
+    },
+    {
+      "id": "leather_armor",
+      "weight": 15
+    },
+    {
+      "id": "steel_sword",
+      "weight": 10
+    },
+    {
+      "id": "chainmail",
+      "weight": 10
+    },
+    {
+      "id": "gold_coins",
+      "weight": 10
+    }
+  ],
+  "specialRooms": [
+    {
+      "type": "boss",
+      "minSize": 8,
+      "guaranteedMonsters": [
+        {
+          "id": "troll"
+        }
+      ],
+      "guaranteedItems": [
+        {
+          "id": "steel_sword"
+        },
+        {
+          "id": "health_potion"
+        }
+      ]
+    },
+    {
+      "type": "treasure",
+      "minSize": 6,
+      "guaranteedItems": [
+        {
+          "id": "chainmail"
+        },
+        {
+          "id": "gold_coins"
+        }
+      ],
+      "guaranteedMonsters": [
+        {
+          "id": "orc_warrior"
+        },
+        {
+          "id": "orc_warrior"
+        }
+      ]
+    }
+  ],
+  "exitToTown": {
+    "x_offset": 0,
+    "y_offset": 2,
+    "signMessage": "Return to Town",
+    "destination_x": 10,
+    "destination_y": 10
+  }
+}

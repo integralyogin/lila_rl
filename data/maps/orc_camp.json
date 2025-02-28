@@ -1,0 +1,86 @@
+{
+  "roomMinSize": 5,
+  "roomMaxSize": 8,
+  "maxRooms": 10,
+  "monsterDensity": 0.5,
+  "itemDensity": 0.3,
+  "monsters": [
+    {
+      "id": "orc",
+      "weight": 70
+    },
+    {
+      "id": "orc_warrior",
+      "weight": 20
+    },
+    {
+      "id": "orc_shaman",
+      "weight": 10
+    }
+  ],
+  "items": [
+    {
+      "id": "health_potion",
+      "weight": 40
+    },
+    {
+      "id": "orc_talisman",
+      "weight": 15
+    },
+    {
+      "id": "gold_coins",
+      "weight": 30
+    },
+    {
+      "id": "steel_sword",
+      "weight": 10
+    },
+    {
+      "id": "orcish_axe",
+      "weight": 5
+    }
+  ],
+  "specialRooms": [
+    {
+      "type": "chieftain",
+      "minSize": 7,
+      "guaranteedMonsters": [
+        {
+          "id": "orc_chieftain"
+        }
+      ],
+      "guaranteedItems": [
+        {
+          "id": "gold_coins",
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "type": "prison",
+      "maxSize": 6,
+      "guaranteedNpcs": [
+        {
+          "name": "Captured Merchant",
+          "char": "@",
+          "color": "#4682b4",
+          "cls": "npc",
+          "dialogue": [
+            "*looks up in surprise* You're not an orc! Please, help me!",
+            "I was traveling between towns when these brutes ambushed my caravan.",
+            "They've been keeping me here for days. I think they plan to ransom me.",
+            "If you get me out of here, I promise you'll be well rewarded.",
+            "My family owns a trading company in town. They'd be most grateful for my safe return."
+          ]
+        }
+      ]
+    }
+  ],
+  "exitToHills": {
+    "x_offset": 0,
+    "y_offset": 2,
+    "signMessage": "Return to Hills",
+    "destination_x": 10,
+    "destination_y": 35
+  }
+}

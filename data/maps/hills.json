@@ -1,0 +1,127 @@
+{
+  "buildings": [
+    {
+      "type": "Abandoned Watchtower",
+      "x": 25,
+      "y": 10,
+      "width": 5,
+      "height": 5,
+      "color": "#7f7f7f"
+    },
+    {
+      "type": "Bandit Camp",
+      "x": 15,
+      "y": 18,
+      "width": 7,
+      "height": 6,
+      "color": "#8b4513"
+    },
+    {
+      "type": "Orc Camp",
+      "x": 10,
+      "y": 35,
+      "width": 9,
+      "height": 8,
+      "color": "#8b0000"
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Bandit Leader",
+      "x": 18,
+      "y": 20,
+      "char": "@",
+      "color": "#c41e3a",
+      "cls": "npc",
+      "dialogue": [
+        "Well, well... what do we have here? A wanderer on our hills?",
+        "These lands belong to me and my crew. You'd best be paying a toll if you want to pass.",
+        "Five gold, and you can go on your way. Or you can try your luck against our blades.",
+        "What'll it be, stranger? The easy way or the hard way?",
+        "*fingers the hilt of his sword* Tick tock, traveler. I'm not a patient man."
+      ]
+    },
+    {
+      "name": "Old Shepherd",
+      "x": 30,
+      "y": 15,
+      "char": "@",
+      "color": "#d2b48c",
+      "cls": "npc",
+      "dialogue": [
+        "*tending to his sheep* Ahh, a visitor! Don't get many of those up here.",
+        "Watch yourself in these hills. Bandits have been more active lately.",
+        "That old watchtower used to keep the peace, but it's been abandoned for years.",
+        "I've been herding sheep here for fifty years. Know every rock and hill for miles.",
+        "If you're heading further west, be careful. Strange lights in the sky at night, and people gone missing."
+      ]
+    },
+    {
+      "name": "Wounded Hunter",
+      "x": 12,
+      "y": 30,
+      "char": "@",
+      "color": "#8b8970",
+      "cls": "npc",
+      "dialogue": [
+        "*clutches a bandaged arm* Stay back from the south hills, friend.",
+        "There's an orc camp down there. Nearly lost my life when I stumbled upon it.",
+        "They've got sentries posted all around. Must be a dozen of 'em at least.",
+        "I heard rumors of a merchant caravan that went missing last week. Bet those green-skins are behind it.",
+        "If you're fool enough to go near that place, you'd better be well armed. Their chieftain is a monster."
+      ]
+    }
+  ],
+  "hardcoded_items": [
+    {
+      "name": "Leather Shield",
+      "char": "]",
+      "color": "#8b4513",
+      "type": "armor",
+      "defense": 2,
+      "x_offset": 7,
+      "y_offset": -3
+    },
+    {
+      "name": "Stone Sling",
+      "char": ")",
+      "color": "#d2b48c",
+      "type": "weapon",
+      "damage": 3,
+      "x_offset": -4,
+      "y_offset": 5
+    },
+    {
+      "name": "Light Spellbook",
+      "char": "+",
+      "color": "#fff44f",
+      "type": "spellbook",
+      "spellId": "light",
+      "spellName": "Light",
+      "description": "Creates a magical light that lasts for a short time.",
+      "element": "radiant",
+      "manaCost": 3,
+      "range": 4,
+      "x_offset": 3,
+      "y_offset": 6
+    }
+  ],
+  "townExit": {
+    "x_offset": 15,
+    "y_offset": -10,
+    "signMessage": "Return to Town",
+    "destination_x": -15,
+    "destination_y": 8
+  },
+  "dungeonEntrance": {
+    "x_offset": -15,
+    "y_offset": -5,
+    "signMessage": "Bandit Hideout - Danger ahead!"
+  },
+  "orcCampEntrance": {
+    "x_offset": 15,
+    "y_offset": 15,
+    "signMessage": "Orc Encampment - Enter at your own risk!",
+    "mapFile": "orc_camp.json"
+  }
+}
