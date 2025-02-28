@@ -1,6 +1,19 @@
-# Modular Roguelike Game
+# Lila RL - Modular Roguelike Game
 
-A browser-based roguelike game built with modern JavaScript using a component-based entity system and a data-driven approach.
+A browser-based roguelike game built with modern JavaScript using a component-based entity system and a data-driven approach inspired by ADOM, UO, DF, D1, D2, CoQ, TOME, Catacylsm RL and ADND 
+
+## Licence 
+Creative Commons Attribution-NonCommercial 4.0 International License
+This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](LICENSE.md).
+https://github.com/integralyogin/lila_rl/blob/master/LICENSE.md
+
+## Screenshot
+![Lila RL Game Screenshot](screenshot.png)
+
+
+## Play Online
+Play Lila RL at: [The Infinite Library](http://theinfinitelibrary.net/games/lila_rl/)
+
 
 ## Features
 
