@@ -1,8 +1,41 @@
 # Lila RL Development Status
 
+
+### GOALS
+- alchemy
+- crafting
+- skills
+- harvesting resources
+
+- build monsters in game.
+- create object, place, edit obj
+- create spell
+- create item
+
+- proper stat advancement
+
+## FIX
+- arena to use behaviourai
+
+### COMPLEX TEST
+- lich vs wizard proper in arena
+- item that grants aura on equip etc
+- phantom limb spell that grants inventory slot
+
+### SPELLS
+- polymorph
+
+### COMBAT
+- limb damage and practical implications
+
+## is WORKING?
+- equipment on monsters that drops on death
+
+### TODO-DONE
+
 | Feature | Status | Description |
 |---------|--------|-------------|
-| Basic Movement | ✅ Complete | Player can move around maps using keyboard |
+| Basic Movement | ✅ Complete | Player can move around maps using keyboard and mouse |
 | Map Generation | ✅ Complete | Multiple map types (town, dungeon, forest) |
 | Combat System | ✅ Complete | Turn-based combat with stats and damage calculation |
 | Inventory System | ✅ Complete | Items can be picked up, equipped, and used |

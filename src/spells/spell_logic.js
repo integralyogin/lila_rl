@@ -2,7 +2,7 @@ import gameState from '../core/gameState.js';
 import { registerBoltSpells, createBoltSpell } from './implementations/boltSpells.js';
 import { registerAuraSpells } from './implementations/auraSpells.js';
 import { registerUtilitySpells } from './implementations/utilitySpells.js';
-import { registerSummoningSpells } from './implementations/summoning.js';
+import { registerSummoningSpells, registerPolymorphSpell } from './implementations/summoning.js';
 import { registerAoESpells } from './implementations/aoeSpells.js';
 import { 
     findEntityAtPosition, 
@@ -65,6 +65,9 @@ class SpellLogic {
         
         // Register summoning spells
         registerSummoningSpells(this);
+        
+        // Register polymorph spell
+        registerPolymorphSpell(this);
     }
     
     /**

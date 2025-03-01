@@ -15,3 +15,6 @@ export * from './magicComponents.js';
 
 // Social components
 export * from './socialComponents.js';
+
+// Export the PolymorphComponent specifically for easy access
+export { PolymorphComponent } from './magicComponents.js';

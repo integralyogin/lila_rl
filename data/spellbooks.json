@@ -1,5 +1,21 @@
 [
   {
+    "id": "polymorph",
+    "name": "Polymorph Spellbook",
+    "char": "+",
+    "color": "#e080ff",
+    "type": "spellbook",
+    "spellId": "polymorph",
+    "spellName": "Polymorph",
+    "description": "Transforms you into a chosen creature, granting its abilities for a limited time.",
+    "element": "arcane",
+    "manaCost": 20,
+    "duration": 20,
+    "price": 200,
+    "effects": ["transform", "shapeshift"],
+    "tags": ["transformation", "utility", "arcane", "creature", "selection"]
+  },
+  {
     "id": "summoncreature",
     "name": "Summon Creature Spellbook",
     "char": "+",

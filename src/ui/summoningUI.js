@@ -91,7 +91,7 @@ class SummoningUI {
     setupEventListeners() {
         // Listen for open summon UI event
         eventBus.on('openSummoningUI', (data) => {
-            this.showSummoningUI(data.spell, data.targetPosition, data.callback);
+            this.showSummoningUI(data.spell, data.targetPosition, data.callback, data.isPolymorph);
         });
         
         // Listen for close event
@@ -123,12 +123,13 @@ class SummoningUI {
      * @param {Object} targetPosition - The target position for summoning
      * @param {Function} callback - Callback function when selection is complete
      */
-    showSummoningUI(spell, targetPosition, callback) {
-        console.log('Opening Summoning UI', spell, targetPosition);
+    showSummoningUI(spell, targetPosition, callback, isPolymorph = false) {
+        console.log('Opening Summoning UI', spell, targetPosition, isPolymorph ? '(Polymorph)' : '');
         this.spellData = spell;
         this.targetPosition = targetPosition;
         this.selectionCallback = callback;
         this.selectedMonster = null;
+        this.isPolymorph = isPolymorph || (spell && spell.isPolymorph) || false;
         
         this.visible = true;
         this.container.classList.remove('hidden');
@@ -136,7 +137,13 @@ class SummoningUI {
         gameState.gameMode = 'summoning_selection';
         
         // Update header with spell name
-        this.header.textContent = `${spell.spellName}: Choose a Creature to Summon`;
+        if (this.isPolymorph) {
+            this.header.textContent = `${spell.spellName}: Choose a Creature to Transform Into`;
+            this.summonButton.textContent = 'Transform';
+        } else {
+            this.header.textContent = `${spell.spellName}: Choose a Creature to Summon`;
+            this.summonButton.textContent = 'Summon';
+        }
         
         // Get reference to entityFactory if needed
         if (!this.entityFactory) {
@@ -303,21 +310,27 @@ class SummoningUI {
     }
     
     /**
-     * Summon the selected creature
+     * Summon the selected creature or transform into it
      */
     summonCreature() {
         if (!this.selectedMonster) {
-            alert('Select a creature to summon');
+            alert(this.isPolymorph ? 'Select a creature to transform into' : 'Select a creature to summon');
             return;
         }
         
-        console.log(`Summoning a ${this.selectedMonster} at ${this.targetPosition.x},${this.targetPosition.y}`);
+        if (this.isPolymorph) {
+            console.log(`Transforming into a ${this.selectedMonster}`);
+        } else {
+            console.log(`Summoning a ${this.selectedMonster} at ${this.targetPosition.x},${this.targetPosition.y}`);
+        }
         
         // Prepare the summon data with the selected monster type
         const summonData = {
             creatureType: this.selectedMonster,
-            name: `Summoned ${this.formatMonsterName(this.selectedMonster)}`,
-            duration: this.spellData.duration || 25,
+            name: this.isPolymorph ? 
+                `${this.formatMonsterName(this.selectedMonster)}` : 
+                `Summoned ${this.formatMonsterName(this.selectedMonster)}`,
+            duration: this.spellData.duration || (this.isPolymorph ? 20 : 25),
             intelligenceScaling: {
                 hp: 0.5,
                 strength: 0.3,
@@ -335,7 +348,8 @@ class SummoningUI {
             const modifiedSpell = { ...this.spellData, summonData };
             this.selectionCallback({
                 spell: modifiedSpell,
-                target: this.targetPosition
+                target: this.targetPosition,
+                isPolymorph: this.isPolymorph
             });
         }
     }

@@ -17,6 +17,14 @@ class AISystem {
     for (let entity of entityArray) {
       if (!entity || entity === gameState.player) continue;
       
+      // Skip polymorphed entities in the main game loop
+      if (entity.hasComponent && entity.hasComponent('PolymorphComponent')) {
+        // Update polymorph duration if needed
+        const polymorphComp = entity.getComponent('PolymorphComponent');
+        if (polymorphComp) polymorphComp.update();
+        continue;
+      }
+      
       // Disable Gladiator AI to prevent issues
       if (entity.name && entity.name.toLowerCase().includes('gladiator')) {
         if (entity.getComponent && entity.getComponent('AIComponent')) entity.removeComponent('AIComponent');
@@ -30,6 +38,15 @@ class AISystem {
     if (gameState.currentMap === "town") {
       for (let entity of entityArray) {
         if (!entity || entity === gameState.player || !entity.getComponent) continue;
+        
+        // Skip polymorphed entities
+        if (entity.hasComponent && entity.hasComponent('PolymorphComponent')) {
+          // Update polymorph duration if needed
+          const polymorphComp = entity.getComponent('PolymorphComponent');
+          if (polymorphComp) polymorphComp.update();
+          continue;
+        }
+        
         const ai = entity.getComponent('AIComponent');
         if (!ai) continue;
         

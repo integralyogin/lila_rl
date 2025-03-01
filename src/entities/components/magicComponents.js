@@ -137,6 +137,30 @@ export class WillpowerComponent extends Component {
     }
 }
 
+// PolymorphComponent - for entities that have been transformed by polymorph spell
+export class PolymorphComponent extends Component {
+    constructor(duration = 10, originalComponents = {}) {
+        super();
+        this.duration = duration;     // How many turns the effect lasts
+        this.turnsRemaining = duration;
+        this.originalComponents = originalComponents; // Store original components
+        this.originalName = null;
+    }
+    
+    update() {
+        if (this.turnsRemaining <= 0) {
+            return false; // Component should be removed
+        }
+        
+        this.turnsRemaining--;
+        return true; // Component should stay active
+    }
+    
+    get isExpired() {
+        return this.turnsRemaining <= 0;
+    }
+}
+
 // StaminaComponent - for entities that perform physical actions
 export class StaminaComponent extends Component {
     constructor(maxSP = 60, spRegen = 2) {

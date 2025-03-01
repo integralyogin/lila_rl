@@ -51,6 +51,15 @@ class CombatSystem {
             return false;
         }
         
+        // Check if entity is polymorphed - can't attack polymorphed entities
+        if (targetEntity.hasComponent && targetEntity.hasComponent('PolymorphComponent')) {
+            eventBus.emit('logMessage', { 
+                message: `${targetEntity.name} is already incapacitated.`,
+                type: 'combat'
+            });
+            return true; // Attack was attempted but not processed
+        }
+        
         // Get player stats and equipment
         const playerStats = gameState.player.getComponent('StatsComponent');
         const playerEquipment = gameState.player.getComponent('EquipmentComponent');

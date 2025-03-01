@@ -6,6 +6,156 @@ import eventBus from '../../core/eventEmitter.js';
  * @param {object} spellLogic - The spell logic system
  */
 export function registerUtilitySpells(spellLogic) {
+    // Polymorph spell - transforms enemy into a harmless sheep
+    spellLogic.registerSpell('polymorph', {
+        targetType: 'entity',
+        
+        // Method for targeting before casting
+        target: function(spell, callback) {
+            // Enable targeting mode - this will be handled by the targeting system
+            const targetingSystem = gameState.getSystem('TargetingSystem');
+            if (targetingSystem) {
+                targetingSystem.startTargeting({
+                    range: spell.range || 5,
+                    targetType: 'enemy',
+                    onSelect: callback
+                });
+                return true;
+            }
+            return false;
+        },
+        
+        // Actual spell implementation
+        cast: function(spell, target) {
+            if (!target || !target.entity) {
+                gameState.addMessage("You need a valid target for this spell.");
+                return false;
+            }
+            
+            const targetEntity = target.entity;
+            
+            // Don't allow polymorphing already polymorphed targets
+            if (targetEntity.hasComponent('PolymorphComponent')) {
+                gameState.addMessage(`${targetEntity.name} is already transformed!`);
+                return false;
+            }
+            
+            // Don't polymorph bosses, very large creatures, or non-living things
+            if (targetEntity.hasComponent('BossComponent') || 
+                (targetEntity.renderable && targetEntity.renderable.char === 'D') || 
+                !targetEntity.hasComponent('HealthComponent')) {
+                gameState.addMessage(`${targetEntity.name} resists the polymorph spell!`);
+                return false;
+            }
+            
+            // Use mana
+            const mana = gameState.player.getComponent('ManaComponent');
+            if (!mana.useMana(spell.manaCost)) {
+                gameState.addMessage("You don't have enough mana.");
+                return false;
+            }
+            
+            // Calculate duration based on intelligence
+            const intelligence = gameState.player.getComponent('StatsComponent').intelligence;
+            const duration = spell.duration + Math.floor(intelligence * 0.2);
+            
+            // Save original components
+            const originalComponents = {
+                renderable: targetEntity.hasComponent('RenderableComponent') ? 
+                    { 
+                        char: targetEntity.renderable.char,
+                        color: targetEntity.renderable.color
+                    } : null,
+                attack: targetEntity.hasComponent('AttackComponent'),
+                ai: targetEntity.hasComponent('AIComponent')
+            };
+            
+            // Save original name
+            const originalName = targetEntity.name;
+            targetEntity.name = "Sheep";
+            
+            // Create polymorph component to track the transformation
+            const polymorphComponent = new gameState.components.PolymorphComponent(duration, originalComponents);
+            polymorphComponent.originalName = originalName;
+            targetEntity.addComponent(polymorphComponent);
+            
+            // Modify appearance
+            if (targetEntity.renderable) {
+                targetEntity.renderable.char = 's';  // 's' for sheep
+                targetEntity.renderable.color = '#ffffff';  // white color for sheep
+            }
+            
+            // Remove attack capability
+            if (targetEntity.hasComponent('AttackComponent')) {
+                targetEntity.removeComponent('AttackComponent');
+            }
+            
+            // Remove or disable AI
+            if (targetEntity.hasComponent('AIComponent')) {
+                targetEntity.removeComponent('AIComponent');
+            }
+            
+            // Create visual effect
+            if (gameState.renderSystem) {
+                gameState.renderSystem.createSpellEffect('aura', 'arcane', {
+                    x: targetEntity.position.x,
+                    y: targetEntity.position.y,
+                    radius: 1,
+                    duration: 1000
+                });
+            }
+            
+            gameState.addMessage(`You transform ${originalName} into a harmless sheep!`);
+            
+            // Set up the reversion after duration expires
+            setTimeout(() => {
+                if (targetEntity && targetEntity.hasComponent('PolymorphComponent')) {
+                    // Check if entity still exists and is still polymorphed
+                    const polyComp = targetEntity.getComponent('PolymorphComponent');
+                    
+                    // Restore original name
+                    targetEntity.name = polyComp.originalName;
+                    
+                    // Restore appearance
+                    if (targetEntity.renderable && polyComp.originalComponents.renderable) {
+                        targetEntity.renderable.char = polyComp.originalComponents.renderable.char;
+                        targetEntity.renderable.color = polyComp.originalComponents.renderable.color;
+                    }
+                    
+                    // Restore combat capability
+                    if (polyComp.originalComponents.attack && !targetEntity.hasComponent('AttackComponent')) {
+                        // We need to recreate the attack component - this is implementation-specific
+                        const attackComp = new gameState.components.AttackComponent(5); // Default values
+                        targetEntity.addComponent(attackComp);
+                    }
+                    
+                    // Restore AI
+                    if (polyComp.originalComponents.ai && !targetEntity.hasComponent('AIComponent')) {
+                        // We need to recreate the AI component - this is implementation-specific
+                        const aiComp = new gameState.components.AIComponent();
+                        targetEntity.addComponent(aiComp);
+                    }
+                    
+                    // Remove polymorph component
+                    targetEntity.removeComponent('PolymorphComponent');
+                    
+                    // Visual effect for transformation back
+                    if (gameState.renderSystem) {
+                        gameState.renderSystem.createSpellEffect('aura', 'arcane', {
+                            x: targetEntity.position.x,
+                            y: targetEntity.position.y,
+                            radius: 1,
+                            duration: 1000
+                        });
+                    }
+                    
+                    gameState.addMessage(`${targetEntity.name} transforms back to normal!`);
+                }
+            }, duration * 1000); // Convert turns to milliseconds
+            
+            return true;
+        }
+    });
     // Nature spell (healing + temporary defense boost)
     spellLogic.registerSpell('nature', {
         targetType: 'self',
