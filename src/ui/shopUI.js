@@ -10,8 +10,8 @@ class ShopUI {
         this.shopElement = null;
         this.shopkeeper = null;
         this.items = [];
-        this.mode = 'buy'; // 'buy' or 'sell'
-        this.entityFactory = null; // Will be set by game.js
+        this.mode = 'buy';
+        this.entityFactory = null;
         
         this.boundHandleKeyDown = this.handleKeyDown.bind(this);
         this.clickOutsideHandler = this.handleClickOutside.bind(this);
@@ -22,9 +22,7 @@ class ShopUI {
         eventBus.on('shopClosed', () => this.close());
         eventBus.on('shopKeyPressed', (key) => this.handleKeyPress(key));
         eventBus.on('shopItemSelected', (index) => {
-            if (index >= 0) {
-                this.selectItem(index);
-            }
+            if (index >= 0) this.selectItem(index);
         });
     }
     
@@ -40,162 +38,160 @@ class ShopUI {
     }
     
     selectItem(index) {
-        if (index >= 0) {
-            const oldIndex = this.selectedIndex;
-            this.selectedIndex = index;
+        if (index < 0) return;
+        
+        const oldIndex = this.selectedIndex;
+        this.selectedIndex = index;
+        
+        const allItems = document.querySelectorAll('.shop-item');
+        
+        if (allItems.length > 0) {
+            allItems.forEach((item, i) => {
+                item.classList.toggle('selected', i === index);
+            });
             
-            const allItems = document.querySelectorAll('.shop-item');
-            
-            if (allItems.length > 0) {
-                allItems.forEach((item, i) => {
-                    if (i === index) {
-                        item.classList.add('selected');
-                        item.scrollIntoView({ block: 'nearest', behavior: 'auto' });
-                    } else {
-                        item.classList.remove('selected');
-                    }
-                });
-                
-                if (oldIndex !== index) {
-                    const event = new CustomEvent('shopselectionchanged', { 
-                        detail: { oldIndex, newIndex: index, mode: this.mode } 
-                    });
-                    document.dispatchEvent(event);
-                }
-            } else {
-                if (this.mode === 'buy') {
-                    this.renderBuyMode();
-                } else {
-                    this.renderSellMode();
-                }
-                
-                setTimeout(() => {
-                    const newItems = document.querySelectorAll('.shop-item');
-                    if (newItems[index]) {
-                        newItems[index].classList.add('selected');
-                    }
-                }, 10);
+            if (allItems[index]) {
+                allItems[index].scrollIntoView({ block: 'nearest', behavior: 'auto' });
             }
+            
+            if (oldIndex !== index) {
+                document.dispatchEvent(new CustomEvent('shopselectionchanged', { 
+                    detail: { oldIndex, newIndex: index, mode: this.mode } 
+                }));
+            }
+        } else {
+            this.render();
+            
+            setTimeout(() => {
+                const newItems = document.querySelectorAll('.shop-item');
+                if (newItems[index]) newItems[index].classList.add('selected');
+            }, 10);
         }
     }
     
     initialize() {
-        if (!document.getElementById('shop-ui')) {
-            const shopUI = document.createElement('div');
-            shopUI.id = 'shop-ui';
-            shopUI.className = 'shop-ui';
-            shopUI.style.display = 'none';
-            
-            const header = document.createElement('div');
-            header.className = 'shop-header';
-            header.style.display = 'flex';
-            header.style.justifyContent = 'space-between';
-            header.style.alignItems = 'center';
-            header.style.padding = '5px 10px';
-            
-            const titleGoldArea = document.createElement('div');
-            titleGoldArea.style.display = 'flex';
-            titleGoldArea.style.justifyContent = 'space-between';
-            titleGoldArea.style.flex = '1';
-            
-            const title = document.createElement('div');
-            title.id = 'shop-title';
-            title.textContent = 'Shop';
-            
-            const goldDisplay = document.createElement('div');
-            goldDisplay.id = 'player-gold';
-            goldDisplay.textContent = 'Gold: 0';
-            
-            titleGoldArea.appendChild(title);
-            titleGoldArea.appendChild(goldDisplay);
-            
-            const closeButton = document.createElement('button');
-            closeButton.className = 'close-button';
-            closeButton.innerHTML = '&times;';
-            closeButton.style.background = 'none';
-            closeButton.style.border = 'none';
-            closeButton.style.color = '#fff';
-            closeButton.style.fontSize = '20px';
-            closeButton.style.cursor = 'pointer';
-            closeButton.style.padding = '0 5px';
-            closeButton.style.marginLeft = '10px';
-            closeButton.title = 'Close shop';
-            
-            closeButton.addEventListener('mouseenter', () => {
-                closeButton.style.color = '#ff9999';
-            });
-            closeButton.addEventListener('mouseleave', () => {
-                closeButton.style.color = '#fff';
-            });
-            
-            closeButton.addEventListener('click', (e) => {
-                e.stopPropagation();
-                this.close();
-                gameState.gameMode = 'exploration';
-                eventBus.emit('shopClosed');
-            });
-            
-            header.appendChild(titleGoldArea);
-            header.appendChild(closeButton);
-            
-            const itemList = document.createElement('div');
-            itemList.className = 'shop-items';
-            itemList.id = 'shop-items';
-            
-            const modeToggle = document.createElement('div');
-            modeToggle.className = 'shop-mode-toggle';
-            modeToggle.id = 'shop-mode-toggle';
-            
-            const buyMode = document.createElement('div');
-            buyMode.className = 'mode-option mode-buy selected';
-            buyMode.textContent = 'Buy';
-            buyMode.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.mode = 'buy';
-                this.selectedIndex = 0;
-                this.renderModeToggle();
-                this.render();
-            });
-            
-            const sellMode = document.createElement('div');
-            sellMode.className = 'mode-option mode-sell';
-            sellMode.textContent = 'Sell';
-            sellMode.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                this.mode = 'sell';
-                this.selectedIndex = 0;
-                this.renderModeToggle();
-                this.render();
-            });
-            
-            modeToggle.appendChild(buyMode);
-            modeToggle.appendChild(sellMode);
-            
-            const footer = document.createElement('div');
-            footer.className = 'shop-footer';
-            footer.innerHTML = `
-                <div><b>↑↓</b> Navigate items</div>
-                <div><b>B/S</b> or <b>←/→</b> Switch buy/sell mode</div>
-                <div><b>Enter</b> or <b>Space</b> Buy/Sell selected item</div>
-                <div><b>ESC</b> Close shop</div>
-            `;
-            
-            shopUI.appendChild(header);
-            shopUI.appendChild(modeToggle);
-            shopUI.appendChild(itemList);
-            shopUI.appendChild(footer);
-            
-            const gameContainer = document.getElementById('game-container') || document.body;
-            gameContainer.appendChild(shopUI);
-            
-            this.shopElement = itemList;
-            
-            this.addShopStyles();
-        } else {
+        if (document.getElementById('shop-ui')) {
             this.shopElement = document.getElementById('shop-items');
+            return;
         }
+        
+        const shopUI = document.createElement('div');
+        shopUI.id = 'shop-ui';
+        shopUI.className = 'shop-ui';
+        shopUI.style.display = 'none';
+        
+        const header = this.createHeader();
+        const itemList = document.createElement('div');
+        itemList.className = 'shop-items';
+        itemList.id = 'shop-items';
+        const modeToggle = this.createModeToggle();
+        
+        const footer = document.createElement('div');
+        footer.className = 'shop-footer';
+        footer.innerHTML = `
+            <div><b>↑↓</b> Navigate items</div>
+            <div><b>B/S</b> or <b>←/→</b> Switch buy/sell mode</div>
+            <div><b>Enter</b> or <b>Space</b> Buy/Sell selected item</div>
+            <div><b>ESC</b> Close shop</div>
+        `;
+        
+        shopUI.appendChild(header);
+        shopUI.appendChild(modeToggle);
+        shopUI.appendChild(itemList);
+        shopUI.appendChild(footer);
+        
+        const gameContainer = document.getElementById('game-container') || document.body;
+        gameContainer.appendChild(shopUI);
+        
+        this.shopElement = itemList;
+        this.addShopStyles();
+    }
+    
+    createHeader() {
+        const header = document.createElement('div');
+        header.className = 'shop-header';
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.padding = '5px 10px';
+        
+        const titleGoldArea = document.createElement('div');
+        titleGoldArea.style.display = 'flex';
+        titleGoldArea.style.justifyContent = 'space-between';
+        titleGoldArea.style.flex = '1';
+        
+        const title = document.createElement('div');
+        title.id = 'shop-title';
+        title.textContent = 'Shop';
+        
+        const goldDisplay = document.createElement('div');
+        goldDisplay.id = 'player-gold';
+        goldDisplay.textContent = 'Gold: 0';
+        
+        titleGoldArea.appendChild(title);
+        titleGoldArea.appendChild(goldDisplay);
+        
+        const closeButton = document.createElement('button');
+        closeButton.className = 'close-button';
+        closeButton.innerHTML = '&times;';
+        closeButton.style.background = 'none';
+        closeButton.style.border = 'none';
+        closeButton.style.color = '#fff';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.padding = '0 5px';
+        closeButton.style.marginLeft = '10px';
+        closeButton.title = 'Close shop';
+        
+        closeButton.addEventListener('mouseenter', () => closeButton.style.color = '#ff9999');
+        closeButton.addEventListener('mouseleave', () => closeButton.style.color = '#fff');
+        
+        closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.close();
+            gameState.gameMode = 'exploration';
+            eventBus.emit('shopClosed');
+        });
+        
+        header.appendChild(titleGoldArea);
+        header.appendChild(closeButton);
+        
+        return header;
+    }
+    
+    createModeToggle() {
+        const modeToggle = document.createElement('div');
+        modeToggle.className = 'shop-mode-toggle';
+        modeToggle.id = 'shop-mode-toggle';
+        
+        const buyMode = document.createElement('div');
+        buyMode.className = 'mode-option mode-buy selected';
+        buyMode.textContent = 'Buy';
+        buyMode.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.mode = 'buy';
+            this.selectedIndex = 0;
+            this.renderModeToggle();
+            this.render();
+        });
+        
+        const sellMode = document.createElement('div');
+        sellMode.className = 'mode-option mode-sell';
+        sellMode.textContent = 'Sell';
+        sellMode.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            this.mode = 'sell';
+            this.selectedIndex = 0;
+            this.renderModeToggle();
+            this.render();
+        });
+        
+        modeToggle.appendChild(buyMode);
+        modeToggle.appendChild(sellMode);
+        
+        return modeToggle;
     }
     
     addShopStyles() {
@@ -217,7 +213,6 @@ class ShopUI {
                 z-index: 100;
                 font-family: monospace;
             }
-
             .shop-header {
                 display: flex;
                 justify-content: space-between;
@@ -226,16 +221,13 @@ class ShopUI {
                 margin-bottom: 10px;
                 font-weight: bold;
             }
-            
             #player-gold {
                 color: #ffd700;
             }
-            
             .shop-mode-toggle {
                 display: flex;
                 margin-bottom: 10px;
             }
-            
             .mode-option {
                 flex: 1;
                 text-align: center;
@@ -243,18 +235,15 @@ class ShopUI {
                 background: #333;
                 cursor: pointer;
             }
-            
             .mode-option.selected {
                 background: #555;
                 font-weight: bold;
             }
-            
             .shop-items {
                 max-height: 300px;
                 overflow-y: auto;
                 margin-bottom: 10px;
             }
-            
             .shop-item {
                 display: flex;
                 justify-content: space-between;
@@ -263,28 +252,22 @@ class ShopUI {
                 cursor: pointer;
                 transition: background-color 0.2s;
             }
-            
             .shop-item:hover {
                 background: #444;
             }
-            
             .shop-item.selected {
                 background: #335;
             }
-            
             .item-symbol {
                 margin-right: 10px;
             }
-            
             .item-name {
                 flex: 1;
             }
-            
             .item-price {
                 color: #ffd700;
                 margin-left: 10px;
             }
-            
             .shop-footer {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -293,7 +276,6 @@ class ShopUI {
                 background: #333;
                 font-size: 0.8em;
             }
-            
             .shop-action-button {
                 background-color: #335;
                 color: white;
@@ -308,11 +290,9 @@ class ShopUI {
                 margin-top: 10px;
                 border-radius: 4px;
             }
-            
             .shop-action-button:hover {
                 background-color: #447;
             }
-            
             .shop-action-button:active {
                 background-color: #558;
                 transform: scale(0.98);
@@ -330,13 +310,10 @@ class ShopUI {
         
         this.shopkeeper = shopkeeper;
         this.items = null;
-        delete this._lastShopInventory;
         
         const dialogue = shopkeeper.getComponent('DialogueComponent');
-        
         if (dialogue && dialogue.isShopkeeper && dialogue.inventory) {
-            const inventoryCopy = dialogue.inventory.map(item => ({...item}));
-            this.items = inventoryCopy;
+            this.items = dialogue.inventory.map(item => ({...item}));
             this._lastShopIdentity = shopkeeper.name + "-" + (dialogue._shopkeeperToken || Math.random().toString(36).substring(2, 15));
         } else if (shopkeeper && shopkeeper.inventory) {
             this.items = shopkeeper.inventory.map(item => ({...item}));
@@ -355,9 +332,7 @@ class ShopUI {
         const shopUI = document.getElementById('shop-ui');
         if (shopUI) {
             shopUI.style.display = 'flex';
-            gameState.gameMode = 'shop';
-            
-            shopUI.addEventListener('click', (e) => {
+            shopUI.addEventListener('click', e => {
                 e.preventDefault();
                 e.stopPropagation();
             });
@@ -370,46 +345,51 @@ class ShopUI {
         
         setTimeout(() => {
             document.addEventListener('click', this.clickOutsideHandler);
+            this.setupItemClickHandlers();
         }, 100);
         
         gameState.addMessage(`${this.shopkeeper.name} says: "Welcome! Take a look at my wares."`, "speech");
-        
-        setTimeout(() => {
-            const allItems = document.querySelectorAll('.shop-item');
-            allItems.forEach((item, index) => {
-                item.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.selectItem(index);
-                };
-            });
+    }
+    
+    setupItemClickHandlers() {
+        const allItems = document.querySelectorAll('.shop-item');
+        allItems.forEach((item, index) => {
+            item.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.selectItem(index);
+            };
             
-            const actionButton = document.querySelector('.shop-action-button');
-            if (actionButton) {
-                actionButton.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    actionButton.style.backgroundColor = '#558';
-                    setTimeout(() => actionButton.style.backgroundColor = '', 200);
-                    
-                    gameState.gameMode = 'shop';
-                    
-                    if (this.mode === 'buy') {
-                        this.buySelectedItem();
-                    } else {
-                        this.sellSelectedItem();
-                    }
-                };
-            }
-        }, 200);
+            item.ondblclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this.selectedIndex = index;
+                this.render();
+                setTimeout(() => {
+                    if (this.mode === 'buy') this.buySelectedItem();
+                    else this.sellSelectedItem();
+                }, 50);
+            };
+        });
+        
+        const actionButton = document.querySelector('.shop-action-button');
+        if (actionButton) {
+            actionButton.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                actionButton.style.backgroundColor = '#558';
+                setTimeout(() => actionButton.style.backgroundColor = '', 200);
+                
+                if (this.mode === 'buy') this.buySelectedItem();
+                else this.sellSelectedItem();
+            };
+        }
     }
     
     close() {
         const shopUI = document.getElementById('shop-ui');
-        if (shopUI) {
-            shopUI.style.display = 'none';
-        }
+        if (shopUI) shopUI.style.display = 'none';
         
         this.visible = false;
         gameState.gameMode = 'exploration';
@@ -423,13 +403,9 @@ class ShopUI {
     }
     
     handleKeyDown(event) {
-        if (!this.visible) {
-            return;
-        }
+        if (!this.visible) return;
         
-        const key = event.key;
-        this.handleKeyPress(key);
-        
+        this.handleKeyPress(event.key);
         event.preventDefault();
         event.stopPropagation();
     }
@@ -480,13 +456,8 @@ class ShopUI {
         const sellButton = document.querySelector('.mode-sell');
         
         if (buyButton && sellButton) {
-            if (this.mode === 'buy') {
-                buyButton.classList.add('selected');
-                sellButton.classList.remove('selected');
-            } else {
-                buyButton.classList.remove('selected');
-                sellButton.classList.add('selected');
-            }
+            buyButton.classList.toggle('selected', this.mode === 'buy');
+            sellButton.classList.toggle('selected', this.mode === 'sell');
         }
     }
     
@@ -504,50 +475,28 @@ class ShopUI {
         const oldSelectedIndex = this.selectedIndex;
         this.shopElement.innerHTML = '';
         
-        if (this.mode === 'buy') {
-            this.renderBuyMode();
-        } else {
-            this.renderSellMode();
-        }
-        
-        this.selectedIndex = oldSelectedIndex;
+        if (this.mode === 'buy') this.renderBuyMode();
+        else this.renderSellMode();
         
         const actionButton = document.createElement('button');
         actionButton.id = 'shop-action-button';
         actionButton.className = 'shop-action-button';
         actionButton.textContent = this.mode === 'buy' ? 'Buy Selected Item' : 'Sell Selected Item';
-        
-        actionButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            gameState.gameMode = 'shop';
-            
-            try {
-                if (this.mode === 'buy') {
-                    this.buySelectedItem();
-                } else {
-                    this.sellSelectedItem();
-                }
-            } catch (error) {
-                console.error("Error executing action:", error);
-            }
-        });
-        
         this.shopElement.appendChild(actionButton);
         
+        this.selectedIndex = oldSelectedIndex;
         setTimeout(() => {
             const selectedItem = document.querySelectorAll('.shop-item')[this.selectedIndex];
             if (selectedItem) {
                 selectedItem.classList.add('selected');
                 selectedItem.scrollIntoView({ block: 'nearest', behavior: 'auto' });
             }
+            this.setupItemClickHandlers();
         }, 10);
     }
     
     renderBuyMode() {
-        const items = this.items;
-        
-        if (items.length === 0) {
+        if (this.items.length === 0) {
             const emptyMessage = document.createElement('div');
             emptyMessage.className = 'shop-empty';
             emptyMessage.textContent = "No items available for purchase.";
@@ -555,47 +504,15 @@ class ShopUI {
             return;
         }
         
-        items.forEach((item, index) => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'shop-item';
-            
-            if (index === this.selectedIndex) {
-                itemElement.classList.add('selected');
-            }
-            
-            const symbol = document.createElement('span');
-            symbol.className = 'item-symbol';
-            symbol.textContent = this.getItemSymbol(item.type);
-            symbol.style.color = this.getItemColor(item.type);
-            
-            const nameElement = document.createElement('span');
-            nameElement.className = 'item-name';
-            nameElement.textContent = `${item.name} (${item.description || ''})`;
-            
-            const priceElement = document.createElement('span');
-            priceElement.className = 'item-price';
-            priceElement.textContent = `${item.price} gold`;
-            
-            itemElement.appendChild(symbol);
-            itemElement.appendChild(nameElement);
-            itemElement.appendChild(priceElement);
-            
-            itemElement.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                gameState.gameMode = 'shop';
-                this.selectItem(index);
-                eventBus.emit('shopItemSelected', index);
-            });
-            
-            itemElement.addEventListener('dblclick', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                gameState.gameMode = 'shop';
-                this.selectedIndex = index;
-                this.render();
-                setTimeout(() => this.buySelectedItem(), 50);
-            });
+        this.items.forEach((item, index) => {
+            const itemElement = this.createItemElement(
+                item.name,
+                item.description || '',
+                item.price,
+                this.getItemSymbol(item.type),
+                this.getItemColor(item.type),
+                index
+            );
             
             this.shopElement.appendChild(itemElement);
         });
@@ -612,78 +529,74 @@ class ShopUI {
         }
         
         inventory.items.forEach((item, index) => {
-            const itemElement = document.createElement('div');
-            itemElement.className = 'shop-item';
-            
-            if (index === this.selectedIndex) {
-                itemElement.classList.add('selected');
-            }
-            
             const itemComp = item.getComponent('ItemComponent');
             const renderable = item.getComponent('RenderableComponent');
             
-            if (!itemComp || !itemComp.value) {
-                return;
-            }
+            if (!itemComp || !itemComp.value) return;
             
-            const symbol = document.createElement('span');
-            symbol.className = 'item-symbol';
-            symbol.textContent = renderable ? renderable.char : '?';
-            symbol.style.color = renderable ? renderable.color : '#fff';
-            
-            const nameElement = document.createElement('span');
-            nameElement.className = 'item-name';
-            nameElement.textContent = item.name;
-            
-            const priceElement = document.createElement('span');
-            priceElement.className = 'item-price';
-            priceElement.textContent = `${Math.floor(itemComp.value / 2)} gold`;
-            
-            itemElement.appendChild(symbol);
-            itemElement.appendChild(nameElement);
-            itemElement.appendChild(priceElement);
-            
-            itemElement.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                gameState.gameMode = 'shop';
-                this.selectItem(index);
-                eventBus.emit('shopItemSelected', index);
-            });
-            
-            itemElement.addEventListener('dblclick', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                gameState.gameMode = 'shop';
-                this.selectedIndex = index;
-                this.render();
-                setTimeout(() => this.sellSelectedItem(), 50);
-            });
+            const itemElement = this.createItemElement(
+                item.name,
+                item.description || '',
+                Math.floor(itemComp.value / 2),
+                renderable ? renderable.char : '?',
+                renderable ? renderable.color : '#fff',
+                index
+            );
             
             this.shopElement.appendChild(itemElement);
         });
     }
     
-    getItemSymbol(type) {
-        switch (type) {
-            case 'weapon': return '/';
-            case 'armor': return '[';
-            case 'potion': return '!';
-            case 'scroll': return '?';
-            case 'spellbook': return '+';
-            default: return '*';
+    createItemElement(name, description, price, symbol, color, index) {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'shop-item';
+        
+        if (index === this.selectedIndex) {
+            itemElement.classList.add('selected');
         }
+        
+        const symbolEl = document.createElement('span');
+        symbolEl.className = 'item-symbol';
+        symbolEl.textContent = symbol;
+        symbolEl.style.color = color;
+        
+        const nameElement = document.createElement('span');
+        nameElement.className = 'item-name';
+        nameElement.textContent = description ? `${name} (${description})` : name;
+        
+        const priceElement = document.createElement('span');
+        priceElement.className = 'item-price';
+        priceElement.textContent = `${price} gold`;
+        
+        itemElement.appendChild(symbolEl);
+        itemElement.appendChild(nameElement);
+        itemElement.appendChild(priceElement);
+        
+        return itemElement;
+    }
+    
+    getItemSymbol(type) {
+        const symbols = {
+            'weapon': '/',
+            'armor': '[',
+            'potion': '!',
+            'scroll': '?',
+            'spellbook': '+'
+        };
+        
+        return symbols[type] || '*';
     }
     
     getItemColor(type) {
-        switch (type) {
-            case 'weapon': return '#aaa';
-            case 'armor': return '#8b4513';
-            case 'potion': return '#f00';
-            case 'scroll': return '#ff0';
-            case 'spellbook': return '#0ff';
-            default: return '#fff';
-        }
+        const colors = {
+            'weapon': '#aaa',
+            'armor': '#8b4513',
+            'potion': '#f00',
+            'scroll': '#ff0',
+            'spellbook': '#0ff'
+        };
+        
+        return colors[type] || '#fff';
     }
     
     handleKeyPress(key) {
@@ -692,51 +605,49 @@ class ShopUI {
             return;
         }
         
-        if (key === 'ArrowUp' || key === 'w' || key === 'k') {
-            const itemCount = this.mode === 'buy' ? this.items.length : gameState.player.getComponent('InventoryComponent')?.items.length || 0;
+        const isUp = key === 'ArrowUp' || key === 'w' || key === 'k';
+        const isDown = key === 'ArrowDown' || key === 'j';
+        const isBuy = key === 'b' || key === 'B' || key === 'ArrowLeft';
+        const isSell = key === 's' || key === 'S' || key === 'ArrowRight';
+        const isExecute = key === 'Enter' || key === ' ';
+        
+        if (isUp || isDown) {
+            const itemCount = this.mode === 'buy' 
+                ? this.items.length 
+                : gameState.player.getComponent('InventoryComponent')?.items.length || 0;
+                
             if (itemCount > 0) {
-                this.selectedIndex = (this.selectedIndex - 1 + itemCount) % itemCount;
+                this.selectedIndex = (this.selectedIndex + (isUp ? -1 : 1) + itemCount) % itemCount;
                 this.render();
             }
-        } else if (key === 'ArrowDown' || key === 'j') {
-            const itemCount = this.mode === 'buy' ? this.items.length : gameState.player.getComponent('InventoryComponent')?.items.length || 0;
-            if (itemCount > 0) {
-                this.selectedIndex = (this.selectedIndex + 1) % itemCount;
-                this.render();
-            }
-        } else if (key === 'b' || key === 'B' || key === 'ArrowLeft') {
+        } else if (isBuy) {
             this.mode = 'buy';
             this.selectedIndex = 0;
             this.renderModeToggle();
             this.render();
-        } else if (key === 's' || key === 'S' || key === 'ArrowRight') {
+        } else if (isSell) {
             this.mode = 'sell';
             this.selectedIndex = 0;
             this.renderModeToggle();
             this.render();
-        } else if (key === 'Enter' || key === ' ') {
-            if (this.mode === 'buy') {
-                this.buySelectedItem();
-            } else {
-                this.sellSelectedItem();
-            }
+        } else if (isExecute) {
+            if (this.mode === 'buy') this.buySelectedItem();
+            else this.sellSelectedItem();
         }
     }
     
     buySelectedItem() {
-        if (this.selectedIndex >= this.items.length) {
-            return;
-        }
+        if (this.selectedIndex >= this.items.length) return;
         
         const item = this.items[this.selectedIndex];
         const playerGold = gameState.player.getComponent('GoldComponent');
+        const inventory = gameState.player.getComponent('InventoryComponent');
         
         if (!playerGold || playerGold.amount < item.price) {
             gameState.addMessage("You don't have enough gold to buy that item.", "error");
             return;
         }
         
-        const inventory = gameState.player.getComponent('InventoryComponent');
         if (inventory.isFull) {
             gameState.addMessage("Your inventory is full.", "error");
             return;

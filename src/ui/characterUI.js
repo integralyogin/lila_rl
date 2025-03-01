@@ -6,30 +6,20 @@ class CharacterUI {
         this.visible = false;
         this.characterElement = null;
         
-        // Bind methods
         this.boundHandleKeyDown = this.handleKeyDown.bind(this);
         this.clickOutsideHandler = this.handleClickOutside.bind(this);
         
-        // Initialize the UI
         this.initialize();
         
-        // Subscribe to events
         eventBus.on('characterOpened', () => this.open());
         eventBus.on('characterClosed', () => this.close());
-        
-        // Also keep the event bus listener as backup
         eventBus.on('characterKeyPressed', (key) => this.handleKeyPress(key));
     }
     
-    /**
-     * Handle clicks outside the character panel
-     * @param {MouseEvent} event - The click event
-     */
     handleClickOutside(event) {
         const characterUI = document.getElementById('character-ui');
         if (!characterUI) return;
         
-        // Check if click was outside the character UI
         if (this.visible && !characterUI.contains(event.target)) {
             this.close();
             gameState.gameMode = 'exploration';
@@ -38,29 +28,23 @@ class CharacterUI {
     }
     
     initialize() {
-        // Create character UI container if it doesn't exist
         if (!document.getElementById('character-ui')) {
             const characterUI = document.createElement('div');
             characterUI.id = 'character-ui';
             characterUI.className = 'character-ui';
             characterUI.style.display = 'none';
             
-            // Create header with close button
             const header = document.createElement('div');
             header.className = 'character-header';
-            
-            // Create a flex container for the header content
             header.style.display = 'flex';
             header.style.justifyContent = 'space-between';
             header.style.alignItems = 'center';
             header.style.padding = '5px 10px';
             
-            // Add the title
             const title = document.createElement('div');
             title.id = 'character-title';
             title.textContent = 'Character Sheet';
             
-            // Add close button
             const closeButton = document.createElement('button');
             closeButton.className = 'close-button';
             closeButton.innerHTML = '&times;';
@@ -73,15 +57,9 @@ class CharacterUI {
             closeButton.style.marginLeft = '10px';
             closeButton.title = 'Close character sheet';
             
-            // Add hover effect
-            closeButton.addEventListener('mouseenter', () => {
-                closeButton.style.color = '#ff9999';
-            });
-            closeButton.addEventListener('mouseleave', () => {
-                closeButton.style.color = '#fff';
-            });
+            closeButton.addEventListener('mouseenter', () => closeButton.style.color = '#ff9999');
+            closeButton.addEventListener('mouseleave', () => closeButton.style.color = '#fff');
             
-            // Add click handler
             closeButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.close();
@@ -89,32 +67,26 @@ class CharacterUI {
                 eventBus.emit('characterClosed');
             });
             
-            // Assemble header
             header.appendChild(title);
             header.appendChild(closeButton);
             
-            // Create character content area
             const characterContent = document.createElement('div');
             characterContent.className = 'character-content';
             characterContent.id = 'character-content';
             
-            // Create footer with instructions
             const footer = document.createElement('div');
             footer.className = 'character-footer';
             footer.innerHTML = `<div><b>ESC</b> or <b>C</b> Close character sheet</div>`;
             
-            // Assemble the UI
             characterUI.appendChild(header);
             characterUI.appendChild(characterContent);
             characterUI.appendChild(footer);
             
-            // Add to the game container
             const gameContainer = document.getElementById('game-container') || document.body;
             gameContainer.appendChild(characterUI);
             
             this.characterElement = characterContent;
             
-            // Add custom CSS for character UI
             this.addCharacterStyles();
         } else {
             this.characterElement = document.getElementById('character-content');
@@ -142,7 +114,6 @@ class CharacterUI {
                 z-index: 100;
                 font-family: monospace;
             }
-
             .character-header {
                 display: flex;
                 justify-content: center;
@@ -152,20 +123,17 @@ class CharacterUI {
                 font-weight: bold;
                 font-size: 1.2em;
             }
-            
             .character-content {
                 padding: 5px;
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 8px;
             }
-            
             .stat-section {
                 border: 1px solid #444;
                 padding: 5px;
                 background: #333;
             }
-            
             .stat-section h3 {
                 margin-top: 0;
                 margin-bottom: 5px;
@@ -173,30 +141,25 @@ class CharacterUI {
                 padding-bottom: 2px;
                 font-size: 0.9em;
             }
-            
             .stat-row {
                 display: flex;
                 justify-content: space-between;
                 margin-bottom: 2px;
                 font-size: 0.85em;
             }
-            
             .equipment-slot {
                 display: flex;
                 justify-content: space-between;
                 padding: 2px 0;
                 font-size: 0.85em;
             }
-            
             .slot-name {
                 color: #aaa;
             }
-            
             .slot-empty {
                 color: #666;
                 font-style: italic;
             }
-            
             .hp-bar, .xp-bar, .mana-bar {
                 width: 100%;
                 height: 8px;
@@ -204,29 +167,24 @@ class CharacterUI {
                 margin-top: 2px;
                 position: relative;
             }
-            
             .hp-fill {
                 height: 100%;
                 background: #a33;
                 width: 0%;
             }
-            
             .mana-fill {
                 height: 100%;
                 background: #33a;
                 width: 0%;
             }
-            
             .xp-fill {
                 height: 100%;
                 background: #3a3;
                 width: 0%;
             }
-            
             .stat-value {
                 font-weight: bold;
             }
-            
             .character-footer {
                 display: flex;
                 justify-content: center;
@@ -235,13 +193,11 @@ class CharacterUI {
                 margin-top: 5px;
                 font-size: 0.8em;
             }
-            
             .attributes-grid {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
                 gap: 5px;
             }
-            
             .full-width {
                 grid-column: span 2;
             }
@@ -250,76 +206,49 @@ class CharacterUI {
     }
     
     open() {
-        if (!gameState.player) {
-            return;
-        }
+        if (!gameState.player) return;
         
-        // Update UI with player data
         this.render();
         
-        // Show character UI
         const characterUI = document.getElementById('character-ui');
-        if (characterUI) {
-            characterUI.style.display = 'flex';
-        }
+        if (characterUI) characterUI.style.display = 'flex';
         
         this.visible = true;
-        
-        // Set game mode
         gameState.gameMode = 'character';
         
-        // Add event listeners when character UI opens
         document.addEventListener('keydown', this.boundHandleKeyDown);
         
-        // Wait a bit to add the click outside handler to prevent it triggering immediately
         setTimeout(() => {
             document.addEventListener('click', this.clickOutsideHandler);
         }, 100);
     }
     
     close() {
-        // Hide character UI
         const characterUI = document.getElementById('character-ui');
-        if (characterUI) {
-            characterUI.style.display = 'none';
-        }
+        if (characterUI) characterUI.style.display = 'none';
         
         this.visible = false;
         gameState.gameMode = 'exploration';
         
-        // Remove event listeners when character UI closes
         document.removeEventListener('keydown', this.boundHandleKeyDown);
         document.removeEventListener('click', this.clickOutsideHandler);
     }
     
     handleKeyDown(event) {
-        // Only process key events when character UI is visible
-        if (!this.visible) {
-            return;
-        }
+        if (!this.visible) return;
         
-        // Get the key that was pressed
-        const key = event.key;
+        this.handleKeyPress(event.key);
         
-        // Process the key press
-        this.handleKeyPress(key);
-        
-        // Prevent default behavior
         event.preventDefault();
         event.stopPropagation();
     }
     
     handleKeyPress(key) {
-        // Close on Escape or 'c' key
-        if (key === 'Escape' || key === 'c' || key === 'C') {
-            this.close();
-        }
+        if (key === 'Escape' || key === 'c' || key === 'C') this.close();
     }
     
     render() {
-        if (!this.characterElement || !gameState.player) {
-            return;
-        }
+        if (!this.characterElement || !gameState.player) return;
         
         const player = gameState.player;
         const health = player.getComponent('HealthComponent');
@@ -331,10 +260,8 @@ class CharacterUI {
         const gold = player.getComponent('GoldComponent');
         const limbs = player.getComponent('LimbComponent');
         
-        // Build content HTML
         let contentHTML = '';
         
-        // Character stats + Health section
         contentHTML += `
             <div class="stat-section">
                 <h3>Character</h3>
@@ -396,7 +323,6 @@ class CharacterUI {
             </div>
         `;
         
-        // Primary Attributes section
         contentHTML += `
             <div class="stat-section">
                 <h3>Attributes</h3>
@@ -437,20 +363,17 @@ class CharacterUI {
             </div>
         `;
         
-        // Calculate equipment bonuses
         let attackBonus = 0;
         let defenseBonus = 0;
         let limbProtection = 0;
         let attackMsg = "";
         
         if (equipment) {
-            // Get all equipped items and calculate their bonuses
             for (const slotName of Object.keys(equipment.slots)) {
                 const item = equipment.slots[slotName];
                 if (item && item.hasComponent('EquippableComponent')) {
                     const equippable = item.getComponent('EquippableComponent');
                     
-                    // Add stat modifiers
                     if (equippable.statModifiers) {
                         if (equippable.statModifiers.strength) {
                             attackBonus += equippable.statModifiers.strength;
@@ -461,7 +384,6 @@ class CharacterUI {
                         }
                     }
                     
-                    // Add limb protection
                     if (equippable.limbProtection) {
                         limbProtection += equippable.limbProtection;
                     }
@@ -469,7 +391,6 @@ class CharacterUI {
             }
         }
         
-        // Combat Stats section
         contentHTML += `
             <div class="stat-section">
                 <h3>Combat Stats</h3>
@@ -510,12 +431,10 @@ class CharacterUI {
             </div>
         `;
         
-        // Equipment section with stat details
         contentHTML += `
             <div class="stat-section">
                 <h3>Equipment</h3>`;
                 
-        // Function to get stat info for an item
         const getItemStats = (item) => {
             if (!item) return '';
             
@@ -524,24 +443,20 @@ class CharacterUI {
             
             let statInfo = '';
             
-            // Add strength/attack bonus
             if (equippable.statModifiers && equippable.statModifiers.strength) {
                 statInfo += `<span style="color: #6fc"> +${equippable.statModifiers.strength} ATK</span>`;
             }
             
-            // Add defense bonus
             if (equippable.statModifiers && equippable.statModifiers.defense) {
                 if (statInfo) statInfo += ', ';
                 statInfo += `<span style="color: #6cf"> +${equippable.statModifiers.defense} DEF</span>`;
             }
             
-            // Add limb protection
             if (equippable.limbProtection) {
                 if (statInfo) statInfo += ', ';
                 statInfo += `<span style="color: #fc6"> +${equippable.limbProtection} LP</span>`;
             }
             
-            // Add limb damage
             if (equippable.limbDamage) {
                 if (statInfo) statInfo += ', ';
                 statInfo += `<span style="color: #f66"> +${equippable.limbDamage} LD</span>`;
@@ -591,7 +506,6 @@ class CharacterUI {
                             'Empty'}
                     </span>
                 </div>
-                <!-- Legacy slots for backward compatibility -->
                 <div class="equipment-slot" style="display: none;">
                     <span class="slot-name">Weapon:</span>
                     <span class="${equipment && equipment.slots.weapon ? '' : 'slot-empty'}">
@@ -607,26 +521,23 @@ class CharacterUI {
             </div>
         `;
         
-        // Limb Health section
         if (limbs) {
             contentHTML += `
                 <div class="stat-section">
                     <h3>Limb Health</h3>
             `;
             
-            // Display each limb's health
             for (const [limbId, limb] of Object.entries(limbs.limbs)) {
                 const limbName = limb.name;
                 const limbHealth = limb.health;
-                const healthPercentage = limbHealth;
-                let healthColor = '#0f0'; // Green for healthy limbs
+                let healthColor = '#0f0';
                 
-                if (healthPercentage < 30) {
-                    healthColor = '#f00'; // Red for critical
-                } else if (healthPercentage < 60) {
-                    healthColor = '#f80'; // Orange for damaged
-                } else if (healthPercentage < 90) {
-                    healthColor = '#ff0'; // Yellow for slightly damaged
+                if (limbHealth < 30) {
+                    healthColor = '#f00';
+                } else if (limbHealth < 60) {
+                    healthColor = '#f80';
+                } else if (limbHealth < 90) {
+                    healthColor = '#ff0';
                 }
                 
                 contentHTML += `
@@ -643,7 +554,6 @@ class CharacterUI {
             contentHTML += `</div>`;
         }
         
-        // Set the content
         this.characterElement.innerHTML = contentHTML;
     }
 }
