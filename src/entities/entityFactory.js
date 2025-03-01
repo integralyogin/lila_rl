@@ -18,7 +18,12 @@ import {
     SpellbookComponent,
     GoldComponent,
     SummonedByComponent,
-    EnergyComponent
+    EnergyComponent,
+    LimbComponent,
+    WillpowerComponent,
+    StaminaComponent,
+    DialogueComponent,
+    ArenaManagerComponent
 } from './components.js';
 import { allyLogic, ALLY_BEHAVIORS } from './ally_logic.js';
 
@@ -53,9 +58,13 @@ class EntityFactory {
                     accuracy: monster.accuracy || 70,
                     pv: monster.pv || 0,
                     dv: monster.dv || 0,
+                    mana: monster.mana,
                     manaRegen: monster.manaRegen || 0,
                     hpRegen: monster.hpRegen || 0,
-                    xp: monster.xp
+                    xp: monster.xp,
+                    limbs: monster.limbs || null,
+                    spells: monster.spells || [],
+                    ai: monster.ai || null
                 };
             });
         }
@@ -72,7 +81,10 @@ class EntityFactory {
                     effect: item.effect,
                     power: item.power,
                     statModifiers: item.statModifiers,
-                    value: item.value
+                    value: item.value,
+                    twoHanded: item.twoHanded || false,
+                    limbDamage: item.limbDamage || 0,
+                    limbProtection: item.limbProtection || 0
                 };
             });
         }
@@ -171,6 +183,7 @@ class EntityFactory {
         const perception = this.playerData ? this.playerData.perception : 5;
         const wisdom = this.playerData ? this.playerData.wisdom : 5;
         const charisma = this.playerData ? this.playerData.charisma : 5;
+        const willpower = this.playerData ? this.playerData.willpower : 4;
         const speed = this.playerData ? this.playerData.speed : 100;
         const accuracy = this.playerData ? this.playerData.accuracy : 70;
         const pv = this.playerData ? this.playerData.pv : 1;
@@ -179,10 +192,20 @@ class EntityFactory {
         // Regen stats
         const hpRegen = this.playerData ? this.playerData.hpRegen : 1;
         const manaRegen = this.playerData ? this.playerData.manaRegen : 1;
+        const wpRegen = this.playerData ? this.playerData.wpRegen : 1;
+        const spRegen = this.playerData ? this.playerData.spRegen : 2;
         
         // Calculate max mana based on intelligence and wisdom
         const maxMana = this.playerData && this.playerData.maxMana ? 
             this.playerData.maxMana : 10 + (intelligence * 2) + (wisdom * 1);
+            
+        // Calculate max willpower points based on willpower
+        const maxWP = this.playerData && this.playerData.maxWP ? 
+            this.playerData.maxWP : 20 + (willpower * 5);
+            
+        // Calculate max stamina points based on strength and toughness
+        const maxSP = this.playerData && this.playerData.maxSP ? 
+            this.playerData.maxSP : 30 + (strength * 3) + (toughness * 2);
         
         // Add components
         player.addComponent(new PositionComponent(x, y));
@@ -191,15 +214,57 @@ class EntityFactory {
         player.addComponent(new StatsComponent(
             strength, defense, intelligence, 
             dexterity, toughness, perception, 
-            wisdom, charisma, speed, 
+            wisdom, charisma, willpower, speed, 
             accuracy, pv, dv
         ));
         player.addComponent(new InventoryComponent(10));
         player.addComponent(new EquipmentComponent());
         player.addComponent(new ManaComponent(maxMana, manaRegen));
+        player.addComponent(new WillpowerComponent(maxWP, wpRegen));
+        player.addComponent(new StaminaComponent(maxSP, spRegen));
         player.addComponent(new SpellsComponent());
         player.addComponent(new GoldComponent(100)); // Start with 100 gold
         player.addComponent(new EnergyComponent(speed)); // Add energy component with player speed
+        
+        // Add limbs if defined in player data
+        if (this.playerData && this.playerData.limbs) {
+            player.addComponent(new LimbComponent(this.playerData.limbs));
+        } else {
+            // Default limbs
+            const defaultLimbs = {
+                head: {
+                    name: "Head",
+                    slot: "head",
+                    equipped: null,
+                    health: 100
+                },
+                chest: {
+                    name: "Chest",
+                    slot: "chest",
+                    equipped: null,
+                    health: 100
+                },
+                leftHand: {
+                    name: "Left Hand",
+                    slot: "hand",
+                    equipped: null,
+                    health: 100
+                },
+                rightHand: {
+                    name: "Right Hand",
+                    slot: "hand",
+                    equipped: null,
+                    health: 100
+                },
+                feet: {
+                    name: "Feet",
+                    slot: "feet",
+                    equipped: null,
+                    health: 100
+                }
+            };
+            player.addComponent(new LimbComponent(defaultLimbs));
+        }
         
         // Add starting inventory items if defined in player data
         if (this.playerData && this.playerData.inventory && Array.isArray(this.playerData.inventory)) {
@@ -244,60 +309,194 @@ class EntityFactory {
         return player;
     }
     
-    createMonster(type, x, y) {
-        const template = this.monsterTemplates[type];
-        if (!template) {
-            console.error(`Monster type "${type}" not found!`);
-            return null;
-        }
-        
-        const monster = new Entity(template.name || type.charAt(0).toUpperCase() + type.slice(1));
-        
-        // Add components
-        monster.addComponent(new PositionComponent(x, y));
-        monster.addComponent(new RenderableComponent(template.char, template.color, null, 50));
-        monster.addComponent(new HealthComponent(template.hp, false, template.hpRegen || 0));
-        
-        // Add StatsComponent with all the new stats
-        monster.addComponent(new StatsComponent(
-            template.strength,
-            template.defense,
-            template.intelligence || 1,
-            template.dexterity || 5,
-            template.toughness || 5,
-            template.perception || 5,
-            template.wisdom || 1,
-            template.charisma || 1,
-            template.speed || 100,
-            template.accuracy || 70,
-            template.pv || 0,
-            template.dv || 0
-        ));
-        
-        // Add ManaComponent if intelligence > 3
-        if (template.intelligence && template.intelligence > 3) {
-            const maxMana = template.mana || (10 + template.intelligence * 2);
-            monster.addComponent(new ManaComponent(maxMana, template.manaRegen || 1));
-        }
-        
-        // Add EnergyComponent for action economy
-        monster.addComponent(new EnergyComponent(template.speed || 100));
-        
-        // Add AI component with target set to player to make monsters aggressive immediately
-        const ai = new AIComponent('hostile');
-        monster.addComponent(ai);
-        
-        // Set player as target to make monster immediately aggressive
-        if (gameState && gameState.player) {
-            ai.target = gameState.player;
-            ai.state = 'chase';
-        }
-        
-        monster.addComponent(new BlocksMovementComponent());
-        
-        return monster;
+ // Fix for createMonster method to properly load spells from template data
+createMonster(type, x, y) {
+    const template = this.monsterTemplates[type];
+    if (!template) {
+        console.error(`Monster type "${type}" not found!`);
+        return null;
     }
     
+    // Generate a unique ID for the monster by appending a timestamp and random value
+    // This ensures monsters of the same type have unique IDs
+    const uniqueId = `${type}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    
+    const monster = new Entity(template.name || type.charAt(0).toUpperCase() + type.slice(1));
+    monster.id = uniqueId; // Set unique entity ID
+    monster.type = type;   // Set monster type for reference
+    
+    // Add components
+    monster.addComponent(new PositionComponent(x, y));
+    monster.addComponent(new RenderableComponent(template.char, template.color, null, 50));
+    monster.addComponent(new HealthComponent(template.hp, false, template.hpRegen || 0));
+    
+    // Add StatsComponent with all the new stats
+    monster.addComponent(new StatsComponent(
+        template.strength,
+        template.defense,
+        template.intelligence || 1,
+        template.dexterity || 5,
+        template.toughness || 5,
+        template.perception || 5,
+        template.wisdom || 1,
+        template.charisma || 1,
+        template.speed || 100,
+        template.accuracy || 70,
+        template.pv || 0,
+        template.dv || 0
+    ));
+    
+    // Add ManaComponent if specified or if intelligence > 3
+    if (template.mana || (template.intelligence && template.intelligence > 3)) {
+        const maxMana = template.mana || (10 + template.intelligence * 2);
+        monster.addComponent(new ManaComponent(maxMana, template.manaRegen || 1));
+    }
+    
+    // Add SpellsComponent if monster has spells
+    if (template.spells && template.spells.length > 0) {
+        const spellsComponent = new SpellsComponent();
+        
+        // Add each known spell - FIXED to use spellbookTemplates like player creation
+        for (const spellId of template.spells) {
+            // Get spell data from spellbook templates
+            const spellTemplate = this.spellbookTemplates[spellId];
+            
+            if (spellTemplate) {
+                // Create a spell object with the data from the template
+                const spell = {
+                    id: spellId,
+                    name: spellTemplate.spellName,
+                    element: spellTemplate.element,
+                    manaCost: spellTemplate.manaCost,
+                    baseDamage: spellTemplate.baseDamage || 0,
+                    range: spellTemplate.range || 1,
+                    aoeRadius: spellTemplate.aoeRadius || 1,
+                    duration: spellTemplate.duration || 5,
+                    turnCost: spellTemplate.turnCost || 1,
+                    effects: spellTemplate.effects || [],
+                    description: spellTemplate.description
+                };
+                
+                spellsComponent.learnSpell(spellId, spell);
+                console.log(`Added spell: ${spell.name} to monster ${monster.name} spellbook`);
+            } else {
+                // Fallback to basic spell info if template not found
+                console.warn(`Spell template for '${spellId}' not found for monster ${monster.name}. Using fallback data.`);
+                
+                // Create a basic fallback spell with default values
+                const fallbackSpell = {
+                    id: spellId,
+                    name: spellId.charAt(0).toUpperCase() + spellId.slice(1),
+                    manaCost: 5,
+                    baseDamage: 6,
+                    element: 'arcane',
+                    range: 5,
+                    aoeRadius: 1,
+                    duration: 3,
+                    turnCost: 1,
+                    effects: [],
+                    description: `A basic ${spellId} spell`
+                };
+                
+                spellsComponent.learnSpell(spellId, fallbackSpell);
+            }
+        }
+        
+        monster.addComponent(spellsComponent);
+    }
+    
+    // Add EnergyComponent for action economy
+    monster.addComponent(new EnergyComponent(template.speed || 100));
+    
+    // Add AI component with target set to player to make monsters aggressive immediately
+    const ai = new AIComponent('hostile');
+    monster.addComponent(ai);
+    
+    // Set AI properties from template if available
+    if (template.ai) {
+        if (template.ai.behaviorType) ai.behaviorType = template.ai.behaviorType;
+        if (template.ai.preferredMinDist) ai.preferredMinDist = template.ai.preferredMinDist;
+        if (template.ai.preferredMaxDist) ai.preferredMaxDist = template.ai.preferredMaxDist;
+        if (template.ai.attackRange) ai.attackRange = template.ai.attackRange;
+        if (template.ai.attackCooldown) ai.attackCooldown = template.ai.attackCooldown;
+    }
+    
+    // Set player as target to make monster immediately aggressive
+    if (gameState && gameState.player) {
+        ai.target = gameState.player;
+        ai.state = 'chase';
+    }
+    
+    monster.addComponent(new BlocksMovementComponent());
+    
+    // Set the blockMovement property for compatibility with collision detection code
+    monster.blockMovement = true;
+    
+    // Add limbs if defined in monster template
+    if (template.limbs) {
+        monster.addComponent(new LimbComponent(template.limbs));
+        
+        // If any limbs have equipped items, add those items to the monster
+        for (const [limbId, limb] of Object.entries(template.limbs)) {
+            if (limb.equipped) {
+                // We need to create the item and then equip it to the limb
+                const item = this.createItem(limb.equipped, x, y);
+                if (item) {
+                    // Add the item to the monster's inventory (create if needed)
+                    if (!monster.hasComponent('InventoryComponent')) {
+                        monster.addComponent(new InventoryComponent(5));
+                    }
+                    monster.getComponent('InventoryComponent').addItem(item);
+                    
+                    // Equip the item to the monster's limb
+                    const limbComponent = monster.getComponent('LimbComponent');
+                    if (limbComponent) {
+                        limbComponent.equipToLimb(limbId, limb.equipped);
+                    }
+                }
+            }
+        }
+    } else {
+        // Default limbs
+        const defaultLimbs = {
+            head: {
+                name: "Head",
+                slot: "head",
+                equipped: null,
+                health: 100
+            },
+            chest: {
+                name: "Chest",
+                slot: "chest",
+                equipped: null,
+                health: 100
+            },
+            leftHand: {
+                name: "Left Hand",
+                slot: "hand",
+                equipped: null,
+                health: 100
+            },
+            rightHand: {
+                name: "Right Hand",
+                slot: "hand",
+                equipped: null,
+                health: 100
+            },
+            feet: {
+                name: "Feet",
+                slot: "feet",
+                equipped: null,
+                health: 100
+            }
+        };
+        monster.addComponent(new LimbComponent(defaultLimbs));
+    }
+    
+    console.log(`Created monster: ${monster.name} with unique ID: ${monster.id}, type: ${monster.type}`);
+    return monster;
+}
+
     createItem(type, x, y) {
         const template = this.itemTemplates[type];
         if (!template) {
@@ -313,8 +512,15 @@ class EntityFactory {
         item.addComponent(new ItemComponent(template.type, template.value));
         
         // Add specialized components based on item type
-        if (template.type === 'weapon' || template.type === 'armor') {
-            item.addComponent(new EquippableComponent(template.slot, template.statModifiers));
+        if (template.type === 'weapon' || template.type === 'armor' || template.type === 'shield') {
+            const equippable = new EquippableComponent(template.slot, template.statModifiers);
+            
+            // Add limb-specific properties
+            if (template.twoHanded) equippable.twoHanded = template.twoHanded;
+            if (template.limbDamage) equippable.limbDamage = template.limbDamage;
+            if (template.limbProtection) equippable.limbProtection = template.limbProtection;
+            
+            item.addComponent(equippable);
         } else if (template.type === 'potion') {
             item.addComponent(new UsableComponent(template.effect, template.power));
         }
@@ -474,15 +680,22 @@ class EntityFactory {
             // Hydras are stationary casters that shoot firebolts
             allyBehavior = ALLY_BEHAVIORS.STATIONARY_CASTER;
             
-            // Get AI component and set it up for ranged attacks
-            const ai = monster.getComponent('AIComponent');
-            if (ai) {
-                ai.type = 'friendly'; // Keep it friendly, we'll use our custom ally logic
-                ai.state = 'idle';    // Start in idle state
-                ai.target = null;     // No initial target
-                ai.attackRange = 6;   // Better range for attacks
-                ai.attackCooldown = 2; // Attack every 2 turns
-            }
+            // COMPLETELY REPLACE the AI component to make sure it's set correctly
+            // Remove the existing AI component
+            monster.removeComponent('AIComponent');
+            
+            // Create a new AI component with specific settings for hydra
+            const newAI = new AIComponent('friendly');
+            newAI.type = 'friendly';
+            newAI.faction = 'ally';
+            newAI.state = 'idle';
+            newAI.target = null;
+            newAI.attackRange = 6;
+            newAI.attackCooldown = 2;
+            newAI.behaviorType = 'stationary';
+            monster.addComponent(newAI);
+            
+            console.log(`Created HYDRA with AI: Type=${newAI.type}, Faction=${newAI.faction}, State=${newAI.state}`);
             
             // Give the hydra some intelligence for spellcasting
             const stats = monster.getComponent('StatsComponent');
@@ -499,12 +712,39 @@ class EntityFactory {
             // Default behavior for other summons - follow and help summoner
             allyBehavior = ALLY_BEHAVIORS.FOLLOWER;
             
-            const ai = monster.getComponent('AIComponent');
-            if (ai) {
-                ai.type = 'friendly';
-                ai.state = 'follow';
-                ai.target = null;
+            // COMPLETELY REPLACE the AI component to make sure it's set correctly
+            monster.removeComponent('AIComponent');
+            
+            // Create a new AI component with proper ally settings
+            const newAI = new AIComponent('friendly');
+            newAI.type = 'friendly';
+            newAI.faction = 'ally';
+            newAI.state = 'follow';
+            newAI.target = null;
+            newAI.attackRange = 1;  // Default to melee
+            newAI.attackCooldown = 2;
+            newAI.behaviorType = 'follower';
+            
+            // Special handling for Fire Mage - maintain spellcaster behavior
+            if (monster.type === 'fire_mage') {
+                newAI.behaviorType = 'spellcaster';
+                newAI.attackRange = 6;
+                // Copy spell priorities from template
+                newAI.spellPriorities = { 
+                    "fireball": { "priority": 1, "cooldown": 3 } 
+                };
+                // Set flag to use real spells
+                newAI.useRealSpells = true;
+                console.log(`Created Fire Mage summon with spellcaster AI`);
             }
+            // For other ranged monsters, set appropriate attack range
+            else if (monster.type === 'archer' || monster.type === 'orc_shaman') {
+                newAI.attackRange = 5;
+                newAI.behaviorType = 'ranged';
+            }
+            
+            monster.addComponent(newAI);
+            console.log(`Created summon with AI: Type=${newAI.type}, Faction=${newAI.faction}, State=${newAI.state}`);
         }
         
         // Apply customization from summonData
@@ -534,6 +774,11 @@ class EntityFactory {
                 stats.strength += Math.floor(intelligence * summonData.intelligenceScaling.strength);
                 stats.defense += Math.floor(intelligence * summonData.intelligenceScaling.defense);
             }
+            
+            // For Fire Mage, ensure high intelligence for spellcasting
+            if (monster.type === 'fire_mage' && stats.intelligence < 9) {
+                stats.intelligence = 9; // Same as in monsters.json
+            }
         }
         
         // Apply health modifiers
@@ -548,6 +793,54 @@ class EntityFactory {
                 const hpBonus = Math.floor(intelligence * summonData.intelligenceScaling.hp);
                 health.maxHp += hpBonus;
                 health.hp = health.maxHp;
+            }
+        }
+        
+        // Fix mana for Fire Mage
+        if (monster.type === 'fire_mage') {
+            const manaComp = monster.getComponent('ManaComponent');
+            if (manaComp) {
+                // Ensure fire mage has enough mana to cast fireball (12 required)
+                if (manaComp.mana < 15 || manaComp.maxMana < 15) {
+                    manaComp.maxMana = 90; // Same as in monsters.json
+                    manaComp.mana = 90;    // Full mana on summon
+                    console.log(`[Summon] Ensuring Fire Mage has enough mana: ${manaComp.mana}/${manaComp.maxMana}`);
+                }
+            } else {
+                // If no mana component, add one
+                monster.addComponent(new ManaComponent(90, 2));
+                console.log(`[Summon] Added ManaComponent to Fire Mage: 90/90`);
+            }
+            
+            // Ensure it has the fireball spell
+            const spellsComp = monster.getComponent('SpellsComponent');
+            if (spellsComp) {
+                if (!spellsComp.hasSpell('fireball')) {
+                    spellsComp.learnSpell('fireball', {
+                        id: 'fireball',
+                        name: 'Fireball',
+                        manaCost: 12,
+                        baseDamage: 14,
+                        element: 'fire',
+                        range: 6,
+                        aoeRadius: 2
+                    });
+                    console.log(`[Summon] Added fireball spell to Fire Mage`);
+                }
+            } else {
+                // Create a new SpellsComponent with fireball
+                const newSpellsComp = new SpellsComponent();
+                newSpellsComp.learnSpell('fireball', {
+                    id: 'fireball',
+                    name: 'Fireball',
+                    manaCost: 12,
+                    baseDamage: 14,
+                    element: 'fire',
+                    range: 6,
+                    aoeRadius: 2
+                });
+                monster.addComponent(newSpellsComp);
+                console.log(`[Summon] Created SpellsComponent with fireball for Fire Mage`);
             }
         }
         
@@ -566,8 +859,21 @@ class EntityFactory {
             allyLogic.registerSummonedCreature(monster.id, x, y, allyBehavior);
         }
         
+        // Special handling for spellcaster monsters to use real spells
+        if (type === 'fire_mage') {
+            // Import spellcaster module to set up real spells
+            import('./ai/monsterSpellcaster.js').then(module => {
+                const spellcaster = module.default;
+                console.log(`Setting up summoned Fire Mage to use real spells`);
+                spellcaster.setupMonsterForRealSpells(monster);
+            }).catch(error => {
+                console.error(`Error setting up real spells for summoned ${monster.name}:`, error);
+            });
+            
+            gameState.addMessage(`A ${monster.name} appears, ready to cast powerful fire spells!`);
+        }
         // Update the summoning announcement based on creature type
-        if (type === 'hydra') {
+        else if (type === 'hydra') {
             gameState.addMessage(`A ${monster.name} appears! It hisses menacingly and glares at nearby enemies.`);
         }
         

@@ -15,10 +15,11 @@
     "char": "/",
     "color": "#aaa",
     "type": "weapon",
-    "slot": "weapon",
+    "slot": "hand",
     "statModifiers": {
       "strength": 2
     },
+    "limbDamage": 2,
     "value": 30
   },
   {
@@ -27,10 +28,11 @@
     "char": "[",
     "color": "#8b4513",
     "type": "armor",
-    "slot": "armor",
+    "slot": "chest",
     "statModifiers": {
       "defense": 1
     },
+    "limbProtection": 1,
     "value": 25
   },
   {
@@ -39,10 +41,11 @@
     "char": "/",
     "color": "#ddd",
     "type": "weapon",
-    "slot": "weapon",
+    "slot": "hand",
     "statModifiers": {
       "strength": 6
     },
+    "limbDamage": 5,
     "value": 60
   },
   {
@@ -51,10 +54,11 @@
     "char": "[",
     "color": "#bbb",
     "type": "armor",
-    "slot": "armor",
+    "slot": "chest",
     "statModifiers": {
       "defense": 3
     },
+    "limbProtection": 3,
     "value": 50
   },
   {
@@ -71,7 +75,7 @@
     "char": "*",
     "color": "#cd7f32",
     "type": "charm",
-    "slot": "accessory",
+    "slot": "neck",
     "statModifiers": {
       "strength": 1,
       "defense": 1
@@ -84,10 +88,80 @@
     "char": "\\",
     "color": "#8b0000",
     "type": "weapon",
-    "slot": "weapon",
+    "slot": "hand",
+    "twoHanded": true,
     "statModifiers": {
       "strength": 5
     },
+    "limbDamage": 8,
     "value": 70
+  },
+  {
+    "id": "leather_boots",
+    "name": "Leather Boots",
+    "char": "]",
+    "color": "#8b4513",
+    "type": "armor",
+    "slot": "feet",
+    "statModifiers": {
+      "defense": 1,
+      "speed": 5
+    },
+    "limbProtection": 1,
+    "value": 25
+  },
+  {
+    "id": "iron_helmet",
+    "name": "Iron Helmet",
+    "char": "^",
+    "color": "#bbb",
+    "type": "armor",
+    "slot": "head",
+    "statModifiers": {
+      "defense": 2
+    },
+    "limbProtection": 2,
+    "value": 35
+  },
+  {
+    "id": "steel_gauntlets",
+    "name": "Steel Gauntlets",
+    "char": "{",
+    "color": "#aaa",
+    "type": "armor",
+    "slot": "hand",
+    "statModifiers": {
+      "defense": 1,
+      "strength": 1
+    },
+    "limbProtection": 1,
+    "value": 30
+  },
+  {
+    "id": "steel_shield",
+    "name": "Steel Shield",
+    "char": ")",
+    "color": "#aaa",
+    "type": "shield",
+    "slot": "hand",
+    "statModifiers": {
+      "defense": 3
+    },
+    "limbProtection": 0,
+    "value": 40
+  },
+  {
+    "id": "great_axe",
+    "name": "Great Axe",
+    "char": "\\",
+    "color": "#ddd",
+    "type": "weapon",
+    "slot": "hand",
+    "twoHanded": true,
+    "statModifiers": {
+      "strength": 10
+    },
+    "limbDamage": 12,
+    "value": 85
   }
 ]

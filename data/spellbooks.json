@@ -1,5 +1,22 @@
 [
   {
+    "id": "summoncreature",
+    "name": "Summon Creature Spellbook",
+    "char": "+",
+    "color": "#00fa9a",
+    "type": "spellbook",
+    "spellId": "summoncreature",
+    "spellName": "Summon Creature",
+    "description": "Opens a monster selection menu allowing you to choose a creature to summon to aid you in battle.",
+    "element": "nature",
+    "manaCost": 20,
+    "range": 3,
+    "duration": 25,
+    "price": 200,
+    "effects": ["summon"],
+    "tags": ["summoning", "nature", "creature", "selection"]
+  },
+  {
     "id": "summonhydra",
     "name": "Summon Hydra Spellbook",
     "char": "+",
@@ -77,14 +94,14 @@
     "type": "spellbook",
     "spellId": "firebolt",
     "spellName": "Firebolt",
-    "description": "A basic fire attack spell that deals damage to a single target.",
+    "description": "A basic fire attack spell that sends a bolt of flame in a straight line at a target.",
     "element": "fire",
     "manaCost": 5,
     "baseDamage": 8,
     "range": 6,
     "price": 50,
     "effects": ["damage"],
-    "tags": ["attack", "fire", "direct", "target"]
+    "tags": ["attack", "fire", "direct", "target", "bolt"]
   },
   {
     "id": "townportal",
@@ -110,14 +127,14 @@
     "type": "spellbook",
     "spellId": "icespear",
     "spellName": "Ice Spear",
-    "description": "A cold spell that deals damage and has a chance to slow enemies.",
+    "description": "Launches a sharp spear of ice that pierces enemies and has a chance to slow them.",
     "element": "ice",
     "manaCost": 7,
     "baseDamage": 10,
     "range": 5,
     "price": 75,
     "effects": ["damage", "slow"],
-    "tags": ["attack", "ice", "direct", "target", "debuff"]
+    "tags": ["attack", "ice", "direct", "target", "debuff", "bolt"]
   },
   {
     "id": "healing",
@@ -144,14 +161,14 @@
     "type": "spellbook",
     "spellId": "frostbolt",
     "spellName": "Frost Bolt",
-    "description": "A freezing spell that slows enemies and deals moderate damage.",
+    "description": "A freezing bolt that slows enemies and deals moderate damage.",
     "element": "ice",
     "manaCost": 4,
     "baseDamage": 6,
     "range": 5,
     "price": 60,
     "effects": ["damage", "slow"],
-    "tags": ["attack", "ice", "direct", "target", "debuff"]
+    "tags": ["attack", "ice", "direct", "target", "debuff", "bolt"]
   },
   {
     "id": "fireball",
@@ -161,7 +178,7 @@
     "type": "spellbook",
     "spellId": "fireball",
     "spellName": "Fireball",
-    "description": "A powerful fire spell that deals damage to multiple enemies in an area.",
+    "description": "Hurls a ball of fire that explodes on impact, dealing damage to multiple enemies in an area.",
     "element": "fire",
     "manaCost": 12,
     "baseDamage": 14,
@@ -169,7 +186,25 @@
     "aoeRadius": 2,
     "price": 150,
     "effects": ["damage", "area_effect"],
-    "tags": ["attack", "fire", "area", "target"]
+    "tags": ["attack", "fire", "area", "target", "impact"]
+  },
+  {
+    "id": "frostwave",
+    "name": "Frost Wave Spellbook",
+    "char": "+",
+    "color": "#80deea",
+    "type": "spellbook",
+    "spellId": "frostwave",
+    "spellName": "Frost Wave",
+    "description": "Releases a wave of freezing energy that radiates outward, damaging and slowing all nearby enemies.",
+    "element": "ice",
+    "manaCost": 8,
+    "baseDamage": 8,
+    "range": 1,
+    "aoeRadius": 3,
+    "price": 120,
+    "effects": ["damage", "slow", "area_effect"],
+    "tags": ["attack", "ice", "area", "self", "wave"]
   },
   {
     "id": "lightning",
@@ -186,7 +221,7 @@
     "range": 7,
     "price": 125,
     "effects": ["damage", "chain"],
-    "tags": ["attack", "lightning", "chain", "target"]
+    "tags": ["attack", "lightning", "chain", "target", "bolt"]
   },
   {
     "id": "flameaura",

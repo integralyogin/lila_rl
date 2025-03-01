@@ -27,6 +27,14 @@
       "signMessage": "Test Map - With modular entity references!",
       "destination_x": 0,
       "destination_y": 0
+    },
+    {
+      "name": "arena",
+      "x_offset": 30,
+      "y_offset": 30,
+      "signMessage": "Arena - Test your mettle or watch others fight!",
+      "destination_x": 0,
+      "destination_y": -10
     }
   ],
   "buildings": [
@@ -64,6 +72,58 @@
     }
   ],
   "npcs": [
+    {
+      "name": "Fire Mage",
+      "x": 5,
+      "y": 5,
+      "char": "M",
+      "color": "#ff4500",
+      "cls": "npc",
+      "monsterType": "fire_mage",
+      "blocksMovement": true,
+      "combat": {
+        "maxHp": 32,
+        "hp": 32,
+	"maxMp" :100,
+	"mp": 100,
+        "defense": 1,
+        "strength": 3,
+        "intelligence": 9,
+        "mana": 110,
+        "maxMana": 110,
+        "immortal": false
+      },
+      "dialogue": [
+        "Welcome, traveler. I am studying the art of fire magic.",
+        "The flames respond to those with the right focus and determination.",
+        "If you wish to learn, you must first understand that fire is as unpredictable as it is powerful.",
+        "Be careful in your travels - not all mages use their powers for good."
+      ]
+    },
+    {
+      "name": "Gladiator",
+      "x": 30,
+      "y": 27,
+      "char": "@",
+      "color": "#cd853f",
+      "cls": "npc",
+      "blocksMovement": true,
+      "combat": {
+        "maxHp": 50,
+        "hp": 50,
+        "defense": 3,
+        "strength": 8,
+        "immortal": false
+      },
+      "dialogue": [
+        "Welcome to the Arena, challenger!",
+        "Are you ready to test your mettle against our champions?",
+        "Victory brings glory and gold. Defeat brings... well, let's not dwell on that.",
+        "Would you like to watch a match? [Enter] to proceed."
+      ],
+      "isArenaManager": true,
+      "friendly": true
+    },
     {
       "name": "Training Dummy",
       "x": 45,
@@ -138,6 +198,8 @@
       "char": "@",
       "color": "#9370db",
       "cls": "npc",
+      "monsterType": "wizard",
+      "blocksMovement": true,
       "isShopkeeper": true,
       "dialogue": [
         "Ah, greetings! A fellow seeker of knowledge, I presume?",
@@ -243,8 +305,8 @@
   ],
   "hardcoded_items": [],
   "dungeonEntrance": {
-    "x_offset": 0,
-    "y_offset": 5,
+    "x_offset": 2,
+    "y_offset": 3,
     "signMessage": "Danger! Enter the dungeon at your own risk!",
     "destination_x": 0,
     "destination_y": -5

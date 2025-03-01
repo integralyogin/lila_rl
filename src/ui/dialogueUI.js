@@ -5,8 +5,22 @@ class DialogueUI {
     constructor() {
         this.visible = false;
         this.currentNPC = null;
+        this.clickOutsideHandler = this.handleClickOutside.bind(this);
         this.initUI();
         this.setupEventListeners();
+    }
+    
+    /**
+     * Handle clicks outside the dialogue panel
+     * @param {MouseEvent} event - The click event
+     */
+    handleClickOutside(event) {
+        if (!this.visible) return;
+        
+        // Check if click was outside the dialogue UI
+        if (!this.container.contains(event.target)) {
+            this.hideDialogue();
+        }
     }
     
     initUI() {
@@ -16,9 +30,47 @@ class DialogueUI {
         this.container.style.display = 'none'; // Make sure it's hidden initially
         document.getElementById('game-container').appendChild(this.container);
         
-        // Create header for NPC name
+        // Create header with close button
         this.header = document.createElement('div');
         this.header.className = 'dialogue-header';
+        
+        // Create header as a flex container
+        this.header.style.display = 'flex';
+        this.header.style.justifyContent = 'space-between';
+        this.header.style.alignItems = 'center';
+        
+        // Create the NPC name element
+        this.npcNameElement = document.createElement('span');
+        this.header.appendChild(this.npcNameElement);
+        
+        // Add close button
+        const closeButton = document.createElement('button');
+        closeButton.className = 'close-button';
+        closeButton.innerHTML = '&times;';
+        closeButton.style.background = 'none';
+        closeButton.style.border = 'none';
+        closeButton.style.color = '#fff';
+        closeButton.style.fontSize = '20px';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.padding = '0 5px';
+        closeButton.style.marginLeft = '10px';
+        closeButton.title = 'Close dialogue';
+        
+        // Add hover effect
+        closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.color = '#ff9999';
+        });
+        closeButton.addEventListener('mouseleave', () => {
+            closeButton.style.color = '#fff';
+        });
+        
+        // Add click handler
+        closeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.hideDialogue();
+        });
+        
+        this.header.appendChild(closeButton);
         this.container.appendChild(this.header);
         
         // Create dialogue content area
@@ -29,8 +81,16 @@ class DialogueUI {
         // Create footer with instructions
         this.footer = document.createElement('div');
         this.footer.className = 'dialogue-footer';
-        this.footer.textContent = 'Press Space to continue, Escape to exit';
+        this.footer.textContent = 'Press Space to continue, or click anywhere';
         this.container.appendChild(this.footer);
+        
+        // Add click event for dialogue advancement
+        this.container.addEventListener('click', (e) => {
+            // Only advance if clicking on the dialogue itself, not its buttons
+            if (!e.target.closest('button')) {
+                this.advanceDialogue();
+            }
+        });
     }
     
     setupEventListeners() {
@@ -78,6 +138,11 @@ class DialogueUI {
         // Special handling for shopkeepers
         if (dialogue.hasCompletedDialogue && !dialogue.hasMoreDialogue() && dialogue.isShopkeeper) {
             console.log(`DialogueUI: Skipping dialogue for shopkeeper ${npc.name} and going straight to shop`);
+            
+            // Set timestamp to track when shop was opened
+            window.lastShopOpenTime = Date.now();
+            console.log("Setting lastShopOpenTime (direct shop):", window.lastShopOpenTime);
+            
             // Skip dialogue and go straight to shop
             eventBus.emit('shopOpened', npc);
             gameState.gameMode = 'shop';
@@ -90,9 +155,12 @@ class DialogueUI {
         this.visible = true;
         
         // Set NPC name in header
-        this.header.textContent = npc.name;
-        this.header.style.color = npc.hasComponent('RenderableComponent') ? 
+        this.npcNameElement.textContent = npc.name;
+        this.npcNameElement.style.color = npc.hasComponent('RenderableComponent') ? 
             npc.getComponent('RenderableComponent').color : '#fff';
+            
+        // Add click outside listener
+        document.addEventListener('click', this.clickOutsideHandler);
         
         // Set game mode to dialogue
         gameState.gameMode = 'dialogue';
@@ -110,13 +178,28 @@ class DialogueUI {
         if (!dialogue.hasMoreDialogue()) {
             // Check if this is a shopkeeper
             if (dialogue.isShopkeeper) {
+                // Set timestamp to track when shop was opened
+                window.lastShopOpenTime = Date.now();
+                console.log("Setting lastShopOpenTime:", window.lastShopOpenTime);
+                
                 // Open the shop
                 eventBus.emit('shopOpened', this.currentNPC);
                 gameState.gameMode = 'shop';
                 
                 // Don't mark shopkeeper dialogue as completed
                 dialogue.hasCompletedDialogue = false;
-            } else {
+            } 
+            // Check if this is an arena manager
+            else if (this.currentNPC.hasComponent('ArenaManagerComponent')) {
+                console.log("Opening arena UI");
+                
+                // Open the arena UI
+                eventBus.emit('openArena', this.currentNPC);
+                
+                // Don't mark arena manager dialogue as completed
+                dialogue.hasCompletedDialogue = false;
+            }
+            else {
                 gameState.addMessage(`${this.currentNPC.name} has nothing more to say.`);
             }
             
@@ -137,6 +220,8 @@ class DialogueUI {
     }
     
     hideDialogue() {
+        // Remove click outside listener
+        document.removeEventListener('click', this.clickOutsideHandler);
         this.container.classList.add('hidden');
         this.container.style.display = 'none';
         this.visible = false;

@@ -100,29 +100,48 @@ class TownGenerator {
     }
     
     createBuilding(map, building) {
-        const { x, y, width, height } = building;
+        const { x, y, width, height, isOpen } = building;
         
         if (!map.isInBounds(x, y) || !map.isInBounds(x + width - 1, y + height - 1)) {
             return false;
         }
         
-        // Create walls for the building outline
+        // Create walls for the building outline or an open area
         for (let i = 0; i < width; i++) {
             for (let j = 0; j < height; j++) {
-                // If it's on the perimeter, place a wall
-                if (i === 0 || i === width - 1 || j === 0 || j === height - 1) {
-                    map.setTile(x + i, y + j, TILE_TYPES.WALL);
-                } 
-                // Otherwise, make it a floor inside the building
+                // For arena and other open areas
+                if (isOpen) {
+                    // Only mark the corners for reference
+                    if ((i === 0 && j === 0) || 
+                        (i === width-1 && j === 0) || 
+                        (i === 0 && j === height-1) || 
+                        (i === width-1 && j === height-1)) {
+                        map.setTile(x + i, y + j, TILE_TYPES.WALL);
+                    } 
+                    // Everything else is floor
+                    else {
+                        map.setTile(x + i, y + j, TILE_TYPES.FLOOR);
+                    }
+                }
+                // Regular buildings with walls
                 else {
-                    map.setTile(x + i, y + j, TILE_TYPES.FLOOR);
+                    // If it's on the perimeter, place a wall
+                    if (i === 0 || i === width - 1 || j === 0 || j === height - 1) {
+                        map.setTile(x + i, y + j, TILE_TYPES.WALL);
+                    } 
+                    // Otherwise, make it a floor inside the building
+                    else {
+                        map.setTile(x + i, y + j, TILE_TYPES.FLOOR);
+                    }
                 }
             }
         }
         
-        // Add a door in the middle of one of the walls
-        const doorPosition = Math.floor(width / 2);
-        map.setTile(x + doorPosition, y + height - 1, TILE_TYPES.DOOR);
+        // Add a door in the middle of one of the walls (only for normal buildings)
+        if (!isOpen) {
+            const doorPosition = Math.floor(width / 2);
+            map.setTile(x + doorPosition, y + height - 1, TILE_TYPES.DOOR);
+        }
         
         // Store the building in map's rooms array
         map.addRoom({

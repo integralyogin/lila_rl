@@ -16,6 +16,10 @@
     {
       "id": "troll",
       "weight": 20
+    },
+    {
+      "id": "fire_mage",
+      "weight": 30
     }
   ],
   "items": [

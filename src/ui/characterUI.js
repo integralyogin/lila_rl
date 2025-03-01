@@ -6,6 +6,10 @@ class CharacterUI {
         this.visible = false;
         this.characterElement = null;
         
+        // Bind methods
+        this.boundHandleKeyDown = this.handleKeyDown.bind(this);
+        this.clickOutsideHandler = this.handleClickOutside.bind(this);
+        
         // Initialize the UI
         this.initialize();
         
@@ -13,11 +17,24 @@ class CharacterUI {
         eventBus.on('characterOpened', () => this.open());
         eventBus.on('characterClosed', () => this.close());
         
-        // Add key event listener
-        this.boundHandleKeyDown = this.handleKeyDown.bind(this);
-        
         // Also keep the event bus listener as backup
         eventBus.on('characterKeyPressed', (key) => this.handleKeyPress(key));
+    }
+    
+    /**
+     * Handle clicks outside the character panel
+     * @param {MouseEvent} event - The click event
+     */
+    handleClickOutside(event) {
+        const characterUI = document.getElementById('character-ui');
+        if (!characterUI) return;
+        
+        // Check if click was outside the character UI
+        if (this.visible && !characterUI.contains(event.target)) {
+            this.close();
+            gameState.gameMode = 'exploration';
+            eventBus.emit('characterClosed');
+        }
     }
     
     initialize() {
@@ -28,10 +45,53 @@ class CharacterUI {
             characterUI.className = 'character-ui';
             characterUI.style.display = 'none';
             
-            // Create header
+            // Create header with close button
             const header = document.createElement('div');
             header.className = 'character-header';
-            header.innerHTML = `<div id="character-title">Character Sheet</div>`;
+            
+            // Create a flex container for the header content
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            header.style.alignItems = 'center';
+            header.style.padding = '5px 10px';
+            
+            // Add the title
+            const title = document.createElement('div');
+            title.id = 'character-title';
+            title.textContent = 'Character Sheet';
+            
+            // Add close button
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-button';
+            closeButton.innerHTML = '&times;';
+            closeButton.style.background = 'none';
+            closeButton.style.border = 'none';
+            closeButton.style.color = '#fff';
+            closeButton.style.fontSize = '20px';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.padding = '0 5px';
+            closeButton.style.marginLeft = '10px';
+            closeButton.title = 'Close character sheet';
+            
+            // Add hover effect
+            closeButton.addEventListener('mouseenter', () => {
+                closeButton.style.color = '#ff9999';
+            });
+            closeButton.addEventListener('mouseleave', () => {
+                closeButton.style.color = '#fff';
+            });
+            
+            // Add click handler
+            closeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.close();
+                gameState.gameMode = 'exploration';
+                eventBus.emit('characterClosed');
+            });
+            
+            // Assemble header
+            header.appendChild(title);
+            header.appendChild(closeButton);
             
             // Create character content area
             const characterContent = document.createElement('div');
@@ -208,8 +268,13 @@ class CharacterUI {
         // Set game mode
         gameState.gameMode = 'character';
         
-        // Add event listener when character UI opens
+        // Add event listeners when character UI opens
         document.addEventListener('keydown', this.boundHandleKeyDown);
+        
+        // Wait a bit to add the click outside handler to prevent it triggering immediately
+        setTimeout(() => {
+            document.addEventListener('click', this.clickOutsideHandler);
+        }, 100);
     }
     
     close() {
@@ -222,8 +287,9 @@ class CharacterUI {
         this.visible = false;
         gameState.gameMode = 'exploration';
         
-        // Remove event listener when character UI closes
+        // Remove event listeners when character UI closes
         document.removeEventListener('keydown', this.boundHandleKeyDown);
+        document.removeEventListener('click', this.clickOutsideHandler);
     }
     
     handleKeyDown(event) {
@@ -260,7 +326,10 @@ class CharacterUI {
         const stats = player.getComponent('StatsComponent');
         const equipment = player.getComponent('EquipmentComponent');
         const mana = player.getComponent('ManaComponent');
+        const willpower = player.getComponent('WillpowerComponent');
+        const stamina = player.getComponent('StaminaComponent');
         const gold = player.getComponent('GoldComponent');
+        const limbs = player.getComponent('LimbComponent');
         
         // Build content HTML
         let contentHTML = '';
@@ -299,6 +368,22 @@ class CharacterUI {
                 </div>
                 <div class="mana-bar">
                     <div class="mana-fill" style="width: ${mana ? Math.floor((mana.mana / mana.maxMana) * 100) : 0}%"></div>
+                </div>
+                
+                <div class="stat-row" style="margin-top: 4px;">
+                    <span>Willpower:</span>
+                    <span class="stat-value">${willpower ? `${willpower.wp}/${willpower.maxWP}` : 'N/A'}</span>
+                </div>
+                <div class="hp-bar">
+                    <div class="hp-fill" style="width: ${willpower ? Math.floor((willpower.wp / willpower.maxWP) * 100) : 0}%; background-color: #a3a;"></div>
+                </div>
+                
+                <div class="stat-row" style="margin-top: 4px;">
+                    <span>Stamina:</span>
+                    <span class="stat-value">${stamina ? `${stamina.sp}/${stamina.maxSP}` : 'N/A'}</span>
+                </div>
+                <div class="hp-bar">
+                    <div class="hp-fill" style="width: ${stamina ? Math.floor((stamina.sp / stamina.maxSP) * 100) : 0}%; background-color: #aa3;"></div>
                 </div>
                 
                 <div class="stat-row" style="margin-top: 4px;">
@@ -344,9 +429,45 @@ class CharacterUI {
                         <span>CHA:</span>
                         <span class="stat-value">${stats ? stats.charisma : 'N/A'}</span>
                     </div>
+                    <div class="stat-row">
+                        <span>WIL:</span>
+                        <span class="stat-value">${stats ? stats.willpower : 'N/A'}</span>
+                    </div>
                 </div>
             </div>
         `;
+        
+        // Calculate equipment bonuses
+        let attackBonus = 0;
+        let defenseBonus = 0;
+        let limbProtection = 0;
+        let attackMsg = "";
+        
+        if (equipment) {
+            // Get all equipped items and calculate their bonuses
+            for (const slotName of Object.keys(equipment.slots)) {
+                const item = equipment.slots[slotName];
+                if (item && item.hasComponent('EquippableComponent')) {
+                    const equippable = item.getComponent('EquippableComponent');
+                    
+                    // Add stat modifiers
+                    if (equippable.statModifiers) {
+                        if (equippable.statModifiers.strength) {
+                            attackBonus += equippable.statModifiers.strength;
+                            attackMsg = ` (+${attackBonus})`;
+                        }
+                        if (equippable.statModifiers.defense) {
+                            defenseBonus += equippable.statModifiers.defense;
+                        }
+                    }
+                    
+                    // Add limb protection
+                    if (equippable.limbProtection) {
+                        limbProtection += equippable.limbProtection;
+                    }
+                }
+            }
+        }
         
         // Combat Stats section
         contentHTML += `
@@ -362,16 +483,20 @@ class CharacterUI {
                         <span class="stat-value">${stats ? stats.accuracy : 'N/A'}%</span>
                     </div>
                     <div class="stat-row">
-                        <span>Defense:</span>
-                        <span class="stat-value">${stats ? stats.defense : 'N/A'}</span>
+                        <span>Attack:</span>
+                        <span class="stat-value">${stats ? stats.strength : 'N/A'}${attackMsg}</span>
                     </div>
                     <div class="stat-row">
-                        <span>PV:</span>
-                        <span class="stat-value">${stats ? stats.pv : 'N/A'}</span>
+                        <span>Defense:</span>
+                        <span class="stat-value">${stats ? stats.defense : 'N/A'}${defenseBonus > 0 ? ` (+${defenseBonus})` : ''}</span>
                     </div>
                     <div class="stat-row">
                         <span>DV:</span>
                         <span class="stat-value">${stats ? stats.dv : 'N/A'}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span>Limb Protection:</span>
+                        <span class="stat-value">${limbProtection}</span>
                     </div>
                     <div class="stat-row">
                         <span>HP Regen:</span>
@@ -385,17 +510,95 @@ class CharacterUI {
             </div>
         `;
         
-        // Equipment section
+        // Equipment section with stat details
         contentHTML += `
             <div class="stat-section">
-                <h3>Equipment</h3>
+                <h3>Equipment</h3>`;
+                
+        // Function to get stat info for an item
+        const getItemStats = (item) => {
+            if (!item) return '';
+            
+            const equippable = item.getComponent('EquippableComponent');
+            if (!equippable) return '';
+            
+            let statInfo = '';
+            
+            // Add strength/attack bonus
+            if (equippable.statModifiers && equippable.statModifiers.strength) {
+                statInfo += `<span style="color: #6fc"> +${equippable.statModifiers.strength} ATK</span>`;
+            }
+            
+            // Add defense bonus
+            if (equippable.statModifiers && equippable.statModifiers.defense) {
+                if (statInfo) statInfo += ', ';
+                statInfo += `<span style="color: #6cf"> +${equippable.statModifiers.defense} DEF</span>`;
+            }
+            
+            // Add limb protection
+            if (equippable.limbProtection) {
+                if (statInfo) statInfo += ', ';
+                statInfo += `<span style="color: #fc6"> +${equippable.limbProtection} LP</span>`;
+            }
+            
+            // Add limb damage
+            if (equippable.limbDamage) {
+                if (statInfo) statInfo += ', ';
+                statInfo += `<span style="color: #f66"> +${equippable.limbDamage} LD</span>`;
+            }
+            
+            return statInfo ? ` (${statInfo})` : '';
+        };
+                
+        contentHTML += `
                 <div class="equipment-slot">
+                    <span class="slot-name">Head:</span>
+                    <span class="${equipment && equipment.slots.head ? '' : 'slot-empty'}">
+                        ${equipment && equipment.slots.head ? 
+                            equipment.slots.head.name + getItemStats(equipment.slots.head) : 
+                            'Empty'}
+                    </span>
+                </div>
+                <div class="equipment-slot">
+                    <span class="slot-name">Chest:</span>
+                    <span class="${equipment && equipment.slots.chest ? '' : 'slot-empty'}">
+                        ${equipment && equipment.slots.chest ? 
+                            equipment.slots.chest.name + getItemStats(equipment.slots.chest) : 
+                            'Empty'}
+                    </span>
+                </div>
+                <div class="equipment-slot">
+                    <span class="slot-name">Left Hand:</span>
+                    <span class="${equipment && equipment.slots.leftHand ? '' : 'slot-empty'}">
+                        ${equipment && equipment.slots.leftHand ? 
+                            equipment.slots.leftHand.name + getItemStats(equipment.slots.leftHand) : 
+                            'Empty'}
+                    </span>
+                </div>
+                <div class="equipment-slot">
+                    <span class="slot-name">Right Hand:</span>
+                    <span class="${equipment && equipment.slots.rightHand ? '' : 'slot-empty'}">
+                        ${equipment && equipment.slots.rightHand ? 
+                            equipment.slots.rightHand.name + getItemStats(equipment.slots.rightHand) : 
+                            'Empty'}
+                    </span>
+                </div>
+                <div class="equipment-slot">
+                    <span class="slot-name">Feet:</span>
+                    <span class="${equipment && equipment.slots.feet ? '' : 'slot-empty'}">
+                        ${equipment && equipment.slots.feet ? 
+                            equipment.slots.feet.name + getItemStats(equipment.slots.feet) : 
+                            'Empty'}
+                    </span>
+                </div>
+                <!-- Legacy slots for backward compatibility -->
+                <div class="equipment-slot" style="display: none;">
                     <span class="slot-name">Weapon:</span>
                     <span class="${equipment && equipment.slots.weapon ? '' : 'slot-empty'}">
                         ${equipment && equipment.slots.weapon ? equipment.slots.weapon.name : 'Empty'}
                     </span>
                 </div>
-                <div class="equipment-slot">
+                <div class="equipment-slot" style="display: none;">
                     <span class="slot-name">Armor:</span>
                     <span class="${equipment && equipment.slots.armor ? '' : 'slot-empty'}">
                         ${equipment && equipment.slots.armor ? equipment.slots.armor.name : 'Empty'}
@@ -403,6 +606,42 @@ class CharacterUI {
                 </div>
             </div>
         `;
+        
+        // Limb Health section
+        if (limbs) {
+            contentHTML += `
+                <div class="stat-section">
+                    <h3>Limb Health</h3>
+            `;
+            
+            // Display each limb's health
+            for (const [limbId, limb] of Object.entries(limbs.limbs)) {
+                const limbName = limb.name;
+                const limbHealth = limb.health;
+                const healthPercentage = limbHealth;
+                let healthColor = '#0f0'; // Green for healthy limbs
+                
+                if (healthPercentage < 30) {
+                    healthColor = '#f00'; // Red for critical
+                } else if (healthPercentage < 60) {
+                    healthColor = '#f80'; // Orange for damaged
+                } else if (healthPercentage < 90) {
+                    healthColor = '#ff0'; // Yellow for slightly damaged
+                }
+                
+                contentHTML += `
+                    <div class="stat-row">
+                        <span>${limbName}:</span>
+                        <span class="stat-value" style="color: ${healthColor};">${limbHealth}%</span>
+                    </div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" style="width: ${limbHealth}%; background-color: ${healthColor};"></div>
+                    </div>
+                `;
+            }
+            
+            contentHTML += `</div>`;
+        }
         
         // Set the content
         this.characterElement.innerHTML = contentHTML;

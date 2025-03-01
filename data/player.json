@@ -7,12 +7,17 @@
   "intelligence": 5,
   "wisdom": 3,
   "charisma": 4,
+  "willpower": 4,
   "speed": 100,
   "defense": 1,
   "accuracy": 80,
-  "maxMana": 50,
+  "maxMana": 80,
   "manaRegen": 2,
   "hpRegen": 1,
+  "maxWP": 40,
+  "wpRegen": 1,
+  "maxSP": 60,
+  "spRegen": 2,
   "pv": 3,
   "dv": 2,
   "inventory": [
@@ -26,16 +31,49 @@
   ],
   "knownSpells": [
     "nature",
+    "townportal",
+    "summoncreature",
+    "summonhydra",
     "light",
     "firebolt",
-    "townportal",
-    "icespear",
-    "healing",
-    "summonhydra",
     "frostbolt",
     "fireball",
     "lightning",
+    "icespear",
+    "healing",
     "flameaura",
     "frostaura"
-  ]
+  ],
+  "limbs": {
+    "head": {
+      "name": "Head",
+      "slot": "head",
+      "equipped": null,
+      "health": 100
+    },
+    "chest": {
+      "name": "Chest",
+      "slot": "chest",
+      "equipped": null,
+      "health": 100
+    },
+    "leftHand": {
+      "name": "Left Hand",
+      "slot": "hand",
+      "equipped": null,
+      "health": 100
+    },
+    "rightHand": {
+      "name": "Right Hand",
+      "slot": "hand",
+      "equipped": null,
+      "health": 100
+    },
+    "feet": {
+      "name": "Feet",
+      "slot": "feet",
+      "equipped": null,
+      "health": 100
+    }
+  }
 }

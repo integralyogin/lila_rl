@@ -60,6 +60,10 @@ class Entity {
     get inventory() {
         return this.getComponent('InventoryComponent');
     }
+    
+    get limbs() {
+        return this.getComponent('LimbComponent');
+    }
 }
 
 export default Entity;

@@ -8,6 +8,7 @@ class SpellbookUI {
         this.visible = false;
         this.selectedIndex = 0;
         this.spellbookElement = null;
+        this.clickOutsideHandler = this.handleClickOutside.bind(this);
         
         // Initialize the UI
         this.initialize();
@@ -16,6 +17,27 @@ class SpellbookUI {
         eventBus.on('spellbookOpened', () => this.open());
         eventBus.on('spellbookClosed', () => this.close());
         eventBus.on('spellbookKeyPressed', (key) => this.handleKeyPress(key));
+        eventBus.on('spellbookSpellSelected', (index) => this.selectSpell(index));
+    }
+    
+    /**
+     * Handle clicks outside the spellbook panel
+     * @param {MouseEvent} event - The click event
+     */
+    handleClickOutside(event) {
+        const spellbookUI = document.getElementById('spellbook-ui');
+        if (!spellbookUI) return;
+        
+        // Log the event for debugging
+        console.log("SpellbookUI click outside handler triggered, target:", event.target);
+        
+        // Check if click was outside the spellbook UI
+        if (this.visible && !spellbookUI.contains(event.target)) {
+            console.log("Click detected outside spellbook UI, closing via handleClickOutside");
+            this.close();
+            gameState.gameMode = 'exploration';
+            eventBus.emit('spellbookClosed');
+        }
     }
     
     initialize() {
@@ -27,10 +49,51 @@ class SpellbookUI {
             spellbookUI.style.display = 'none';
             spellbookUI.style.width = '350px'; // Increased width for better spell display
             
-            // Create header
+            // Create header with close button
             const header = document.createElement('div');
             header.className = 'spellbook-header';
-            header.textContent = 'Spellbook';
+            
+            // Create a flex container for the header content
+            header.style.display = 'flex';
+            header.style.justifyContent = 'space-between';
+            header.style.alignItems = 'center';
+            
+            // Add the title
+            const title = document.createElement('span');
+            title.textContent = 'Spellbook';
+            
+            // Add close button
+            const closeButton = document.createElement('button');
+            closeButton.className = 'close-button';
+            closeButton.innerHTML = '&times;';
+            closeButton.style.background = 'none';
+            closeButton.style.border = 'none';
+            closeButton.style.color = '#fff';
+            closeButton.style.fontSize = '20px';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.padding = '0 5px';
+            closeButton.style.marginLeft = '10px';
+            closeButton.title = 'Close spellbook';
+            
+            // Add hover effect
+            closeButton.addEventListener('mouseenter', () => {
+                closeButton.style.color = '#ff9999';
+            });
+            closeButton.addEventListener('mouseleave', () => {
+                closeButton.style.color = '#fff';
+            });
+            
+            // Add click handler
+            closeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.close();
+                gameState.gameMode = 'exploration';
+                eventBus.emit('spellbookClosed');
+            });
+            
+            // Assemble header
+            header.appendChild(title);
+            header.appendChild(closeButton);
             
             // Create spell list container
             const spellList = document.createElement('div');
@@ -41,12 +104,54 @@ class SpellbookUI {
             const footer = document.createElement('div');
             footer.className = 'spellbook-footer';
             footer.innerHTML = `
-                <div><b>↑↓</b> Navigate spells</div>
-                <div><b>PgUp/PgDn</b> Jump 5 spells</div>
-                <div><b>Home/End</b> First/Last spell</div>
-                <div><b>c</b> Cast selected spell</div>
-                <div><b>ESC/s</b> Close spellbook</div>
+                <div class="spellbook-controls">
+                    <div><b>↑↓</b> Navigate spells</div>
+                    <div><b>PgUp/PgDn</b> Jump 5 spells</div>
+                    <div><b>Home/End</b> First/Last spell</div>
+                    <div><button id="cast-spell-button" class="spellbook-action-cast"><b>c</b> Cast spell</button></div>
+                    <div><b>ESC/s</b> Close spellbook</div>
+                </div>
             `;
+            
+            // Add click handler for the cast spell button after it's added to the DOM
+            setTimeout(() => {
+                const castButton = document.getElementById('cast-spell-button');
+                if (castButton) {
+                    castButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log("Cast spell button clicked directly");
+                        this.castSelectedSpell();
+                    });
+                }
+            }, 100);
+            
+            // Add some CSS to style the buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .spellbook-controls button {
+                    background: #333;
+                    border: 1px solid #555;
+                    color: white;
+                    padding: 2px 5px;
+                    margin: 2px 0;
+                    cursor: pointer;
+                    font-family: monospace;
+                }
+                .spellbook-controls button:hover {
+                    background: #444;
+                }
+                .spellbook-spell {
+                    cursor: pointer;
+                }
+                .spellbook-spell:hover:not(.disabled) {
+                    background: #333;
+                }
+                .spellbook-spell.disabled {
+                    cursor: not-allowed;
+                }
+            `;
+            document.head.appendChild(style);
             
             // Assemble the UI
             spellbookUI.appendChild(header);
@@ -92,6 +197,12 @@ class SpellbookUI {
         }
         
         this.visible = true;
+        
+        // Add click outside listener
+        // Wait a bit to add the event listener to prevent triggering on the same click that opened it
+        setTimeout(() => {
+            document.addEventListener('click', this.clickOutsideHandler);
+        }, 100);
     }
     
     close() {
@@ -102,6 +213,9 @@ class SpellbookUI {
         }
         
         this.visible = false;
+        
+        // Remove click outside listener
+        document.removeEventListener('click', this.clickOutsideHandler);
     }
     
     render() {
@@ -193,6 +307,26 @@ class SpellbookUI {
             spellElement.appendChild(nameElement);
             spellElement.appendChild(infoElement);
             
+            // Add click handler to select this spell
+            spellElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`Spell clicked directly: ${index} (${spell.name})`);
+                this.selectedIndex = index;
+                this.render();
+            });
+            
+            // Add double click handler to immediately cast the spell
+            spellElement.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`Spell double-clicked: ${index} (${spell.name})`);
+                this.selectedIndex = index;
+                this.render();
+                // Execute the cast action
+                setTimeout(() => this.castSelectedSpell(), 50);
+            });
+            
             spellListContainer.appendChild(spellElement);
         });
         
@@ -223,6 +357,12 @@ class SpellbookUI {
         
         // Get the spell array
         const spellArray = Array.from(spells.knownSpells.entries());
+        
+        // Handle special mouse-triggered event
+        if (key === 'select-spell') {
+            // This is handled by selectSpell method
+            return;
+        }
         
         // Navigate through spells
         if (key === 'ArrowUp' || key === 'w' || key === 'k') {
@@ -258,6 +398,20 @@ class SpellbookUI {
         }
     }
     
+    // Method to directly select a spell by index (for mouse clicks)
+    selectSpell(index) {
+        const spells = gameState.player.getComponent('SpellsComponent');
+        if (!spells || spells.spellCount === 0) return;
+        
+        const spellArray = Array.from(spells.knownSpells.entries());
+        
+        // Validate the index
+        if (index >= 0 && index < spellArray.length) {
+            this.selectedIndex = index;
+            this.render();
+        }
+    }
+    
     getSelectedSpell() {
         const spells = gameState.player.getComponent('SpellsComponent');
         if (!spells || spells.spellCount === 0) {
@@ -288,24 +442,40 @@ class SpellbookUI {
             return;
         }
         
-        // Dynamically import spell logic to ensure it's loaded
+        // Use ES modules dynamic import
+        console.log("Attempting to cast spell:", id, spell);
+        
         import('../spells/spell_logic.js').then(module => {
             const spellLogic = module.default;
-            
-            // Try to cast the spell
-            if (spellLogic.hasSpell(id)) {
-                console.log("Attempting to cast spell:", id, spell);
+            console.log("Got spellLogic module:", spellLogic ? "yes" : "no");
                 
-                // For location-targeted spells, we need the targeting system
+            // Make sure it's valid
+            if (!spellLogic) {
+                console.error("SpellLogic module not found");
+                gameState.addMessage("The magical energy fizzles.");
+                return;
+            }
+            
+            // Log the known spells
+            console.log("Known spell effects:", Array.from(spellLogic.spellEffects.keys()));
+            
+            // Check if this spell is implemented
+            if (spellLogic.hasSpell(id)) {
+                console.log("Found spell implementation for:", id);
+                
+                // Get the implementation
                 const implementation = spellLogic.getSpellImplementation(id);
-                if (implementation && implementation.targetType === 'location') {
-                    // Use the spell's targeting method instead of direct cast
+                
+                // Handle targeting spells
+                if (implementation && (implementation.targetType === 'location' || implementation.targetType === 'entity')) {
                     if (implementation.target && typeof implementation.target === 'function') {
+                        // Use the spell's targeting method
                         implementation.target(spell, (target) => {
                             if (target) {
+                                // Cast the spell with the target
                                 const success = implementation.cast(spell, target);
                                 if (success) {
-                                    // Close spellbook and go back to exploration mode
+                                    // Close spellbook and return to exploration
                                     this.close();
                                     gameState.gameMode = 'exploration';
                                 }
@@ -313,6 +483,8 @@ class SpellbookUI {
                                 console.log("Spell targeting canceled");
                             }
                         });
+                        
+                        // Close the spellbook and enter targeting mode
                         this.close();
                         gameState.gameMode = 'targeting';
                         return;
@@ -322,15 +494,16 @@ class SpellbookUI {
                 // For non-targeted spells, cast directly
                 const success = spellLogic.castSpell(id, spell);
                 if (success) {
-                    // Close spellbook and go back to exploration mode
+                    // Close spellbook and return to exploration
                     this.close();
                     gameState.gameMode = 'exploration';
                 }
             } else {
+                console.error(`Spell implementation not found for: ${id}`);
                 gameState.addMessage(`You don't know how to cast ${spell.name} yet.`);
             }
         }).catch(error => {
-            console.error("Error loading spell logic:", error);
+            console.error("Error importing spell_logic.js:", error);
             gameState.addMessage("Something went wrong with your spell. The magical energy dissipates.");
         });
     }

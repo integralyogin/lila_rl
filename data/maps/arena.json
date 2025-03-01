@@ -1,0 +1,248 @@
+{
+  "spawn_point": {
+    "x_offset": 14,
+    "y_offset": 3
+  },
+  "exits": [
+    {
+      "name": "town",
+      "x_offset": 2,
+      "y_offset": 3,
+      "signMessage": "Return to Town",
+      "destination_x": 0,
+      "destination_y": -10
+    }
+  ],
+  "buildings": [
+    {
+      "type": "Arena Pit",
+      "x": 7,
+      "y": 8,
+      "width": 14,
+      "height": 10,
+      "color": "#8b0000",
+      "isOpen": true
+    },
+    {
+      "type": "Spectator Stands North",
+      "x": 6,
+      "y": 6,
+      "width": 16,
+      "height": 1,
+      "color": "#a52a2a",
+      "isOpen": true
+    },
+    {
+      "type": "Spectator Stands East",
+      "x": 22,
+      "y": 7,
+      "width": 1,
+      "height": 12,
+      "color": "#a52a2a",
+      "isOpen": true
+    },
+    {
+      "type": "Spectator Stands South",
+      "x": 6,
+      "y": 19,
+      "width": 16,
+      "height": 1,
+      "color": "#a52a2a",
+      "isOpen": true
+    },
+    {
+      "type": "Spectator Stands West",
+      "x": 5,
+      "y": 7,
+      "width": 1,
+      "height": 12,
+      "color": "#a52a2a",
+      "isOpen": true
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Arena Master",
+      "x": 14,
+      "y": 4,
+      "char": "@",
+      "color": "#cd853f",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Welcome to the Arena!",
+        "Enjoy the battle.",
+        "Place your bets!"
+      ]
+    },
+    {
+      "name": "Spectator 1",
+      "x": 7,
+      "y": 6,
+      "char": "@",
+      "color": "#6495ED",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Go for the eyes!",
+        "Hit 'em harder!",
+        "What a match!"
+      ]
+    },
+    {
+      "name": "Spectator 2",
+      "x": 14,
+      "y": 6,
+      "char": "@",
+      "color": "#FF7F50",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "I bet 5 gold on the orc!",
+        "Watch out for that spell!",
+        "This is so exciting!"
+      ]
+    },
+    {
+      "name": "Spectator 3",
+      "x": 21,
+      "y": 6,
+      "char": "@",
+      "color": "#9ACD32",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "These seats are terrible...",
+        "Did you see that move?",
+        "I can barely see from here!"
+      ]
+    },
+    {
+      "name": "Spectator 4",
+      "x": 22,
+      "y": 9,
+      "char": "@",
+      "color": "#DA70D6",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Oh! That's gotta hurt!",
+        "Quite a show today!",
+        "Pass the snacks!"
+      ]
+    },
+    {
+      "name": "Spectator 5",
+      "x": 22,
+      "y": 13,
+      "char": "@",
+      "color": "#20B2AA",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Show us some blood!",
+        "What a move!",
+        "My money's on the wizard!"
+      ]
+    },
+    {
+      "name": "Spectator 6",
+      "x": 22,
+      "y": 17,
+      "char": "@",
+      "color": "#FFD700",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Is this seat taken?",
+        "Look at them go!",
+        "Better than last week!"
+      ]
+    },
+    {
+      "name": "Spectator 7",
+      "x": 18,
+      "y": 19,
+      "char": "@",
+      "color": "#FF6347",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Finish them off!",
+        "I can't watch...",
+        "THAT'S entertainment!"
+      ]
+    },
+    {
+      "name": "Spectator 8",
+      "x": 14,
+      "y": 19,
+      "char": "@",
+      "color": "#4682B4",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "What a brutal exchange!",
+        "Amazing technique!",
+        "So exciting!"
+      ]
+    },
+    {
+      "name": "Spectator 9",
+      "x": 10,
+      "y": 19,
+      "char": "@",
+      "color": "#7B68EE",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Are you seeing this?!",
+        "Boom! Right in the face!",
+        "10 gold on the underdog!"
+      ]
+    },
+    {
+      "name": "Spectator 10",
+      "x": 5,
+      "y": 17,
+      "char": "@",
+      "color": "#CD5C5C",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Use your special move!",
+        "Defense! Defense!",
+        "Front-row seats!"
+      ]
+    },
+    {
+      "name": "Spectator 11",
+      "x": 5,
+      "y": 13,
+      "char": "@",
+      "color": "#9370DB",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Don't let them escape!",
+        "That's how you do it!",
+        "The crowd is wild!"
+      ]
+    },
+    {
+      "name": "Spectator 12",
+      "x": 5,
+      "y": 9,
+      "char": "@",
+      "color": "#F0E68C",
+      "cls": "npc",
+      "blocksMovement": true,
+      "dialogue": [
+        "Look at that footwork!",
+        "Legendary fight!",
+        "So intense!"
+      ]
+    }
+  ],
+  "hardcoded_items": []
+}

@@ -76,25 +76,45 @@ class ActionSystem {
      * Process regeneration for entities with HealthComponent or ManaComponent
      */
     processRegeneration() {
-        gameState.entities.forEach(entity => {
+        // Convert entities from Map to array first if needed
+        const entities = gameState.entities instanceof Map ? 
+            Array.from(gameState.entities.values()) : 
+            gameState.entities;
+            
+        // Process each entity
+        entities.forEach(entity => {
+            if (!entity || !entity.getComponent) return;
+            
             // Process HP regeneration
-            if (entity.hasComponent('HealthComponent')) {
+            if (entity.getComponent('HealthComponent')) {
                 const healthComp = entity.getComponent('HealthComponent');
-                if (healthComp.hpRegen > 0) {
-                    const regenAmount = healthComp.regenerate(gameState.turn);
-                    if (regenAmount > 0 && entity === gameState.player) {
-                        gameState.addMessage(`You regenerate ${regenAmount} health.`);
+                
+                // Check that the component has the regenerate method
+                if (healthComp.hpRegen > 0 && typeof healthComp.regenerate === 'function') {
+                    try {
+                        const regenAmount = healthComp.regenerate(gameState.turn);
+                        if (regenAmount > 0 && entity === gameState.player) {
+                            gameState.addMessage(`You regenerate ${regenAmount} health.`);
+                        }
+                    } catch (error) {
+                        console.error("Error in health regeneration:", error);
                     }
                 }
             }
             
             // Process mana regeneration
-            if (entity.hasComponent('ManaComponent')) {
+            if (entity.getComponent('ManaComponent')) {
                 const manaComp = entity.getComponent('ManaComponent');
-                if (manaComp.manaRegen > 0) {
-                    const regenAmount = manaComp.regenerate(gameState.turn);
-                    if (regenAmount > 0 && entity === gameState.player) {
-                        gameState.addMessage(`You recover ${regenAmount} mana.`);
+                
+                // Check that the component has the regenerate method
+                if (manaComp.manaRegen > 0 && typeof manaComp.regenerate === 'function') {
+                    try {
+                        const regenAmount = manaComp.regenerate(gameState.turn);
+                        if (regenAmount > 0 && entity === gameState.player) {
+                            gameState.addMessage(`You recover ${regenAmount} mana.`);
+                        }
+                    } catch (error) {
+                        console.error("Error in mana regeneration:", error);
                     }
                 }
             }
@@ -170,7 +190,31 @@ class ActionSystem {
             // Skip player (should have been handled earlier)
             if (entity === gameState.player) continue;
             
-            // Process AI turn
+            // Special handling for summoned allies - use allyLogic
+            if (entity.hasComponent('SummonedByComponent') && 
+                entity.hasComponent('AIComponent') &&
+                entity.getComponent('AIComponent').faction === 'ally') {
+                
+                // Get the AI system
+                if (gameState.getSystem && gameState.getSystem('AISystem')) {
+                    const aiSystem = gameState.getSystem('AISystem');
+                    if (aiSystem && aiSystem.handleAllyEntity) {
+                        // Use the special ally handler
+                        aiSystem.handleAllyEntity(entity);
+                        
+                        // Spend energy
+                        const energy = entity.getComponent('EnergyComponent');
+                        if (energy && energy.canAct()) {
+                            energy.spendEnergy('attack');
+                            actionsProcessed++;
+                            actionsThisFrame++;
+                        }
+                    }
+                    continue;
+                }
+            }
+            
+            // Process AI turn for regular entities
             if (entity.hasComponent('AIComponent')) {
                 const ai = entity.getComponent('AIComponent');
                 const energy = entity.getComponent('EnergyComponent');

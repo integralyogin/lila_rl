@@ -68,6 +68,11 @@ class TargetingSystem {
     const playerX = player.position.x;
     const playerY = player.position.y;
     
+    // Check if we're targeting with a location spell (all tiles in range are valid)
+    const isLocationTargeting = this.targetingSpell && 
+                               this.targetingSpell.id && 
+                               this.targetingSpell.targetType === 'location';
+    
     // Check all tiles within range
     for (let y = playerY - this.targetingRange; y <= playerY + this.targetingRange; y++) {
       for (let x = playerX - this.targetingRange; x <= playerX + this.targetingRange; x++) {
@@ -77,11 +82,14 @@ class TargetingSystem {
         if (distance <= this.targetingRange && map.isInBounds(x, y)) {
           // Check line of sight if needed
           if (!this.targetingSpell.requiresLineOfSight || map.hasLineOfSight(playerX, playerY, x, y)) {
+            // For location spells, all tiles in range are valid
             this.validTargets.push({ x, y });
           }
         }
       }
     }
+    
+    console.log(`Calculated ${this.validTargets.length} valid targets for ${this.targetingSpell?.id || 'unknown spell'}`);
   }
   
   moveTarget(direction) {
@@ -96,6 +104,31 @@ class TargetingSystem {
       EventEmitter.emit('targetMoved', this.currentTarget);
       EventEmitter.emit('render');
     }
+  }
+  
+  /**
+   * Update the targeting highlight based on mouse position
+   * @param {Object} tile - The tile position {x, y}
+   */
+  updateTargetingHighlight(tile) {
+    if (!this.isTargeting) return;
+    
+    // Update the current target position
+    this.currentTarget = { x: tile.x, y: tile.y };
+    
+    // Check if this is a valid target
+    const isValid = this.validTargets.some(
+      target => target.x === tile.x && target.y === tile.y
+    );
+    
+    // Emit event to update the target display
+    EventEmitter.emit('targetMoved', {
+      position: this.currentTarget,
+      isValid: isValid
+    });
+    
+    // Trigger render to show the updated target
+    EventEmitter.emit('render');
   }
   
   selectTarget(position = null) {

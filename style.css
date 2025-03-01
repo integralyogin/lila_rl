@@ -46,7 +46,7 @@ body {
     font-size: 8px;
 }
 
-#hover-tooltip {
+#hover-tooltip, .tooltip, #tooltip {
     position: absolute;
     background-color: rgba(0, 0, 0, 0.8);
     color: white;
@@ -127,6 +127,165 @@ body {
     height: 6px;
     border-radius: 50%;
     background-color: rgba(100, 200, 255, 0.7);
+    pointer-events: none;
+}
+
+/* Path highlighting styles */
+.path-highlight {
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.5);
+    z-index: 1;
+}
+
+.path-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #00ffff;
+    font-size: 10px;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px #000;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Spell effects styles */
+.spell-effect {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+/* Bolt spell effects */
+.spell-effect.bolt {
+    height: 8px;
+    border-radius: 2px;
+    transform-origin: left center;
+    animation: bolt-animation 0.5s forwards;
+}
+
+.spell-effect.bolt.fire {
+    background: linear-gradient(to right, #F60, #F90);
+    box-shadow: 0 0 10px #F60;
+}
+
+.spell-effect.bolt.ice {
+    background: linear-gradient(to right, #08F, #0CF);
+    box-shadow: 0 0 10px #0CF;
+}
+
+.spell-effect.bolt.lightning {
+    background: linear-gradient(to right, #FF0, #FF8);
+    box-shadow: 0 0 10px #FF8;
+}
+
+/* Impact spell effects */
+.spell-effect.impact {
+    border-radius: 50%;
+    animation: impact-animation 0.6s forwards;
+}
+
+.spell-effect.impact.fire {
+    background-color: rgba(255, 102, 0, 0.7);
+    box-shadow: 0 0 15px #F60;
+}
+
+.spell-effect.impact.ice {
+    background-color: rgba(0, 191, 255, 0.7);
+    box-shadow: 0 0 15px #0CF;
+}
+
+.spell-effect.impact.lightning {
+    background-color: rgba(255, 255, 0, 0.7);
+    box-shadow: 0 0 15px #FF0;
+}
+
+/* Aura spell effects */
+.spell-effect.aura {
+    border-radius: 50%;
+    animation: aura-animation 0.8s forwards;
+}
+
+.spell-effect.aura.fire {
+    background-color: rgba(255, 102, 0, 0.3);
+    box-shadow: inset 0 0 30px #F60, 0 0 20px #F60;
+}
+
+.spell-effect.aura.ice {
+    background-color: rgba(0, 191, 255, 0.3);
+    box-shadow: inset 0 0 30px #0CF, 0 0 20px #0CF;
+}
+
+.spell-effect.aura.lightning {
+    background-color: rgba(255, 255, 0, 0.3);
+    box-shadow: inset 0 0 30px #FF0, 0 0 20px #FF0;
+}
+
+/* Spell effect animations */
+@keyframes bolt-animation {
+    0% {
+        opacity: 0.9;
+        width: 0;
+    }
+    70% {
+        opacity: 1;
+        width: 100%;
+    }
+    100% {
+        opacity: 0;
+        width: 100%;
+    }
+}
+
+@keyframes impact-animation {
+    0% {
+        transform: scale(0.2);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes aura-animation {
+    0% {
+        transform: scale(0.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.0);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Targeting mode styles */
+.targeting-current {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    z-index: 5;
+}
+
+.targeting-valid {
+    position: relative;
+}
+
+.targeting-valid::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 255, 0, 0.2);
     pointer-events: none;
 }
 
@@ -369,6 +528,25 @@ body {
     position: relative;
 }
 
+/* Special tiles highlighting */
+.stairs-down, .stairs-up, .area-exit, .dungeon-entrance {
+    animation: stairsPulse 3s infinite alternate;
+    box-shadow: 0 0 8px 2px rgba(100, 255, 255, 0.5);
+    border: 1px solid #00ffff;
+    z-index: 5;
+    position: relative;
+    cursor: pointer;
+}
+
+@keyframes stairsPulse {
+    from {
+        box-shadow: 0 0 5px 1px rgba(100, 255, 255, 0.4);
+    }
+    to {
+        box-shadow: 0 0 8px 3px rgba(100, 255, 255, 0.7);
+    }
+}
+
 @keyframes pulse {
     from {
         box-shadow: 0 0 5px 2px rgba(255, 100, 0, 0.7);
@@ -387,6 +565,168 @@ body {
     }
     100% {
         box-shadow: 0 0 5px 2px rgba(255, 255, 255, 0.4);
+    }
+}
+
+/* Spell visual effects */
+.spell-effect {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1000 !important; /* Force high z-index */
+    opacity: 0.9;
+    animation: spellFade 1.2s forwards;
+}
+
+.spell-effect.fire {
+    background-color: rgba(255, 50, 0, 0.8);
+    box-shadow: 0 0 15px 5px rgba(255, 70, 20, 0.9);
+    border: 2px solid rgba(255, 200, 0, 0.9);
+}
+
+.spell-effect.ice {
+    background-color: rgba(100, 200, 255, 0.8);
+    box-shadow: 0 0 15px 5px rgba(120, 210, 255, 0.9);
+    border: 2px solid rgba(200, 255, 255, 0.9);
+}
+
+.spell-effect.lightning {
+    background-color: rgba(200, 200, 50, 0.8);
+    box-shadow: 0 0 15px 5px rgba(220, 220, 70, 0.9);
+    border: 2px solid rgba(255, 255, 150, 0.9);
+}
+
+.spell-effect.nature {
+    background-color: rgba(50, 200, 50, 0.8);
+    box-shadow: 0 0 15px 5px rgba(70, 220, 70, 0.9);
+    border: 2px solid rgba(150, 255, 150, 0.9);
+}
+
+.spell-effect.arcane {
+    background-color: rgba(200, 50, 200, 0.8);
+    box-shadow: 0 0 15px 5px rgba(220, 70, 220, 0.9);
+    border: 2px solid rgba(255, 150, 255, 0.9);
+}
+
+.spell-effect.aura {
+    border-radius: 50%;
+    animation: auraExpand 1.5s forwards;
+}
+
+.spell-effect.bolt {
+    /* Let's implement a very different approach for bolts */
+    height: 10px; /* Slightly thicker to be visible */
+    transform-origin: left center !important;
+    /* Only animate opacity, not transform */
+    animation: boltFade 0.8s forwards;
+    z-index: 1000 !important;
+    /* Make bolts very visible */
+    box-shadow: 0 0 10px 3px currentColor, 0 0 5px 2px white !important;
+    border-radius: 4px;
+    /* Force transform to override any parent effects */
+    display: block !important;
+    will-change: transform, opacity;
+}
+
+/* Fire bolt specific styling to make it obvious */
+.spell-effect.fire.bolt {
+    border: 2px solid #FF0 !important;
+    background: linear-gradient(to right, #F00, #F80) !important;
+}
+
+/* Ice bolt specific styling */
+.spell-effect.ice.bolt {
+    border: 2px solid #8FF !important;
+    background: linear-gradient(to right, #08F, #0CF) !important;
+}
+
+.spell-effect.wave {
+    border-radius: 50%;
+    animation: waveExpand 1.5s forwards;
+}
+
+.spell-effect.impact {
+    border-radius: 50%;
+    animation: impactPulse 0.6s forwards;
+}
+
+.spell-effect.persistent-aura {
+    border-radius: 50%;
+    animation: auraPersist 3s infinite;
+    opacity: 0.7;
+}
+
+@keyframes spellFade {
+    0% { opacity: 0.8; }
+    100% { opacity: 0; }
+}
+
+@keyframes auraExpand {
+    0% { 
+        transform: scale(0.1);
+        opacity: 0.9;
+    }
+    100% { 
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes waveExpand {
+    0% { 
+        transform: scale(0.1);
+        opacity: 0.9;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% { 
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+@keyframes impactPulse {
+    0% { 
+        transform: scale(0.1);
+        opacity: 0.95;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.8;
+    }
+    100% { 
+        transform: scale(0.8);
+        opacity: 0;
+    }
+}
+
+@keyframes auraPersist {
+    0% { 
+        transform: scale(0.9);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    100% { 
+        transform: scale(0.9);
+        opacity: 0.4;
+    }
+}
+
+@keyframes boltFade {
+    0% { 
+        opacity: 0.4;
+    }
+    20% {
+        opacity: 1.0;
+    }
+    80% { 
+        opacity: 0.9;
+    }
+    100% { 
+        opacity: 0;
     }
 }
 
@@ -492,6 +832,185 @@ body {
     flex-direction: column;
     z-index: 100;
     font-family: monospace;
+}
+
+/* Arena UI */
+.arena-ui {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 600px;
+    background: #222;
+    border: 2px solid #8b0000;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    font-family: monospace;
+}
+
+.arena-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #331111;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #cd853f;
+}
+
+.arena-monster-select, 
+.arena-selected-monsters {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #333;
+    border: 1px solid #555;
+}
+
+.monster-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.monster-list li {
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #444;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.monster-list li:hover {
+    background: #555;
+}
+
+.arena-selected-monsters ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.arena-selected-monsters li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: #445;
+    border-radius: 3px;
+}
+
+.arena-selected-monsters button {
+    background: #a33;
+    border: none;
+    color: white;
+    padding: 3px 8px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.arena-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.arena-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #444;
+    border: 1px solid #666;
+    color: white;
+}
+
+/* Summoning UI */
+.summoning-ui {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    max-width: 600px;
+    background: #222;
+    border: 2px solid #00aa8c;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    font-family: monospace;
+}
+
+.summoning-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #003f3f;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #00faba;
+}
+
+.summoning-monster-select, 
+.summoning-selected-monster {
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #333;
+    border: 1px solid #555;
+}
+
+.summoning-selected-monster {
+    background: #1f3f3f;
+}
+
+.monster-details {
+    padding: 8px;
+    background: #2a5050;
+    border-radius: 3px;
+}
+
+.monster-stats {
+    list-style: none;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+.monster-stats li {
+    padding: 3px 0;
+}
+
+.summoning-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.summoning-buttons button {
+    flex: 1;
+    padding: 8px;
+    background: #444;
+    border: 1px solid #666;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.arena-buttons button:hover {
+    background: #555;
+}
+
+.arena-buttons button:disabled {
+    background: #333;
+    color: #777;
+    cursor: not-allowed;
 }
 
 .shop-header {

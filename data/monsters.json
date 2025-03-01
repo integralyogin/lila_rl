@@ -1,5 +1,127 @@
 [
   {
+    "id": "hydra_master",
+    "name": "Hydra Master",
+    "char": "M",
+    "color": "#800080",
+    "hp": 50,
+    "strength": 3,
+    "dexterity": 4,
+    "toughness": 4,
+    "perception": 8,
+    "intelligence": 15,
+    "wisdom": 12,
+    "charisma": 8,
+    "speed": 85,
+    "defense": 2,
+    "accuracy": 90,
+    "mana": 150,
+    "manaRegen": 7,
+    "hpRegen": 1,
+    "pv": 2,
+    "dv": 3,
+    "xp": 35,
+    "spells": ["summonhydra"],
+    "ai": {
+      "behaviorType": "summoner",
+      "preferredMinDist": 4,
+      "preferredMaxDist": 7,
+      "attackRange": 5
+    }
+  },
+  {
+    "id": "summoner",
+    "name": "Summoner",
+    "char": "S",
+    "color": "#9932cc",
+    "hp": 40,
+    "strength": 2,
+    "dexterity": 4,
+    "toughness": 3,
+    "perception": 8,
+    "intelligence": 12,
+    "wisdom": 10,
+    "charisma": 7,
+    "speed": 90,
+    "defense": 1,
+    "accuracy": 85,
+    "mana": 100,
+    "manaRegen": 5,
+    "hpRegen": 1,
+    "pv": 1,
+    "dv": 3,
+    "xp": 25,
+    "spells": ["summonhydra"],
+    "ai": {
+      "behaviorType": "summoner",
+      "preferredMinDist": 4,
+      "preferredMaxDist": 7,
+      "attackRange": 5
+    }
+  },
+  {
+    "id": "fire_mage",
+    "name": "Fire Mage",
+    "char": "M",
+    "color": "#ff4500",
+    "hp": 42,
+    "strength": 3,
+    "dexterity": 5,
+    "toughness": 3,
+    "perception": 6,
+    "intelligence": 9,
+    "wisdom": 7,
+    "charisma": 5,
+    "speed": 95,
+    "defense": 1,
+    "accuracy": 80,
+    "mana": 90,
+    "maxmana": 90,
+    "manaRegen": 4,
+    "hpRegen": 1,
+    "pv": 1,
+    "dv": 2,
+    "xp": 15,
+    "spells": ["fireball"],
+    "ai": {
+      "behaviorType": "spellcaster",
+      "preferredMinDist": 4,
+      "preferredMaxDist": 6,
+      "attackRange": 6,
+      "spellPriorities": {
+        "fireball": { "priority": 1, "cooldown": 3 }
+      }
+    }
+  },
+  {
+    "id": "archer",
+    "name": "Ranger Archer",
+    "char": "A",
+    "color": "#6b8e23",
+    "hp": 15,
+    "strength": 5,
+    "dexterity": 8,
+    "toughness": 4,
+    "perception": 7,
+    "intelligence": 5,
+    "wisdom": 4,
+    "charisma": 3,
+    "speed": 100,
+    "defense": 1,
+    "accuracy": 85,
+    "manaRegen": 0,
+    "hpRegen": 1,
+    "pv": 2,
+    "dv": 3,
+    "xp": 12,
+    "ai": {
+      "behaviorType": "ranged",
+      "preferredMinDist": 3,
+      "preferredMaxDist": 6,
+      "attackRange": 5
+    }
+  },
+  {
     "id": "hydra",
     "name": "Hydra",
     "char": "H",
@@ -9,17 +131,29 @@
     "dexterity": 4,
     "toughness": 7,
     "perception": 6,
-    "intelligence": 3,
+    "intelligence": 5,
     "wisdom": 2,
     "charisma": 1,
     "speed": 120,
     "defense": 2,
     "accuracy": 70,
-    "manaRegen": 1,
+    "mana": 50,
+    "manaRegen": 3,
     "hpRegen": 2,
     "pv": 4,
     "dv": 1,
-    "xp": 0
+    "xp": 20,
+    "spells": ["firebolt", "spawnnewhead"],
+    "ai": {
+      "behaviorType": "hydra",
+      "attackRange": 6,
+      "attackCooldown": 3,
+      "spellPriorities": {
+        "spawnnewhead": { "priority": 1, "cooldown": 5, "healthThreshold": 80 },
+        "firebolt": { "priority": 2 }
+      }
+    },
+    "specialAbilities": ["regeneration", "multiheaded"]
   },
   {
     "id": "goblin",
@@ -41,7 +175,39 @@
     "hpRegen": 1,
     "pv": 1,
     "dv": 3,
-    "xp": 5
+    "xp": 5,
+    "limbs": {
+      "head": {
+        "name": "Head",
+        "slot": "head",
+        "equipped": null,
+        "health": 100
+      },
+      "chest": {
+        "name": "Chest",
+        "slot": "chest",
+        "equipped": null,
+        "health": 100
+      },
+      "leftHand": {
+        "name": "Left Hand",
+        "slot": "hand",
+        "equipped": null,
+        "health": 100
+      },
+      "rightHand": {
+        "name": "Right Hand",
+        "slot": "hand",
+        "equipped": null,
+        "health": 100
+      },
+      "feet": {
+        "name": "Feet",
+        "slot": "feet",
+        "equipped": null,
+        "health": 100
+      }
+    }
   },
   {
     "id": "orc",
@@ -63,7 +229,39 @@
     "hpRegen": 1,
     "pv": 2,
     "dv": 1,
-    "xp": 10
+    "xp": 10,
+    "limbs": {
+      "head": {
+        "name": "Head",
+        "slot": "head",
+        "equipped": null,
+        "health": 100
+      },
+      "chest": {
+        "name": "Chest",
+        "slot": "chest",
+        "equipped": null,
+        "health": 100
+      },
+      "leftHand": {
+        "name": "Left Hand",
+        "slot": "hand",
+        "equipped": null,
+        "health": 100
+      },
+      "rightHand": {
+        "name": "Right Hand",
+        "slot": "hand",
+        "equipped": "orcish_axe",
+        "health": 100
+      },
+      "feet": {
+        "name": "Feet",
+        "slot": "feet",
+        "equipped": null,
+        "health": 100
+      }
+    }
   },
   {
     "id": "troll",
@@ -85,7 +283,53 @@
     "hpRegen": 3,
     "pv": 5,
     "dv": 0,
-    "xp": 20
+    "xp": 20,
+    "limbs": {
+      "head": {
+        "name": "Head",
+        "slot": "head",
+        "equipped": null,
+        "health": 120,
+        "regeneration": true
+      },
+      "chest": {
+        "name": "Torso",
+        "slot": "chest",
+        "equipped": null,
+        "health": 150,
+        "regeneration": true
+      },
+      "leftHand": {
+        "name": "Left Arm",
+        "slot": "hand",
+        "equipped": null,
+        "health": 100,
+        "regeneration": true,
+        "regrowTime": 10
+      },
+      "rightHand": {
+        "name": "Right Arm",
+        "slot": "hand",
+        "equipped": null,
+        "health": 100,
+        "regeneration": true,
+        "regrowTime": 10
+      },
+      "leftFoot": {
+        "name": "Left Foot",
+        "slot": "feet",
+        "equipped": null,
+        "health": 100,
+        "regeneration": true
+      },
+      "rightFoot": {
+        "name": "Right Foot",
+        "slot": "feet",
+        "equipped": null,
+        "health": 100,
+        "regeneration": true
+      }
+    }
   },
   {
     "id": "orc_warrior",
@@ -125,11 +369,19 @@
     "speed": 90,
     "defense": 1,
     "accuracy": 70,
+    "mana": 25,
     "manaRegen": 3,
     "hpRegen": 1,
     "pv": 1,
     "dv": 2,
-    "xp": 12
+    "xp": 12,
+    "spells": ["shockbolt"],
+    "ai": {
+      "behaviorType": "spellcaster",
+      "preferredMinDist": 2,
+      "preferredMaxDist": 5,
+      "attackRange": 5
+    }
   },
   {
     "id": "orc_chieftain",
@@ -151,7 +403,21 @@
     "hpRegen": 2,
     "pv": 4,
     "dv": 2,
-    "xp": 35
+    "xp": 35,
+    "ai": {
+      "behaviorType": "default",
+      "preferredMinDist": 1,
+      "attackRange": 1,
+      "attackCooldown": 2
+    },
+    "specialAttacks": [
+      {
+        "name": "cleave",
+        "cooldown": 3,
+        "damageMultiplier": 1.5,
+        "chance": 0.5
+      }
+    ]
   },
   {
     "id": "wizard",
@@ -177,7 +443,20 @@
     "mana": 100,
     "isNPC": true,
     "isShopkeeper": true,
-    "spells": ["fireball", "lightning", "ice"],
+    "spells": ["firebolt", "shockbolt", "icespear", "frostaura", "healing"],
+    "ai": {
+      "behaviorType": "spellcaster",
+      "preferredMinDist": 3,
+      "preferredMaxDist": 6,
+      "attackRange": 6,
+      "spellPriorities": {
+        "frostaura": { "priority": 1, "manaThreshold": 40, "cooldown": 5 },
+        "healing": { "priority": 2, "healthThreshold": 60, "cooldown": 3 },
+        "icespear": { "priority": 3, "prefer": "low_hp_targets" },
+        "firebolt": { "priority": 4 },
+        "shockbolt": { "priority": 5 }
+      }
+    },
     "lore": "A master of arcane arts who has studied magic for centuries. When provoked, his power is devastating.",
     "dropItems": ["staff_of_power", "arcane_robe"],
     "dialogue": [

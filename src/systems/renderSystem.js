@@ -50,6 +50,20 @@ class RenderSystem {
         if (!this.miniMapElement) {
             console.error('Mini-map element not found');
         }
+        
+        // Create a container for spell effects
+        this.spellEffectsContainer = document.createElement('div');
+        this.spellEffectsContainer.id = 'spell-effects-container';
+        this.spellEffectsContainer.style.position = 'absolute';
+        this.spellEffectsContainer.style.top = '0';
+        this.spellEffectsContainer.style.left = '0';
+        this.spellEffectsContainer.style.width = '100%';
+        this.spellEffectsContainer.style.height = '100%';
+        this.spellEffectsContainer.style.pointerEvents = 'none';
+        this.spellEffectsContainer.style.zIndex = '50';
+        
+        // Insert the container into the map element itself
+        this.mapElement.appendChild(this.spellEffectsContainer);
     }
     
     render() {
@@ -117,6 +131,15 @@ class RenderSystem {
                 const cellElement = document.createElement('div');
                 cellElement.className = 'map-cell';
                 
+                // Add data attributes for position
+                const viewX = x - startX;
+                const viewY = y - startY;
+                
+                cellElement.dataset.x = String(viewX);
+                cellElement.dataset.y = String(viewY);
+                cellElement.dataset.mapX = String(x);
+                cellElement.dataset.mapY = String(y);
+                
                 // Check if we should show the actual map or FOV
                 const debugMode = false; // Set to true to see the whole map
                 
@@ -165,6 +188,12 @@ class RenderSystem {
                 cellElement.textContent = ' ';
                 cellElement.style.backgroundColor = '#000';
                 
+                // Add data attributes for position
+                cellElement.dataset.x = String(x); 
+                cellElement.dataset.y = String(y);
+                cellElement.dataset.mapX = String(x);
+                cellElement.dataset.mapY = String(y);
+                
                 rowElement.appendChild(cellElement);
             }
             
@@ -184,8 +213,10 @@ class RenderSystem {
             if (!renderableA) return -1;
             if (!renderableB) return 1;
             
-            return renderableB.priority - renderableA.priority;
+            return (renderableB.priority || 0) - (renderableA.priority || 0);
         });
+        
+        // Remove the duplicate targeting highlight call (handled below)
         
         if (entities.length > 0 && entities[0].renderable) {
             // Render the highest priority entity
@@ -211,8 +242,8 @@ class RenderSystem {
             
             const targetingInfo = targetingSystem.getTargetingInfo();
             if (targetingInfo && gameState.player) {
-                const playerX = gameState.player.x;
-                const playerY = gameState.player.y;
+                const playerX = gameState.player.position.x;
+                const playerY = gameState.player.position.y;
                 const distance = Math.sqrt(Math.pow(playerX - x, 2) + Math.pow(playerY - y, 2));
                 
                 // Add the targeting class to all visible tiles
@@ -271,6 +302,9 @@ class RenderSystem {
     }
     
     _renderTile(cellElement, tile, dimmed = false) {
+        // First, remove any special tile classes that might be present
+        cellElement.classList.remove('stairs-down', 'stairs-up', 'area-exit', 'dungeon-entrance');
+        
         // Choose character based on tile type
         switch (tile.type) {
             case TILE_TYPES.WALL:
@@ -284,6 +318,8 @@ class RenderSystem {
             case TILE_TYPES.STAIRS_DOWN:
                 cellElement.textContent = '>';
                 cellElement.style.color = dimmed ? '#666' : '#fff';
+                // Add special class for stairs down
+                if (!dimmed) cellElement.classList.add('stairs-down');
                 break;
             case TILE_TYPES.DOOR:
                 cellElement.textContent = '+';
@@ -300,19 +336,28 @@ class RenderSystem {
             case TILE_TYPES.DUNGEON_ENTRANCE:
                 cellElement.textContent = '>';
                 cellElement.style.color = dimmed ? '#333' : '#fff';
+                // Add special class for dungeon entrance
+                if (!dimmed) cellElement.classList.add('dungeon-entrance');
                 break;
             case TILE_TYPES.AREA_EXIT:
                 cellElement.textContent = '⋄';
                 cellElement.style.color = dimmed ? '#666' : '#ffcc00';
+                // Add special class for area exit
+                if (!dimmed) cellElement.classList.add('area-exit');
                 break;
             case TILE_TYPES.STAIRS_UP:
                 cellElement.textContent = '<';
                 cellElement.style.color = dimmed ? '#666' : '#fff';
+                // Add special class for stairs up
+                if (!dimmed) cellElement.classList.add('stairs-up');
                 break;
             default:
                 cellElement.textContent = '?';
                 cellElement.style.color = dimmed ? '#666' : '#f00';
         }
+        
+        // Add a data attribute for the tile type to help with debugging
+        cellElement.setAttribute('data-tile-type', tile.type);
         
         // Set background color
         this._setTileBackground(cellElement, tile, dimmed);
@@ -343,19 +388,43 @@ class RenderSystem {
     }
     
     renderMessages() {
-        if (!this.messageElement) return;
+        if (!this.messageElement) {
+            console.error("Message element not found");
+            return;
+        }
         
         this.messageElement.innerHTML = '';
         
         // Show the most recent messages (up to 5)
         const messages = gameState.messages.slice(0, 5);
         
+        console.log("Rendering messages:", messages);
+        
         messages.forEach(message => {
             const messageElement = document.createElement('div');
-            messageElement.className = `message message-${message.type}`;
-            messageElement.textContent = message.text;
+            // Handle both "text" and "message" property names for backward compatibility
+            const messageText = message.text || message.message;
+            
+            if (!messageText) {
+                console.warn("Message without text:", message);
+                return;
+            }
+            
+            messageElement.className = `message message-${message.type || 'info'}`;
+            messageElement.textContent = messageText;
             this.messageElement.appendChild(messageElement);
         });
+    }
+    
+    /**
+     * Apply targeting highlight to the cell if it's in the valid range
+     * This method is no longer used - targeting highlights are applied directly in _renderVisibleTile
+     * @deprecated
+     */
+    _applyTargetingHighlight(cellElement, x, y) {
+        // This method is kept for compatibility but no longer used
+        // All targeting highlighting is now done in the _renderVisibleTile method
+        return;
     }
     
     _updateStats() {
@@ -469,6 +538,332 @@ class RenderSystem {
             
             this.miniMapElement.appendChild(rowElement);
         }
+    }
+    
+    /**
+     * Create a spell visual effect
+     * @param {string} type - Type of spell effect ('aura', 'bolt', etc)
+     * @param {string} element - Element of the spell ('fire', 'ice', etc)
+     * @param {object} options - Additional options for the effect
+     */
+    createSpellEffect(type, element, options = {}) {
+        // Force create the container every time to ensure it exists and is properly positioned
+        const gameContainer = document.getElementById('game-container');
+        if (!gameContainer) {
+            console.error("Cannot find game-container element for spell effects");
+            return;
+        }
+        
+        // Create a new container each time to avoid any positioning issues
+        const effectsContainer = document.createElement('div');
+        effectsContainer.id = 'temp-spell-effect-container';
+        effectsContainer.style.position = 'absolute';
+        effectsContainer.style.top = '0';
+        effectsContainer.style.left = '0';
+        effectsContainer.style.width = '100%';
+        effectsContainer.style.height = '100%';
+        effectsContainer.style.pointerEvents = 'none';
+        effectsContainer.style.zIndex = '1000';
+        
+        // Add debugging border for development
+        effectsContainer.style.border = 'none'; // Change to '1px solid red' to debug container
+        
+        // Add it directly to the game container
+        gameContainer.appendChild(effectsContainer);
+        console.log("Created new effects container for this spell");
+        
+        // Confirm position and dimensions
+        const rect = effectsContainer.getBoundingClientRect();
+        console.log(`Effects container positioned at (${rect.left},${rect.top}) with size ${rect.width}x${rect.height}`);
+        
+        // Position defaults to center of map
+        const { 
+            x = 0, 
+            y = 0, 
+            sourceX = null, 
+            sourceY = null, 
+            targetX = null, 
+            targetY = null, 
+            radius = 2, 
+            duration = 800 
+        } = options;
+        
+        // Create the effect element
+        const effectElement = document.createElement('div');
+        effectElement.className = `spell-effect ${element} ${type}`;
+        // Add a randomized ID for debugging
+        const effectId = `effect-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+        effectElement.id = effectId;
+        console.log(`Created effect with ID: ${effectId}`);
+        
+        // Set base style
+        effectElement.style.position = 'absolute';
+        // Force any transforms to override animation
+        effectElement.style.transformStyle = 'preserve-3d';
+        
+        // For absolute positioning on the game container, we don't need to adjust for viewport
+        
+        // Handle different effect types
+        if (type === 'aura' || type === 'persistent-aura' || type === 'wave') {
+            // For aura effects, create a circle centered on the caster
+            const cellSize = 20; // Match the cell size from CSS
+            const radiusInPx = radius * cellSize;
+            
+            // Position in absolute coordinates for the container
+            const gameMap = document.getElementById('game-map');
+            const mapRect = gameMap ? gameMap.getBoundingClientRect() : null;
+            
+            // Get the cell element at the specified position
+            const cellElement = document.querySelector(`[data-map-x="${x}"][data-map-y="${y}"]`);
+            let cellRect = null;
+            
+            if (cellElement) {
+                cellRect = cellElement.getBoundingClientRect();
+                console.log(`Found cell at position ${x},${y}`, cellRect);
+            }
+            
+            // Use the cell's position if found, otherwise estimate
+            let adjustedX, adjustedY;
+            
+            if (cellRect && mapRect) {
+                // Use the actual position of the cell relative to the game container
+                adjustedX = cellRect.left - mapRect.left + cellSize/2 - radiusInPx;
+                adjustedY = cellRect.top - mapRect.top + cellSize/2 - radiusInPx;
+                console.log(`Using actual cell position: ${adjustedX},${adjustedY}`);
+            } else {
+                // Fallback to estimation
+                const viewWidth = 40;
+                const viewHeight = 25;
+                adjustedX = (x % viewWidth) * cellSize + cellSize/2 - radiusInPx;
+                adjustedY = (y % viewHeight) * cellSize + cellSize/2 - radiusInPx;
+                console.log(`Using estimated position: ${adjustedX},${adjustedY}`);
+            }
+            
+            effectElement.style.left = `${adjustedX}px`;
+            effectElement.style.top = `${adjustedY}px`;
+            effectElement.style.width = `${radiusInPx * 2}px`;
+            effectElement.style.height = `${radiusInPx * 2}px`;
+            
+            // Set animation duration
+            effectElement.style.animationDuration = `${duration}ms`;
+        } 
+        else if (type === 'bolt') {
+            // For bolt effects, draw a line from source to target
+            const cellSize = 20; // Match the cell size from CSS
+            
+            // If source not specified, use player position
+            let srcX = sourceX;
+            let srcY = sourceY;
+            
+            if (srcX === null || srcY === null) {
+                if (gameState.player && gameState.player.position) {
+                    srcX = gameState.player.position.x;
+                    srcY = gameState.player.position.y;
+                } else {
+                    return; // Can't draw a bolt without a start position
+                }
+            }
+            
+            // Position and size
+            const dx = targetX - srcX;
+            const dy = targetY - srcY;
+            const length = Math.sqrt(dx * dx + dy * dy) * cellSize;
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+            
+            // Position using DOM coordinates for accuracy
+            // Get the source and target cell positions
+            const sourceCell = document.querySelector(`[data-map-x="${srcX}"][data-map-y="${srcY}"]`);
+            const targetCell = document.querySelector(`[data-map-x="${targetX}"][data-map-y="${targetY}"]`);
+            const gameMap = document.getElementById('game-map');
+            const mapRect = gameMap ? gameMap.getBoundingClientRect() : null;
+            
+            let sourceCellRect = null;
+            let targetCellRect = null;
+            
+            if (sourceCell) {
+                sourceCellRect = sourceCell.getBoundingClientRect();
+                console.log(`Found source cell at ${srcX},${srcY}`, sourceCellRect);
+            }
+            
+            if (targetCell) {
+                targetCellRect = targetCell.getBoundingClientRect();
+                console.log(`Found target cell at ${targetX},${targetY}`, targetCellRect);
+            }
+            
+            let screenStartX, screenStartY;
+            let screenTargetX, screenTargetY;
+            let boltLength, boltAngle;
+            
+            if (sourceCellRect && targetCellRect && mapRect) {
+                // Use the actual position relative to the game container
+                screenStartX = sourceCellRect.left - mapRect.left + cellSize/2;
+                screenStartY = sourceCellRect.top - mapRect.top + cellSize/2;
+                
+                // Calculate actual target position
+                screenTargetX = targetCellRect.left - mapRect.left + cellSize/2;
+                screenTargetY = targetCellRect.top - mapRect.top + cellSize/2;
+                
+                // Calculate the angle and length based on screen coordinates
+                const actualDx = screenTargetX - screenStartX;
+                const actualDy = screenTargetY - screenStartY;
+                boltLength = Math.sqrt(actualDx * actualDx + actualDy * actualDy);
+                boltAngle = Math.atan2(actualDy, actualDx) * (180 / Math.PI);
+                
+                console.log(`Found cells and calculating precise bolt:`);
+                console.log(`  Source: (${screenStartX}, ${screenStartY})`);
+                console.log(`  Target: (${screenTargetX}, ${screenTargetY})`);
+                console.log(`  Bolt length: ${boltLength}px, angle: ${boltAngle}°`);
+            } else {
+                // Fallback to viewport calculation
+                console.log(`Missing cells for precise bolt calculation, using estimates.`);
+                const viewWidth = 40;
+                const viewHeight = 25;
+                
+                // Estimate source coordinates
+                screenStartX = (srcX % viewWidth) * cellSize + cellSize/2;
+                screenStartY = (srcY % viewHeight) * cellSize + cellSize/2;
+                
+                // Estimate target coordinates
+                screenTargetX = (targetX % viewWidth) * cellSize + cellSize/2;
+                screenTargetY = (targetY % viewHeight) * cellSize + cellSize/2;
+                
+                // Calculate length and angle
+                const estDx = screenTargetX - screenStartX;
+                const estDy = screenTargetY - screenStartY;
+                boltLength = Math.sqrt(estDx * estDx + estDy * estDy);
+                boltAngle = Math.atan2(estDy, estDx) * (180 / Math.PI);
+                
+                console.log(`  Estimated source: (${screenStartX}, ${screenStartY})`);
+                console.log(`  Estimated target: (${screenTargetX}, ${screenTargetY})`);
+                console.log(`  Estimated bolt length: ${boltLength}px, angle: ${boltAngle}°`);
+            }
+
+            // Position the bolt element at the source's center
+            effectElement.style.left = `${screenStartX}px`;
+            effectElement.style.top = `${screenStartY}px`;
+            effectElement.style.width = `${boltLength}px`;
+            
+            // Implement a completely different approach for bolt rendering
+            effectElement.style.transformOrigin = 'left center';
+            effectElement.style.position = 'absolute';
+            
+            // Create a bolt with explicit inline styles that override any CSS
+            // This is a brute force approach but should work
+            effectElement.style.cssText += `
+                width: ${boltLength}px !important;
+                height: 10px !important;
+                transform: rotate(${boltAngle}deg) !important;
+                transform-origin: left center !important; 
+                pointer-events: none !important;
+                z-index: 9999 !important;
+            `;
+            
+            // Add extra element inside to ensure visibility
+            const innerBolt = document.createElement('div');
+            innerBolt.style.cssText = `
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: ${element === 'fire' ? 'linear-gradient(to right, #F60, #F90)' : 
+                              element === 'ice' ? 'linear-gradient(to right, #08F, #0CF)' :
+                              element === 'lightning' ? 'linear-gradient(to right, #FF0, #FF8)' : 
+                              'white'};
+                border-radius: 3px;
+            `;
+            effectElement.appendChild(innerBolt);
+            
+            // Log detailed transformation
+            console.log(`Applied rotation transform: rotate(${boltAngle}deg) to effect ${effectElement.id}`);
+            
+            // Log info about what's happening
+            console.log(`Bolt created: from map(${srcX},${srcY}) to map(${targetX},${targetY})`);
+            console.log(`Bolt rotation: ${boltAngle}° with length ${boltLength}px`);
+            
+            // Set animation duration
+            effectElement.style.animationDuration = `${duration}ms`;
+        }
+        else if (type === 'impact') {
+            // For impact effects, create a flash at the target location
+            const cellSize = 20; // Match the cell size from CSS
+            const size = cellSize * 1.5;
+            
+            // Position using DOM coordinates for accuracy
+            const cellElement = document.querySelector(`[data-map-x="${x}"][data-map-y="${y}"]`);
+            const gameMap = document.getElementById('game-map');
+            const mapRect = gameMap ? gameMap.getBoundingClientRect() : null;
+            
+            let adjustedX, adjustedY;
+            
+            if (cellElement && mapRect) {
+                const cellRect = cellElement.getBoundingClientRect();
+                adjustedX = cellRect.left - mapRect.left + cellSize/2 - size/2;
+                adjustedY = cellRect.top - mapRect.top + cellSize/2 - size/2;
+                console.log(`Using actual impact position at ${x},${y}: ${adjustedX},${adjustedY}`);
+            } else {
+                // Fallback to estimation
+                const viewWidth = 40;
+                const viewHeight = 25;
+                adjustedX = (x % viewWidth) * cellSize + cellSize/2 - size/2;
+                adjustedY = (y % viewHeight) * cellSize + cellSize/2 - size/2;
+                console.log(`Using estimated impact position: ${adjustedX},${adjustedY}`);
+            }
+            
+            effectElement.style.left = `${adjustedX}px`;
+            effectElement.style.top = `${adjustedY}px`;
+            effectElement.style.width = `${size}px`;
+            effectElement.style.height = `${size}px`;
+            effectElement.style.borderRadius = '50%';
+            
+            // Set animation duration
+            effectElement.style.animationDuration = `${duration}ms`;
+        }
+        
+        // Log effect creation for debugging
+        console.log(`Creating ${element} ${type} effect at position (${x}, ${y})`);
+        
+        // Make effects more visible for testing
+        effectElement.style.zIndex = '100';
+        if (type === 'bolt') {
+            effectElement.style.height = '8px'; // Make bolts thinner to represent projectiles
+            // Ensure bolt has a visible width and make it stand out more
+            effectElement.style.minWidth = '10px'; 
+            effectElement.style.border = `2px solid ${element === 'fire' ? '#ff0' : 
+                                          element === 'ice' ? '#6ff' : 
+                                          element === 'lightning' ? '#ff6' : '#fff'}`;
+        }
+        
+        // Add to the container
+        effectsContainer.appendChild(effectElement);
+        console.log("Added effect to container:", effectsContainer.childNodes.length, "elements");
+        
+        // For persistent effects, handle differently
+        if (type === 'persistent-aura') {
+            // Return the element so it can be managed by the spell logic
+            // Don't remove it automatically
+            console.log("Created persistent aura effect that will be managed by spell logic");
+            
+            // Store a reference to the container to allow removal later
+            effectElement.container = effectsContainer;
+            return effectElement;
+        }
+        
+        // For regular effects, remove after animation completes
+        setTimeout(() => {
+            if (effectElement.parentNode) {
+                effectElement.parentNode.removeChild(effectElement);
+                console.log(`Removed ${element} ${type} effect after ${duration}ms`);
+            }
+            
+            // Also remove the container
+            if (effectsContainer.parentNode) {
+                effectsContainer.parentNode.removeChild(effectsContainer);
+                console.log("Removed temporary effects container");
+            }
+        }, duration);
+        
+        return effectElement;
     }
 }
 

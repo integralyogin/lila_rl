@@ -2,6 +2,10 @@
 
 A browser-based roguelike game built with modern JavaScript using a component-based entity system and a data-driven approach inspired by ADOM, UO, DF, D1, D2, CoQ, TOME, Catacylsm RL and ADND 
 
+## Keywords
+
+`#roguelike` `#javascript` `#browser-game` `#procedural-generation` `#component-based` `#data-driven` `#turn-based` `#dungeon-crawler` `#permadeath` `#rpg` `#ascii`
+
 ## Licence 
 Creative Commons Attribution-NonCommercial 4.0 International License
 This project is licensed under the [Creative Commons Attribution-NonCommercial 4.0 International License](LICENSE.md).
@@ -37,6 +41,33 @@ The game is built using a component-based entity system with a modular, data-dri
 - **Systems**: Logic is separated into independent systems (rendering, input, FOV, etc.)
 - **State Management**: Centralized game state
 - **Data-Driven Design**: Game content is defined in JSON files for easy modification
+
+### Core Systems
+
+The game functionality is divided into the following key systems:
+
+| System | File | Responsibility |
+|--------|------|----------------|
+| **Game Controller** | `game.js` | Main game loop, initialization, and coordination between systems |
+| **Input System** | `inputSystem.js` | Processes keyboard/mouse input, handles player actions and movement |
+| **Render System** | `renderSystem.js` | Draws the game map, entities, and UI elements including player stats |
+| **FOV System** | `fovSystem.js` | Calculates field-of-view for exploration and visibility |
+| **Action System** | `actionSystem.js` | Manages turn-based actions like combat, movement, and item use |
+| **Targeting System** | `targetingSystem.js` | Handles selecting targets for spells and ranged abilities |
+| **Entity Factory** | `entityFactory.js` | Creates entities from templates defined in data files |
+| **Mouse Handler** | `mouse_handler.js` | Processes mouse interactions for UI and map navigation |
+
+### UI Components
+
+The game has several UI screens for different game functions:
+
+| UI Component | File | Purpose |
+|--------------|------|---------|
+| **Inventory UI** | `inventoryUI.js` | Display and interact with player inventory |
+| **Spellbook UI** | `spellbookUI.js` | Manage and cast spells |
+| **Shop UI** | `shopUI.js` | Buy/sell items with merchants |
+| **Character UI** | `characterUI.js` | View and upgrade player stats |
+| **Dialogue UI** | `dialogueUI.js` | NPC conversations |
 
 ## Directory Structure
 
@@ -81,11 +112,29 @@ The game is built using a component-based entity system with a modular, data-dri
 
 ## Controls
 
-- **Arrow keys**: Move/attack
+### Keyboard Controls
+- **Arrow keys** or **WASD**: Move/attack in cardinal directions (or interrupt automatic pathfinding)
+- **Home/End/PgUp/PgDn**: Move/attack diagonally (or interrupt automatic pathfinding)
 - **i**: Open inventory
-- **e**: Pick up item
+- **e** or **g** or **,**: Pick up item
 - **>**: Use stairs (when standing on them)
-- **.** or **5**: Wait a turn
+- **.** or **5** or **Space**: Wait a turn
+- **b**: Open spellbook
+- **c**: Open character screen
+- **t**: Talk to nearby NPC
+- **f**: Toggle pause/resume automatic pathfinding
+- **Alt+p**: Toggle pathfinding mode
+- **ESC**: Close menus or cancel pathfinding
+
+### Mouse Controls
+- **Left-click** on map: Move to location (pathfinding)
+- **Left-click** on enemy: Attack enemy (when adjacent)
+- **Left-click** on items/doors/stairs: Interact when in range
+- **Left-click** in inventory: Select and use items
+- **Left-click** in spellbook: Select and cast spells
+- **Mouse hover**: Display tooltips for entities and tile information
+- **Shift+click**: Invert pathfinding behavior (single step if pathfinding enabled, full path if disabled)
+- **Right-click** or **ESC**: Cancel current pathfinding
 
 ## Running the Game
 
@@ -139,6 +188,56 @@ To add new content to the game:
 2. **New monster**: Add a new monster definition to `monsters.json`
 3. **New item**: Add a new item definition to `items.json`
 4. **Reference in maps**: Use the ID from your monster/item definitions when adding them to maps
+
+## Code Architecture
+
+### Code Refactoring
+
+The codebase follows a modular architecture and has been refactored to improve maintainability:
+
+1. **Splitting Large Files**: Larger files have been split into more focused modules:
+   - Combat system extracted from `inputSystem.js` to `combatSystem.js`
+   - AI logic extracted from `inputSystem.js` to `aiSystem.js`
+   - UI tooltips extracted from `inputSystem.js` to `tooltipSystem.js`
+   
+2. **Recent Bug Fixes**:
+   - Fixed entity storage (now consistently using Map instead of Array)
+   - Added compatibility layer for array operations on the Map with `_entitiesArray` getter
+   - Fixed mouse movement and hover functionality 
+   - Repaired tooltips and entity inspection on hover
+   - Added emergency reset functionality (backtick key) to recover from stuck states
+   - Implemented A* pathfinding for mouse movement with automatic step-by-step path following
+   - Added path visualization with highlighted tiles and step numbers
+   - Added a delay between movement steps for smooth, visible movement
+   - Implemented pathfinding toggle (Alt+P) and manual cancellation (ESC/right-click)
+   - Added automatic pathfinding interruption when taking damage
+   - Maintained turn-based energy system with step-by-step movement
+
+3. **Planned Refactoring**:
+   - Further modularize `game.js` into data management and map generation
+   - Break `spell_logic.js` into core spell system, damage spells, utility spells, and summoning spells
+
+4. **Improved Separation of Concerns**: Each module has a clearly defined responsibility:
+   - System files handle game mechanics (AI, combat, movement)
+   - UI files handle user interface components
+   - Core files handle state management and coordination
+
+### File Sizes
+
+The codebase consists of several JavaScript files, with the largest ones being:
+
+| File | Size | Description |
+|------|------|-------------|
+| game.js | 65K | Main game orchestration, initialization, and game loop |
+| inputSystem.js | 69K | Handles user input processing, keybindings, and game actions |
+| spell_logic.js | 48K | Implementation of spell mechanics and effects |
+| components.js | 35K | Entity component definitions for the ECS architecture |
+| shopUI.js | 25K | Shop interface and transaction handling |
+| entityFactory.js | 23K | Factory for creating game entities from templates |
+| renderSystem.js | 19K | Handles all game rendering, UI elements, and display |
+| inventoryUI.js | 17K | Inventory management interface |
+| characterUI.js | 15K | Character stats and progression UI |
+| spellbookUI.js | 15K | Spell selection and casting interface |
 
 ## Extending the Game Code
 
