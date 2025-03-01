@@ -375,7 +375,7 @@
     "pv": 1,
     "dv": 2,
     "xp": 12,
-    "spells": ["shockbolt"],
+    "spells": ["lightning"],
     "ai": {
       "behaviorType": "spellcaster",
       "preferredMinDist": 2,

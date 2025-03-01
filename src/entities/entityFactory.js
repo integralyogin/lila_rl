@@ -613,7 +613,9 @@ class EntityFactory {
         newAI.behaviorType = 'spellcaster';
         newAI.attackRange = 6;
         newAI.spellPriorities = { "fireball": { "priority": 1, "cooldown": 3 } };
+        // Always use real spells for fire mages - this is critical for proper spell casting
         newAI.useRealSpells = true;
+        console.log("Fire Mage created - useRealSpells flag set to TRUE");
       }
       else if (monster.type === 'archer' || monster.type === 'orc_shaman') {
         newAI.attackRange = 5;
@@ -666,6 +668,7 @@ class EntityFactory {
     }
     
     if (monster.type === 'fire_mage') {
+      // Set up mana for the fire mage
       const manaComp = monster.getComponent('ManaComponent');
       if (manaComp) {
         if (manaComp.mana < 15 || manaComp.maxMana < 15) {
@@ -676,33 +679,54 @@ class EntityFactory {
         monster.addComponent(new ManaComponent(90, 2));
       }
       
+      // We'll load ALL spells from the monster template
+      console.log(`NOTICE: Setting up Fire Mage spells from monster template`);
+      
+      // Don't create or assign any hardcoded spells - we'll use exactly what's in the template
+      
+      // Get the existing SpellsComponent that was created during monster creation
       const spellsComp = monster.getComponent('SpellsComponent');
-      if (spellsComp) {
-        if (!spellsComp.hasSpell('fireball')) {
-          spellsComp.learnSpell('fireball', {
-            id: 'fireball',
-            name: 'Fireball',
-            manaCost: 12,
-            baseDamage: 14,
-            element: 'fire',
-            range: 6,
-            aoeRadius: 2
-          });
-        }
-      } else {
-        const newSpellsComp = new SpellsComponent();
-        newSpellsComp.learnSpell('fireball', {
-          id: 'fireball',
-          name: 'Fireball',
-          manaCost: 12,
-          baseDamage: 14,
-          element: 'fire',
-          range: 6,
-          aoeRadius: 2
+      
+      // Set the flag to use real implementations for ALL spells this monster has
+      if (spellsComp && spellsComp.knownSpells) {
+        // Mark all spells to use real implementation
+        spellsComp.knownSpells.forEach((spell, id) => {
+          spell.useRealImplementation = true;
+          console.log(`Marking spell ${id} to use real implementation`);
         });
-        monster.addComponent(newSpellsComp);
+        
+        // Fetch the latest spellbook data to ensure we have proper spell info
+        fetch('data/spellbooks.json')
+          .then(response => response.json())
+          .then(spellbooks => {
+            // Update each spell with the latest data from spellbooks.json
+            spellsComp.knownSpells.forEach((spell, id) => {
+              const spellbook = spellbooks.find(s => s.spellId === id);
+              if (spellbook) {
+                // Update spell with data from spellbook
+                Object.assign(spell, {
+                  name: spellbook.spellName,
+                  spellName: spellbook.spellName,
+                  manaCost: spellbook.manaCost,
+                  baseDamage: spellbook.baseDamage,
+                  element: spellbook.element,
+                  range: spellbook.range,
+                  aoeRadius: spellbook.aoeRadius,
+                  effects: spellbook.effects,
+                  description: spellbook.description,
+                  tags: spellbook.tags,
+                  useRealImplementation: true,
+                  loadTimeStamp: Date.now()
+                });
+                console.log(`Updated ${id} from spellbooks.json: ${spellbook.spellName}, element: ${spellbook.element}`);
+              }
+            });
+          })
+          .catch(e => console.error(`Error fetching spellbooks.json:`, e));
+      } else {
+        console.error("Fire Mage is missing SpellsComponent - this is unexpected!");
       }
-    }
+    } // End of fire_mage specific block
     
     const duration = summonData.duration || 20;
     monster.addComponent(new SummonedByComponent(summoner, duration));
