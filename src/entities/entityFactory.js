@@ -261,6 +261,8 @@ class EntityFactory {
     const template = this.monsterTemplates[type];
     if (!template) return null;
     
+    console.log(`[ENTITY] Creating monster of type ${type}, template:`, template);
+    
     const uniqueId = `${type}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     
     const monster = new Entity(template.name || type.charAt(0).toUpperCase() + type.slice(1));
@@ -340,12 +342,68 @@ class EntityFactory {
     monster.addComponent(ai);
     
     if (template.ai) {
-      if (template.ai.behaviorType) ai.behaviorType = template.ai.behaviorType;
+      // Initialize using the AI component's method
+      ai.initializeFromMonsterData({
+        ai: template.ai,
+        specialAbilities: template.specialAbilities
+      });
+      
+      // Map behavior type to behavior ID for data-driven system
+      if (template.ai.behaviorType) {
+        console.log(`[ENTITY] Setting behavior for ${monster.name}, type: ${template.ai.behaviorType}`);
+        ai.behaviorType = template.ai.behaviorType;
+        
+        // Assign behavior ID even if behaviorLoader isn't available yet
+        if (window.behaviorLoader) {
+          ai.behaviorId = window.behaviorLoader.mapAITypeToBehaviorId(template.ai.behaviorType);
+        } else {
+          // Direct mapping if loader isn't available
+          const mapping = {
+            'default': 'melee_attacker',
+            'ranged': 'ranged_attacker',
+            'spellcaster': 'spellcaster',
+            'summoner': 'summoner',
+            'hydra': 'hydra',
+            'stationary': 'stationary_caster'
+          };
+          ai.behaviorId = mapping[template.ai.behaviorType] || 'melee_attacker';
+        }
+        
+        console.log(`[ENTITY] Assigned behaviorId: ${ai.behaviorId} to ${monster.name}`);
+        
+        // Set initial state from behavior definition
+        if (window.behaviorDefinition) {
+          const behavior = window.behaviorDefinition.behaviors[ai.behaviorId];
+          if (behavior && behavior.initial_state) {
+            ai.currentState = behavior.initial_state;
+          }
+        } else {
+          // Default initial state if behavior definition isn't available
+          ai.currentState = 'idle';
+        }
+      }
+      
+      // Legacy support for other properties
       if (template.ai.preferredMinDist) ai.preferredMinDist = template.ai.preferredMinDist;
       if (template.ai.preferredMaxDist) ai.preferredMaxDist = template.ai.preferredMaxDist;
       if (template.ai.attackRange) ai.attackRange = template.ai.attackRange;
       if (template.ai.attackCooldown) ai.attackCooldown = template.ai.attackCooldown;
     }
+    
+    // Add special abilities if any
+    if (template.specialAbilities) {
+      ai.specialAbilities = Array.isArray(template.specialAbilities) 
+        ? template.specialAbilities 
+        : [template.specialAbilities];
+    }
+    
+    console.log(`[ENTITY] Final AI component for ${monster.name}:`, {
+      type: ai.type,
+      behaviorType: ai.behaviorType,
+      behaviorId: ai.behaviorId,
+      currentState: ai.currentState,
+      state: ai.state
+    });
     
     if (gameState?.player) {
       ai.target = gameState.player;

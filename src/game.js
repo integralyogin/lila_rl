@@ -44,6 +44,9 @@ class Game {
   
   async initialize() {
     try {
+      // Initialize behavior system first
+      await this.initializeBehaviorSystem();
+      
       this.gameData = await this.gameLoader.loadGameData();
       await this.mapLoader.preloadMaps();
       
@@ -53,6 +56,11 @@ class Game {
       this.initializeSystems();
       this.initializeUI();
       this.setupEventListeners();
+      
+      // Make gameState available globally for compatibility with older code
+      window.gameState = gameState;
+      window.aiBehaviorManager = window.aiBehaviorManager || null;
+      
       this.newGame();
       
       eventBus.emit('gameInitialized');
@@ -131,6 +139,142 @@ class Game {
       import('./entities/ai/monsterSpellcaster.js').catch(error => {
         console.error("Error importing monsterSpellcaster:", error);
       });
+      
+      // Initialize the new data-driven behavior system
+      this.initializeBehaviorSystem().then(() => {
+        // Update existing entities with behavior IDs after the system is loaded
+        this.updateExistingEntitiesWithBehaviors();
+      });
+    }
+  }
+  
+  /**
+   * Force all AI entities to perform a quick check
+   * Used to make sure behavior updates take effect
+   */
+  forceAICheck() {
+    console.log('[GAME] Forcing AI check for all entities');
+    
+    if (!gameState.getSystem('AISystem')) {
+      console.log('[GAME] AI system not found');
+      return;
+    }
+    
+    const aiSystem = gameState.getSystem('AISystem');
+    if (typeof aiSystem.processEntityTurns === 'function') {
+      console.log('[GAME] Triggering AI entity turns');
+      aiSystem.processEntityTurns();
+    }
+  }
+  
+  /**
+   * Updates existing entities to use the behavior system
+   * This is needed for entities that were created before the behavior system was loaded
+   */
+  updateExistingEntitiesWithBehaviors() {
+    console.log('[GAME] Updating existing entities with behaviors');
+    
+    if (!window.behaviorLoader || !window.behaviorDefinition) {
+      console.log('[GAME] Behavior system not available, cannot update entities');
+      return;
+    }
+    
+    const entities = gameState._entitiesArray || 
+      (gameState.entities instanceof Map ? Array.from(gameState.entities.values()) : 
+      (Array.isArray(gameState.entities) ? gameState.entities : []));
+    
+    console.log(`[GAME] Found ${entities.length} entities to update`);
+    
+    for (const entity of entities) {
+      if (!entity || entity === gameState.player) continue;
+      
+      const ai = entity.getComponent && entity.getComponent('AIComponent');
+      if (!ai) continue;
+      
+      console.log(`[GAME] Processing entity ${entity.name}, AI type: ${ai.type}, behaviorType: ${ai.behaviorType}`);
+      
+      // Try to get behavior type from template
+      if (entity.type || entity.name) {
+        // First look for the entity template by its type
+        let template = gameState.monsterTemplates?.find(t => t.id === entity.type);
+        
+        // If not found by type, try to match by name (case insensitive)
+        if (!template && entity.name) {
+          template = gameState.monsterTemplates?.find(t => 
+            t.name && t.name.toLowerCase() === entity.name.toLowerCase());
+        }
+        
+        if (template?.ai?.behaviorType) {
+          ai.behaviorType = template.ai.behaviorType;
+          console.log(`[GAME] Set behaviorType ${ai.behaviorType} from template for ${entity.name}`);
+        } else {
+          // For Fire Mage specifically, set the type to spellcaster
+          if (entity.name === 'Fire Mage') {
+            ai.behaviorType = 'spellcaster';
+            console.log(`[GAME] Force set behaviorType 'spellcaster' for ${entity.name}`);
+          }
+        }
+      }
+      
+      // Set behavior ID if possible
+      if (ai.behaviorType && !ai.behaviorId) {
+        ai.behaviorId = window.behaviorLoader.mapAITypeToBehaviorId(ai.behaviorType);
+        console.log(`[GAME] Set behaviorId ${ai.behaviorId} for ${entity.name}`);
+        
+        // Set initial state if needed
+        if (!ai.currentState) {
+          const behavior = window.behaviorDefinition.behaviors[ai.behaviorId];
+          if (behavior && behavior.initial_state) {
+            ai.currentState = behavior.initial_state;
+            console.log(`[GAME] Set initial state ${ai.currentState} for ${entity.name}`);
+          }
+        }
+      }
+    }
+    
+    console.log('[GAME] Finished updating entities with behaviors');
+    
+    // Force a quick AI check to make sure the updates take effect
+    this.forceAICheck();
+  }
+  
+  async initializeBehaviorSystem() {
+    console.log('[GAME] Starting behavior system initialization');
+    
+    try {
+      // Import behavior definition and loader
+      const [behaviorDefModule, behaviorLoaderModule, aiBehaviorManagerModule] = await Promise.all([
+        import('./entities/ai/behaviorDefinition.js'),
+        import('./entities/ai/behaviorLoader.js'),
+        import('./entities/ai/aiBehaviorManager.js')
+      ]);
+      
+      console.log('[GAME] Imported behavior modules');
+      
+      const behaviorDefinition = behaviorDefModule.default;
+      const behaviorLoader = behaviorLoaderModule.default;
+      const aiBehaviorManager = aiBehaviorManagerModule.default;
+      
+      // Make them available globally for compatibility
+      window.behaviorDefinition = behaviorDefinition;
+      window.behaviorLoader = behaviorLoader;
+      window.aiBehaviorManager = aiBehaviorManager;
+      
+      console.log('[GAME] Set global behavior objects');
+      
+      // Initialize the loader
+      const success = await behaviorLoader.initialize(fetch);
+      console.log(`[GAME] Behavior loader initialization ${success ? 'successful' : 'failed'}`);
+      
+      if (window.behaviorDefinition) {
+        console.log('[GAME] Behavior definitions available:', Object.keys(window.behaviorDefinition.behaviors));
+      } else {
+        console.log('[GAME] No behavior definitions available');
+      }
+      
+      console.log('[GAME] Behavior system initialization complete');
+    } catch (error) {
+      console.error('[GAME] Error initializing behavior system:', error);
     }
   }
   

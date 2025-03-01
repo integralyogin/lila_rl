@@ -136,17 +136,17 @@ class TargetingSystem {
     
     // If a position is provided (e.g., from a click), use that position
     // Otherwise use the current target position
-    const targetPosition = position || this.currentTarget;
+    const selectedPosition = position || this.currentTarget;
     
     // Check if target is valid
     const isValidTarget = this.validTargets.some(
-      target => target.x === targetPosition.x && target.y === targetPosition.y
+      target => target.x === selectedPosition.x && target.y === selectedPosition.y
     );
     
     if (isValidTarget) {
       // Call callback with selected target
       if (this.targetingCallback) {
-        this.targetingCallback(targetPosition);
+        this.targetingCallback(selectedPosition);
       }
       
       // Reset targeting state

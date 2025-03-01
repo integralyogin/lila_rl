@@ -1,0 +1,96 @@
+# Lila RL Data-Driven Architecture Analysis
+
+## Current Architecture Assessment
+
+The codebase follows a roguelike game architecture with a component-based entity system. Key architecture elements include:
+
+1. **Entity-Component System**: Modular components that can be attached to entities, creating a flexible composition-based approach.
+2. **Data-Driven Content**: JSON files define monsters, items, maps, and spells.
+3. **System-Based Logic**: Separate systems process specific game aspects (combat, AI, rendering, etc.)
+4. **Event-Based Communication**: Systems communicate via events rather than tight coupling.
+
+### Data Layer
+- **JSON Data Files**: Items, monsters, spells, and maps defined externally
+- **EntityFactory**: Translates JSON data into game entities with appropriate components
+- **Component Structure**: Properties directly mapped from data files
+
+### Entity-Component System
+- **Base Components**: Position, Renderable, BlocksMovement
+- **Combat Components**: Stats, Health, Attack abilities
+- **Magic Components**: ManaPool, SpellCaster
+- **Item Components**: Inventory, Equipment, Usable
+- **Social Components**: Dialogue, Shop
+
+### Systems
+- **AI System**: Processes entities with AI components, using behavior templates from JSON
+- **Combat System**: Handles attacks, damage calculation, equipment effects
+- **Spell System**: Implements various spell types with some data-driven aspects
+- **Targeting System**: For selecting spell and ability targets
+- **Rendering System**: Displays entities on screen
+
+## Comparison to Data-Driven RPGs
+
+### Caves of Qud
+- **Similarity**: Component-based entity system, JSON data files
+- **Difference**: CoQ uses a more advanced mutation/modification system
+- **Inspiration**: Their object system allows objects to be defined by their properties and mutations
+
+### Cataclysm: Dark Days Ahead
+- **Similarity**: JSON definition of items, monsters, and maps
+- **Difference**: C:DDA uses a more comprehensive JSON schema with inheritance
+- **Inspiration**: Their item template system with inheritance would allow more complex item hierarchies
+
+### Dwarf Fortress
+- **Similarity**: Complex AI behaviors, detailed world representation
+- **Difference**: DF uses a more simulation-heavy approach with interconnected systems
+- **Inspiration**: More complex interaction between systems (temperature, materials, fluids)
+
+### Morrowind
+- **Similarity**: Spell system with different effect types
+- **Difference**: Morrowind uses a more flexible effect component system for spells
+- **Inspiration**: Spell creation system that combines effect components
+
+## Current Data-Driven Strengths
+1. JSON-defined entities (monsters, items, spells)
+2. Component-based architecture allowing composition
+3. Separation of data and logic
+4. System-based processing of components
+
+## Opportunities for Improvement
+
+### Entity Template System
+- Implement inheritance for entity templates
+- Allow overriding specific properties
+- Support composition of templates
+
+### Enhanced Spell System
+- Move spell implementations to data rather than code
+- Define spell effects as composable components
+- Create a pipeline for processing spell effects
+
+### Dynamic Behavior Tree AI
+- Define AI behaviors entirely in data
+- Create behavior building blocks that can be combined
+- Allow conditional actions and sequences
+
+### Material System
+- Define materials and their properties in data
+- Implement material effects on items and environment
+- Create interactions between materials and effects
+
+## Recommended Architecture Model
+
+The game architecture most closely resembles **Caves of Qud**, with its component-based entity system and JSON data files. To further improve the data-driven nature, consider:
+
+1. **Adopting CDDA's inheritance system** for entity templates
+2. **Implementing Morrowind's effect component system** for spells
+3. **Creating a more simulation-based approach** for world interactions (like DF)
+4. **Adding behavior trees defined in data** for more flexible AI
+
+By combining these approaches, Lila RL could become even more data-driven, allowing for rich content creation with minimal code changes.
+
+## Next Steps
+1. Refactor the spell system to use composable effects defined in data
+2. Implement template inheritance for entity definitions
+3. Create a more comprehensive behavior tree system for AI
+4. Design a material property system for more complex interactions

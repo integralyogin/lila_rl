@@ -1,0 +1,422 @@
+[
+  {
+    "id": "melee_attacker",
+    "description": "Basic melee attacker that chases and attacks targets",
+    "initial_state": "idle",
+    "states": {
+      "idle": {
+        "action": "moveRandomly",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 6 }, 
+            "target": "chase" 
+          }
+        ]
+      },
+      "chase": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 1 }, 
+            "target": "attack" 
+          },
+          {
+            "condition": { "type": "hp", "op": "<", "value": "30%" },
+            "target": "flee"
+          }
+        ]
+      },
+      "attack": {
+        "action": "meleeAttack",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 1 }, 
+            "target": "chase" 
+          }
+        ]
+      },
+      "flee": {
+        "action": "moveAwayFromTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "hp", "op": ">", "value": "50%" }, 
+            "target": "chase" 
+          },
+          {
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 10 },
+            "target": "idle"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "ranged_attacker",
+    "description": "Ranged attacker that maintains distance and uses projectiles",
+    "initial_state": "idle",
+    "states": {
+      "idle": {
+        "action": "moveRandomly",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 8 }, 
+            "target": "position" 
+          }
+        ]
+      },
+      "position": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 3 },
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 7 }, 
+            "target": "attack" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 2 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 7 }, 
+            "target": "chase" 
+          }
+        ],
+        "action": "moveTowardTarget"
+      },
+      "chase": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 7 }, 
+            "target": "attack" 
+          }
+        ]
+      },
+      "attack": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 2 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 7 }, 
+            "target": "chase" 
+          },
+          {
+            "condition": { "type": "hp", "op": "<", "value": "30%" },
+            "target": "flee"
+          }
+        ],
+        "action": "castSpell"
+      },
+      "retreat": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 4 }, 
+            "target": "attack" 
+          }
+        ],
+        "action": "moveAwayFromTarget"
+      },
+      "flee": {
+        "action": "moveAwayFromTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "hp", "op": ">", "value": "50%" }, 
+            "target": "position" 
+          },
+          {
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 10 },
+            "target": "idle"
+          }
+        ]
+      }
+    },
+    "actionParams": {
+      "castSpell": {
+        "spellId": "ranged_attack"
+      }
+    }
+  },
+  {
+    "id": "spellcaster",
+    "description": "Magical enemy that casts spells at a distance",
+    "initial_state": "idle",
+    "states": {
+      "idle": {
+        "action": "moveRandomly",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 8 }, 
+            "target": "position" 
+          }
+        ]
+      },
+      "position": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": [
+              { "type": "distanceToTarget", "op": ">=", "value": 3 },
+              { "type": "distanceToTarget", "op": "<=", "value": 6 }
+            ],
+            "target": "cast" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 3 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 6 }, 
+            "target": "chase" 
+          }
+        ]
+      },
+      "chase": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 6 }, 
+            "target": "cast" 
+          }
+        ]
+      },
+      "cast": {
+        "action": "castSpell",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 3 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 6 }, 
+            "target": "chase" 
+          },
+          {
+            "condition": { "type": "hp", "op": "<", "value": "30%" },
+            "target": "heal"
+          }
+        ]
+      },
+      "retreat": {
+        "action": "moveAwayFromTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 4 }, 
+            "target": "cast" 
+          }
+        ]
+      },
+      "heal": {
+        "action": "useSpecialAbility",
+        "transitions": [
+          {
+            "condition": { "type": "hp", "op": ">", "value": "50%" },
+            "target": "cast"
+          }
+        ]
+      }
+    },
+    "actionParams": {
+      "castSpell": {
+        "spellId": "fireball"
+      },
+      "useSpecialAbility": {
+        "abilityId": "healing"
+      }
+    }
+  },
+  {
+    "id": "summoner",
+    "description": "Enemy that summons allies to help in combat",
+    "initial_state": "idle",
+    "states": {
+      "idle": {
+        "action": "moveRandomly",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 8 }, 
+            "target": "position" 
+          }
+        ]
+      },
+      "position": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 3 },
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 6 }, 
+            "target": "summon" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 2 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 6 }, 
+            "target": "chase" 
+          }
+        ],
+        "action": "moveTowardTarget"
+      },
+      "chase": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 6 }, 
+            "target": "summon" 
+          }
+        ]
+      },
+      "summon": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<=", "value": 2 }, 
+            "target": "retreat" 
+          },
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 6 }, 
+            "target": "chase" 
+          },
+          {
+            "condition": { "type": "hp", "op": "<", "value": "30%" },
+            "target": "flee"
+          }
+        ],
+        "action": "castSpell"
+      },
+      "retreat": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">=", "value": 4 }, 
+            "target": "summon" 
+          }
+        ],
+        "action": "moveAwayFromTarget"
+      },
+      "flee": {
+        "action": "moveAwayFromTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "hp", "op": ">", "value": "50%" }, 
+            "target": "position" 
+          },
+          {
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 10 },
+            "target": "idle"
+          }
+        ]
+      }
+    },
+    "actionParams": {
+      "castSpell": {
+        "spellId": "summonhydra"
+      }
+    }
+  },
+  {
+    "id": "hydra",
+    "description": "Multi-headed creature that regenerates health and can spawn new heads",
+    "initial_state": "idle",
+    "states": {
+      "idle": {
+        "action": "moveRandomly",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 8 }, 
+            "target": "attack" 
+          }
+        ]
+      },
+      "attack": {
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": ">", "value": 6 }, 
+            "target": "chase" 
+          },
+          {
+            "condition": { "type": "hp", "op": "<", "value": "60%" },
+            "target": "spawn_head"
+          }
+        ],
+        "action": "castSpell"
+      },
+      "chase": {
+        "action": "moveTowardTarget",
+        "transitions": [
+          { 
+            "condition": { "type": "distanceToTarget", "op": "<", "value": 6 }, 
+            "target": "attack" 
+          }
+        ]
+      },
+      "spawn_head": {
+        "action": "useSpecialAbility",
+        "transitions": [
+          {
+            "condition": { "type": "lastAction", "op": "==", "value": "useSpecialAbility" },
+            "target": "attack"
+          }
+        ]
+      }
+    },
+    "actionParams": {
+      "castSpell": {
+        "spellId": "fireball"
+      },
+      "useSpecialAbility": {
+        "abilityId": "spawnnewhead"
+      }
+    },
+    "specialAbilities": [
+      {
+        "id": "regeneration",
+        "effect": "heal",
+        "amount": "5%",
+        "trigger": "turn_start",
+        "condition": "hp < 100%"
+      },
+      {
+        "id": "spawnnewhead",
+        "effect": "spawn",
+        "trigger": "damaged",
+        "condition": "hp < 50%",
+        "cooldown": 3,
+        "params": {
+          "entityType": "hydra_head",
+          "duration": 20
+        }
+      }
+    ]
+  },
+  {
+    "id": "troll",
+    "description": "Strong enemy with health regeneration",
+    "actions": {
+      "priority": ["meleeAttack", "moveTowardTarget", "moveRandomly"]
+    },
+    "conditions": [
+      { "type": "distanceToTarget", "op": "<=", "value": 1, "action": "meleeAttack" },
+      { "type": "distanceToTarget", "op": ">", "value": 1, "action": "moveTowardTarget" }
+    ],
+    "specialAbilities": [
+      {
+        "id": "regeneration",
+        "effect": "heal",
+        "amount": "2%",
+        "trigger": "turn_start",
+        "condition": "hp < 100%"
+      },
+      {
+        "id": "berserk",
+        "effect": "buff",
+        "trigger": "damaged",
+        "condition": "hp < 30%",
+        "cooldown": 10,
+        "params": {
+          "stat": "strength",
+          "amount": 5,
+          "duration": 10
+        }
+      }
+    ]
+  }
+]

@@ -47,9 +47,9 @@ const monsterSpellcaster = {
         // Get components
         const stats = entity.getComponent('StatsComponent');
         const manaComp = entity.getComponent('ManaComponent');
-        const entityPos = entity.getComponent('PositionComponent');
+        const casterPos = entity.getComponent('PositionComponent');
         
-        if (!stats || !manaComp || !entityPos) return { success: false };
+        if (!stats || !manaComp || !casterPos) return { success: false };
         
         // Create a spell object to pass to the spell logic system
         const spellObj = {
@@ -57,15 +57,15 @@ const monsterSpellcaster = {
             manaCost: 0, // Will be determined by the spell system
             caster: entity,
             casterStats: stats,
-            casterPos: entityPos,
+            casterPos: casterPos,
             isMonsterCast: true // Flag to indicate this is cast by a monster, not the player
         };
         
         // Get the target position if we have a target
-        let targetPos = null;
+        let targetPosComp = null;
         if (context.target) {
-            targetPos = context.target.getComponent('PositionComponent');
-            if (!targetPos) return { success: false };
+            targetPosComp = context.target.getComponent('PositionComponent');
+            if (!targetPosComp) return { success: false };
         }
         
         // Check the spell type to determine how to provide the target
@@ -92,14 +92,14 @@ const monsterSpellcaster = {
                         x: gameState.player.position.x,
                         y: gameState.player.position.y
                     };
-                } else if (targetPos) {
-                    target = { x: targetPos.x, y: targetPos.y };
+                } else if (targetPosComp) {
+                    target = { x: targetPosComp.x, y: targetPosComp.y };
                 } else {
                     return { success: false };
                 }
-            } else if (targetPos) {
+            } else if (targetPosComp) {
                 // Use the target's position for location-based spells
-                target = { x: targetPos.x, y: targetPos.y };
+                target = { x: targetPosComp.x, y: targetPosComp.y };
             } else {
                 return { success: false };
             }
@@ -158,8 +158,8 @@ const monsterSpellcaster = {
             
             // Create bolt effect
             renderSystem.createSpellEffect('bolt', 'fire', {
-                sourceX: entityPos.x,
-                sourceY: entityPos.y,
+                sourceX: casterPos.x,
+                sourceY: casterPos.y,
                 targetX: target.x,
                 targetY: target.y,
                 duration: 600
@@ -272,21 +272,21 @@ const monsterSpellcaster = {
                     gameState.addMessage(`${entity.name} casts ${monsterSpell.name}!`);
                     
                     // Create visual effects
-                    if (gameState.renderSystem && entityPos && targetPos) {
+                    if (gameState.renderSystem && casterPos && targetPosComp) {
                         // Create bolt effect
                         gameState.renderSystem.createSpellEffect('bolt', monsterSpell.element, {
-                            sourceX: entityPos.x,
-                            sourceY: entityPos.y,
-                            targetX: targetPos.x,
-                            targetY: targetPos.y,
+                            sourceX: casterPos.x,
+                            sourceY: casterPos.y,
+                            targetX: targetPosComp.x,
+                            targetY: targetPosComp.y,
                             duration: 600
                         });
                         
                         // Create impact effect with delay
                         setTimeout(() => {
                             gameState.renderSystem.createSpellEffect('impact', monsterSpell.element, {
-                                x: targetPos.x,
-                                y: targetPos.y,
+                                x: targetPosComp.x,
+                                y: targetPosComp.y,
                                 duration: 600
                             });
                         }, 500);

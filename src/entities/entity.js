@@ -11,6 +11,12 @@ class Entity {
     addComponent(component) {
         component.entity = this;
         this.components.set(component.constructor.name, component);
+        
+        // Call onAdd method if it exists
+        if (typeof component.onAdd === 'function') {
+            component.onAdd(this);
+        }
+        
         return this;
     }
     

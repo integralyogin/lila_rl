@@ -385,24 +385,87 @@ export class AIComponent extends Component {
     this.attackCooldown = 3;
     this.attackRange = 5;
     this.behaviorType = null;
+    this.behaviorId = null;  // ID of the behavior definition to use
+    this.currentState = null; // Current state in the state machine
+    this.stateTimeout = 0;   // Timer for temporary states
+    this.lastKnownTargetPos = null; // Target's last known position
+    this.targetLostTimer = 0;      // Timer for tracking lost targets
     this.spellPriorities = null;
-    
+    this.specialAbilities = [];    // Special abilities from JSON
+    this.lastAction = null;        // Last successful action
     this.preferredMinDist = 3;
     this.preferredMaxDist = 6;
   }
   
-  takeTurn() {
-    const context = this._createContext();
-    this._determineBehaviorType();
-    
-    const behavior = monsterBehaviors[this.behaviorType] || monsterBehaviors.default;
-    const actionId = this._evaluateDecisionTree(behavior.decisionTree, context);
-    this._executeAction(actionId, behavior, context);
+  /**
+   * Initialize AI parameters based on monster data
+   * @param {object} monsterData - Data from monsters.json
+   */
+  initializeFromMonsterData(monsterData) {
+    if (monsterData?.ai) {
+      // Copy all AI properties from monster data
+      Object.assign(this, monsterData.ai);
+      
+      // Add special abilities
+      if (monsterData.specialAbilities) {
+        this.specialAbilities = Array.isArray(monsterData.specialAbilities) 
+          ? monsterData.specialAbilities 
+          : [monsterData.specialAbilities];
+      }
+    }
   }
   
+  /**
+   * Process AI behavior using the data-driven approach
+   */
+  takeTurn() {
+    if (!this.entity) {
+      console.warn('AIComponent.takeTurn called without entity reference');
+      return;
+    }
+    
+    // If we have behaviorType but not behaviorId, try to set it
+    if (this.behaviorType && !this.behaviorId && window.behaviorLoader) {
+      console.log(`[AI] ${this.entity.name} has behaviorType ${this.behaviorType} but no behaviorId, setting it now`);
+      this.behaviorId = window.behaviorLoader.mapAITypeToBehaviorId(this.behaviorType);
+      
+      // Set initial state if not already set
+      if (!this.currentState && window.behaviorDefinition) {
+        const behavior = window.behaviorDefinition.behaviors[this.behaviorId];
+        if (behavior && behavior.initial_state) {
+          this.currentState = behavior.initial_state;
+        }
+      }
+    }
+    
+    // Create context for behavior processing
+    const context = this._createContext();
+    
+    // Process behavior using behavior definition system
+    if (window.behaviorDefinition && this.behaviorId) {
+      console.log(`[AI] ${this.entity.name} using behavior definition, id: ${this.behaviorId}, state: ${this.currentState || 'none'}`);
+      window.behaviorDefinition.processBehavior(this.entity, context);
+    } else if (window.aiBehaviorManager) {
+      // Fallback to basic behavior if no behavior ID is set
+      console.log(`[AI] ${this.entity.name} using basic behavior (no behaviorId: ${this.behaviorId}, type: ${this.behaviorType})`);
+      this._basicBehavior(context);
+    } else {
+      console.log(`[AI] ${this.entity.name} has no behavior system!`);
+    }
+  }
+  
+  /**
+   * Create context for behavior processing
+   * @returns {object} Context object with target, distance, etc.
+   */
   _createContext() {
+    // Get gameState from window
+    const gameState = window.gameState;
+    
     const context = {
+      entity: this.entity,
       target: this.target,
+      gameState: gameState,
       inArenaCombat: this.inArenaCombat || false,
       lastAttackAt: this.lastAttackAt,
       attackCooldown: this.attackCooldown,
@@ -412,6 +475,7 @@ export class AIComponent extends Component {
       distanceToTarget: Infinity
     };
     
+    // Calculate distance to target
     if (this.target) {
       const pos = this.entity.getComponent('PositionComponent');
       const targetPos = this.target.getComponent('PositionComponent');
@@ -423,43 +487,10 @@ export class AIComponent extends Component {
       }
     }
     
+    // Get spell information
     const entityData = this._getEntityData();
     if (entityData?.spells?.length > 0) {
-      const spellPriorities = this.spellPriorities || 
-                            (this.entity.getComponent('AIComponent')?.spellPriorities);
-      
-      if (spellPriorities) {
-        let selectedSpell = null;
-        let highestPriority = 999;
-        
-        const manaComp = this.entity.getComponent('ManaComponent');
-        if (!manaComp) {
-          context.spellId = entityData.spells[0];
-        } else {
-          for (const spellId of entityData.spells) {
-            if (!spellPriorities[spellId]) continue;
-            
-            const priority = spellPriorities[spellId].priority;
-            if (priority >= highestPriority) continue;
-            
-            const spell = this._getSpellData(spellId);
-            if (!spell) continue;
-            
-            if (manaComp.mana < spell.manaCost) continue;
-            
-            const cooldown = spellPriorities[spellId].cooldown || 0;
-            const lastCast = this.lastSpellCast ? this.lastSpellCast[spellId] || 0 : 0;
-            if (cooldown > 0 && gameState.turn - lastCast < cooldown) continue;
-            
-            selectedSpell = spellId;
-            highestPriority = priority;
-          }
-          
-          context.spellId = selectedSpell || entityData.spells[0];
-        }
-      } else {
-        context.spellId = entityData.spells[0];
-      }
+      context.spellId = this._selectBestSpell(entityData.spells, context);
       
       const spell = this._getSpellData(context.spellId);
       if (spell) {
@@ -471,18 +502,71 @@ export class AIComponent extends Component {
     
     return context;
   }
-  
-  _determineBehaviorType() {
-    if (this.behaviorType) return;
+
+  /**
+   * Select the best spell to cast based on priorities and context
+   * @param {Array} spells - Available spells
+   * @param {object} context - Context for spell selection
+   * @returns {string} Selected spell ID
+   */
+  _selectBestSpell(spells, context) {
+    const spellPriorities = this.spellPriorities || {};
     
-    const entityData = this._getEntityData();
-    
-    if (entityData?.behaviorType) {
-      this.behaviorType = entityData.behaviorType;
-      return;
+    if (Object.keys(spellPriorities).length === 0) {
+      return spells[0]; // No priorities set, use first spell
     }
+    
+    let selectedSpell = null;
+    let highestPriority = 999;
+    
+    const manaComp = this.entity.getComponent('ManaComponent');
+    
+    for (const spellId of spells) {
+      if (!spellPriorities[spellId]) continue;
+      
+      const priority = spellPriorities[spellId].priority;
+      if (priority >= highestPriority) continue;
+      
+      const spell = this._getSpellData(spellId);
+      if (!spell) continue;
+      
+      // Check if we have enough mana
+      if (manaComp && manaComp.mana < spell.manaCost) continue;
+      
+      // Check cooldown
+      const cooldown = spellPriorities[spellId].cooldown || 0;
+      const lastCast = this.lastSpellCast ? this.lastSpellCast[spellId] || 0 : 0;
+      const gameState = window.gameState;
+      if (cooldown > 0 && gameState && gameState.turn - lastCast < cooldown) continue;
+      
+      // Check health threshold if specified
+      if (spellPriorities[spellId].healthThreshold) {
+        const healthComp = this.entity.getComponent('HealthComponent');
+        if (!healthComp) continue;
+        
+        const healthPercent = (healthComp.hp / healthComp.maxHp) * 100;
+        if (healthPercent > spellPriorities[spellId].healthThreshold) continue;
+      }
+      
+      // Check mana threshold if specified
+      if (spellPriorities[spellId].manaThreshold) {
+        if (!manaComp) continue;
+        
+        const manaPercent = (manaComp.mana / manaComp.maxMana) * 100;
+        if (manaPercent < spellPriorities[spellId].manaThreshold) continue;
+      }
+      
+      selectedSpell = spellId;
+      highestPriority = priority;
+    }
+    
+    return selectedSpell || spells[0];
   }
   
+  /**
+   * Get entity data for spells
+   * @returns {object} Entity data
+   */
   _getEntityData() {
     const spellsComp = this.entity.getComponent('SpellsComponent');
     if (spellsComp?.knownSpells?.size > 0) {
@@ -495,6 +579,11 @@ export class AIComponent extends Component {
     return null;
   }
   
+  /**
+   * Get spell data
+   * @param {string} spellId - Spell ID
+   * @returns {object} Spell data
+   */
   _getSpellData(spellId) {
     const spellDefaults = {
       'firebolt': {
@@ -567,59 +656,99 @@ export class AIComponent extends Component {
         deathMessage: 'is killed by',
         isSummoning: true,
         summonType: 'hydra'
+      },
+      'spawnnewhead': {
+        name: 'Spawn New Head',
+        manaCost: 10,
+        baseDamage: 0,
+        element: 'nature',
+        range: 1,
+        isSelfTargeting: true,
+        message: 'grows a new hydra head',
+        isHydraSpawning: true
+      },
+      'ranged_attack': {
+        name: 'Ranged Attack',
+        manaCost: 0,
+        baseDamage: 5,
+        element: 'physical',
+        range: 5,
+        isSelfTargeting: false,
+        message: 'fires an arrow at',
+        deathMessage: 'is shot by'
       }
     };
     
     return spellDefaults[spellId] || null;
   }
   
-  _evaluateDecisionTree(node, context) {
-    if (typeof node === 'string') {
-      return node;
-    }
+  /**
+   * Basic behavior fallback for entities without a defined behavior
+   * @param {object} context - Context
+   */
+  _basicBehavior(context) {
+    const aiBehaviorManager = window.aiBehaviorManager;
+    if (!aiBehaviorManager) return;
     
-    return this._evaluateDecisionTree(node.evaluate(this.entity, context), context);
+    if (context.target) {
+      if (context.distanceToTarget <= 1.5) {
+        aiBehaviorManager.execute('meleeAttack', this.entity, context);
+      } else {
+        aiBehaviorManager.execute('moveTowardTarget', this.entity, context);
+      }
+    } else {
+      aiBehaviorManager.execute('moveRandomly', this.entity, {});
+    }
   }
   
-  _executeAction(actionId, behavior, context) {
-    const customActions = behavior.actions || {};
-    
-    if (actionId in customActions) {
-      const result = customActions[actionId](this.entity, context);
-      this._updateStateFromResult(actionId, result);
-      return;
-    }
-    
-    const result = aiBehaviorManager.execute(actionId, this.entity, context);
-    this._updateStateFromResult(actionId, result);
-  }
-  
-  _updateStateFromResult(actionId, result) {
+  /**
+   * Update state when an action is performed
+   * @param {string} actionId - ID of the action
+   * @param {object} result - Result of the action
+   */
+  updateState(actionId, result) {
     if (!result) return;
     
+    const gameState = window.gameState;
+    
     if (actionId === 'meleeAttack' || actionId === 'castSpell') {
-      this.lastAttackAt = gameState.turn;
+      if (gameState && typeof gameState.turn !== 'undefined') {
+        this.lastAttackAt = gameState.turn;
+      } else {
+        // Default behavior if gameState isn't available
+        this.lastAttackAt = this.lastAttackAt ? this.lastAttackAt + 1 : 1;
+      }
     }
     
     if (result.isDead && !this.inArenaCombat) {
       this.target = null;
     }
+    
+    // Store last action
+    this.lastAction = actionId;
   }
   
-  _moveRandomly() {
-    aiBehaviorManager.execute('moveRandomly', this.entity, {});
-  }
-  
-  _moveTowardTarget() {
-    aiBehaviorManager.execute('moveTowardTarget', this.entity, { target: this.target });
-  }
-  
-  _moveAwayFromTarget() {
-    aiBehaviorManager.execute('moveAwayFromTarget', this.entity, { target: this.target });
-  }
-  
-  _attackTarget(target) {
-    aiBehaviorManager.execute('meleeAttack', this.entity, { target });
+  /**
+   * Called when this component is added to an entity
+   * @param {Entity} entity - The entity this component is being added to
+   */
+  onAdd(entity) {
+    // Store reference to the entity
+    this.entity = entity;
+    
+    // Fix missing behavior ID if we're added after the behavior system is loaded
+    if (this.behaviorType && !this.behaviorId && window.behaviorLoader) {
+      console.log(`[AI] Setting behaviorId for ${entity.name}, behaviorType: ${this.behaviorType}`);
+      this.behaviorId = window.behaviorLoader.mapAITypeToBehaviorId(this.behaviorType);
+      
+      // Set initial state if it's not already set
+      if (!this.currentState && window.behaviorDefinition) {
+        const behavior = window.behaviorDefinition.behaviors[this.behaviorId];
+        if (behavior && behavior.initial_state) {
+          this.currentState = behavior.initial_state;
+        }
+      }
+    }
   }
 }
 

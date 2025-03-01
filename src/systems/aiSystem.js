@@ -89,6 +89,12 @@ class AISystem {
     const distanceToPlayer = Math.sqrt(dx * dx + dy * dy);
     const canSeePlayer = this.hasLineOfSight(entityPos.x, entityPos.y, playerPos.x, playerPos.y);
     
+    // Update last known position if player is visible
+    if (canSeePlayer) {
+      aiComponent.lastKnownTargetPos = { x: playerPos.x, y: playerPos.y };
+      aiComponent.targetLostTimer = 5; // Reset timer
+    }
+    
     if (aiComponent.state === 'idle') {
       const entityName = entity.name ? entity.name.toLowerCase() : '';
       if (entity.friendly === true || (gameState.currentMap === "town" && 
@@ -97,6 +103,15 @@ class AISystem {
       
       if (canSeePlayer && distanceToPlayer < (aiComponent.aggroRange || 8)) {
         aiComponent.state = 'hostile'; aiComponent.target = gameState.player;
+        
+        // Set initial state from behavior if available
+        if (window.behaviorDefinition && aiComponent.behaviorId) {
+          const behavior = window.behaviorDefinition.behaviors[aiComponent.behaviorId];
+          if (behavior && behavior.initial_state) {
+            aiComponent.currentState = behavior.initial_state;
+          }
+        }
+        
         if (!entity.alertedPlayer) {
           entity.alertedPlayer = true;
           eventBus.emit('logMessage', {message: `The ${entity.name} notices you!`, type: 'warning'});
@@ -105,10 +120,14 @@ class AISystem {
     }
     
     if (aiComponent.state === 'hostile' && aiComponent.target) {
+      // Process behavior using takeTurn method, which now uses the data-driven system
       if (typeof aiComponent.takeTurn === 'function') {
-        aiComponent.takeTurn(); return;
+        console.log(`[AI] ${entity.name} executing takeTurn(), behaviorId: ${aiComponent.behaviorId}, behaviorType: ${aiComponent.behaviorType}, state: ${aiComponent.state}`);
+        aiComponent.takeTurn();
+        return;
       }
       
+      // Fall back to hardcoded behavior if takeTurn isn't available
       const hasSpells = entity.getComponent('SpellsComponent')?.knownSpells?.size > 0;
       const hasMana = entity.getComponent('ManaComponent')?.mana > 0;
       
@@ -116,21 +135,40 @@ class AISystem {
         const spellsComponent = entity.getComponent('SpellsComponent');
         const spellId = Array.from(spellsComponent.knownSpells.keys())[0];
         const spell = spellsComponent.knownSpells.get(spellId);
-        const context = {target: gameState.player, spellId, spellManaCost: spell.manaCost || 5};
+        const context = {
+          target: gameState.player, 
+          spellId, 
+          spellManaCost: spell.manaCost || 5
+        };
+        
         const aiBehaviorManager = window.aiBehaviorManager || 
           (window.AIBehaviorManager ? new window.AIBehaviorManager() : null);
         
-        if (aiBehaviorManager) aiBehaviorManager.execute('castSpell', entity, context);
-        else {
+        if (aiBehaviorManager) {
+          aiBehaviorManager.execute('castSpell', entity, context);
+        } else {
           if (distanceToPlayer <= 1.5) this.entityAttack(entity, gameState.player);
           else this.moveTowardTarget(entity, playerPos.x, playerPos.y);
         }
       } 
       else if (distanceToPlayer <= 1.5) this.entityAttack(entity, gameState.player);
       else if (canSeePlayer) this.moveTowardTarget(entity, playerPos.x, playerPos.y);
+      else if (aiComponent.lastKnownTargetPos && aiComponent.targetLostTimer > 0) {
+        // Move toward last known position if target is lost
+        aiComponent.targetLostTimer--;
+        this.moveTowardTarget(entity, aiComponent.lastKnownTargetPos.x, aiComponent.lastKnownTargetPos.y);
+      }
       else if (Math.random() < 0.7) this.moveRandomly(entity);
     } 
     else if (Math.random() < 0.3) this.moveRandomly(entity);
+    
+    // Process special abilities
+    if (window.behaviorDefinition && aiComponent.specialAbilities && aiComponent.specialAbilities.length > 0) {
+      window.behaviorDefinition.processAbilities(entity, 'turn_start', {
+        entity,
+        gameState: gameState
+      });
+    }
   }
   
   entityAttack(attacker, target) {

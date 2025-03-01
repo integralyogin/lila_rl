@@ -226,6 +226,17 @@ class AIBehaviorManager {
                 message: 'hurls a bolt of fire at',
                 deathMessage: 'is incinerated by'
             },
+            'fireball': {
+                name: 'Fireball',
+                manaCost: 12,
+                baseDamage: 14,
+                element: 'fire',
+                range: 6,
+                aoeRadius: 2,
+                isSelfTargeting: false,
+                message: 'hurls a fireball at',
+                deathMessage: 'is incinerated by'
+            },
             'shockbolt': {
                 name: 'Shock Bolt',
                 manaCost: 5,
@@ -339,6 +350,17 @@ class AIBehaviorManager {
                     message: 'hurls a bolt of fire',
                     deathMessage: 'is incinerated'
                 },
+                'fireball': {
+                    name: 'Fireball',
+                    manaCost: 12,
+                    baseDamage: 14,
+                    element: 'fire',
+                    range: 6,
+                    aoeRadius: 2,
+                    intelligenceScale: 0.6,
+                    message: 'hurls a fireball',
+                    deathMessage: 'is incinerated'
+                },
                 'shockbolt': {
                     name: 'Shock Bolt',
                     manaCost: 5,
@@ -388,27 +410,27 @@ class AIBehaviorManager {
         manaComp.mana -= spell.manaCost;
         
         // Get positions for the spell effect
-        const entityPos = entity.getComponent('PositionComponent');
-        const targetPos = context.target?.getComponent('PositionComponent');
+        const entityPosComp = entity.getComponent('PositionComponent');
+        const targetPosComponent = context.target?.getComponent('PositionComponent');
         
         // Create visual spell effect - only for non-self targeting spells like bolts
-        if (gameState.renderSystem && entityPos && !spell.isSelfTargeting && targetPos) {
+        if (gameState.renderSystem && entityPosComp && !spell.isSelfTargeting && targetPosComponent) {
             console.log(`[AI] Creating ${spell.element || 'magical'} spell effect for ${entity.name}`);
             
             // Create bolt effect
             gameState.renderSystem.createSpellEffect('bolt', spell.element || 'fire', {
-                sourceX: entityPos.x,
-                sourceY: entityPos.y,
-                targetX: targetPos.x,
-                targetY: targetPos.y,
+                sourceX: entityPosComp.x,
+                sourceY: entityPosComp.y,
+                targetX: targetPosComponent.x,
+                targetY: targetPosComponent.y,
                 duration: 500
             });
             
             // Create impact effect after delay
             setTimeout(() => {
                 gameState.renderSystem.createSpellEffect('impact', spell.element || 'fire', {
-                    x: targetPos.x,
-                    y: targetPos.y,
+                    x: targetPosComponent.x,
+                    y: targetPosComponent.y,
                     duration: 600
                 });
             }, 400);
