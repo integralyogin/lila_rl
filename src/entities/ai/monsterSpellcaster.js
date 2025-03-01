@@ -29,8 +29,6 @@ const monsterSpellcaster = {
         if (monster.name === 'Fire Mage' && !aiComp.spellPriorities.fireball) {
             aiComp.spellPriorities.fireball = { priority: 1, cooldown: 3 };
         }
-        
-        console.log(`[AI] Set up monster ${monster.name} for real spells. Priorities:`, aiComp.spellPriorities);
     },
     
     // Get a monster template from monster data
@@ -40,6 +38,7 @@ const monsterSpellcaster = {
         // Find the monster template
         return gameState.monsterTemplates.find(m => m.id === monsterId);
     },
+    
     // Cast a spell using the real spell logic system
     castRealSpell: function(entity, context) {
         if (!gameState.spellLogic || !context.spellId) return { success: false };
@@ -127,19 +126,7 @@ const monsterSpellcaster = {
         // Check if we have enough mana
         const manaCost = spellImpl ? (spellImpl.manaCost || 12) : (monsterSpell.manaCost || 12);
         
-        // Debug mana levels for Fire Mage
-        if (entity.type === 'fire_mage') {
-            console.log(`[Spellcaster] Fire Mage mana check: ${manaComp.mana}/${manaComp.maxMana}, needs ${manaCost}`);
-        }
-        
-        // Special case for Fire Mage - give it more mana if needed
-        if (entity.type === 'fire_mage' && manaComp.mana < manaCost) {
-            console.log(`[Spellcaster] Fire Mage has insufficient mana (${manaComp.mana}). Refilling!`);
-            manaComp.mana = Math.max(manaComp.mana, manaCost + 10);
-            manaComp.maxMana = Math.max(manaComp.maxMana, 90);
-        }
-        
-        // Standard check
+        // Standard mana check
         if (manaComp.mana < manaCost) {
             gameState.addMessage(`${entity.name} tries to cast ${context.spellId} but lacks sufficient mana!`);
             return { success: false, reason: 'insufficientMana' };
@@ -150,8 +137,6 @@ const monsterSpellcaster = {
         
         // Special fireball handling
         if (context.spellId === 'fireball') {
-            console.log(`[AI] ${entity.name} casting fireball at position (${target.x}, ${target.y})`);
-            
             // Create custom fireball implementation for monsters
             // Create visual effects
             const renderSystem = gameState.renderSystem;
@@ -252,13 +237,6 @@ const monsterSpellcaster = {
         
         // For other spells, try to use the standard spell logic system
         try {
-            // Log additional faction and behavior data for debugging
-            const ai = entity.getComponent('AIComponent');
-            const faction = ai ? ai.faction : 'unknown';
-            const behavior = ai ? ai.behaviorType : 'unknown';
-            
-            console.log(`[AI] ${entity.name} (${faction}/${behavior}) trying to cast ${context.spellId} using spell logic system`);
-            
             // Get the implementation again to be safe
             const spellImpl = gameState.spellLogic.getSpellImplementation(context.spellId);
             
@@ -330,7 +308,6 @@ const monsterSpellcaster = {
                 }
                 
                 // For other spells that we can't easily adapt, try to use the spell logic system directly
-                // This may or may not work depending on the spell implementation
                 const result = spellImpl.cast.call(gameState.spellLogic, monsterSpell, target);
                 return { 
                     success: !!result,

@@ -5,7 +5,7 @@ import { allyLogic, ALLY_BEHAVIORS } from '../entities/ally_logic.js';
 import combatSystem from './combatSystem.js';
 
 class AISystem {
-  constructor() { console.log("AI system initialized"); }
+  constructor() { }
   
   processEntityTurns() {
     if (!gameState.player) return;
@@ -14,13 +14,11 @@ class AISystem {
       (gameState.entities instanceof Map ? Array.from(gameState.entities.values()) : 
       (Array.isArray(gameState.entities) ? gameState.entities : []));
     
-    console.log(`Processing turns for ${entityArray.length} entities`);
-    
     for (let entity of entityArray) {
       if (!entity || entity === gameState.player) continue;
       
+      // Disable Gladiator AI to prevent issues
       if (entity.name && entity.name.toLowerCase().includes('gladiator')) {
-        console.log(`EMERGENCY FIX: Forcefully deactivating Gladiator AI`);
         if (entity.getComponent && entity.getComponent('AIComponent')) entity.removeComponent('AIComponent');
         const health = entity.getComponent('HealthComponent');
         if (health) health.immortal = true;
@@ -122,7 +120,6 @@ class AISystem {
     if (aiComponent.state === 'hostile' && aiComponent.target) {
       // Process behavior using takeTurn method, which now uses the data-driven system
       if (typeof aiComponent.takeTurn === 'function') {
-        console.log(`[AI] ${entity.name} executing takeTurn(), behaviorId: ${aiComponent.behaviorId}, behaviorType: ${aiComponent.behaviorType}, state: ${aiComponent.state}`);
         aiComponent.takeTurn();
         return;
       }

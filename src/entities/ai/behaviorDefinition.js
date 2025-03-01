@@ -37,11 +37,9 @@ class BehaviorDefinition {
       castSpell: (entity, context) => {
         // Get the spell to cast based on context.params
         const spellId = context.params?.spellId;
-        console.log(`[BEHAVIOR] castSpell action, spellId: ${spellId || 'none'}, target: ${context.target?.name || 'none'}`);
         
         // Special handling for Fire Mage - always use fireball
         if (entity.name === 'Fire Mage' && !spellId) {
-          console.log(`[BEHAVIOR] Setting spell for Fire Mage to fireball`);
           context.params = { spellId: 'fireball' };
         }
         
@@ -54,7 +52,6 @@ class BehaviorDefinition {
                                  null;
         
         if (aiBehaviorManager) {
-          console.log(`[BEHAVIOR] Found aiBehaviorManager, executing castSpell with spell ${finalSpellId}`);
           if (typeof aiBehaviorManager.execute === 'function') {
             // Use the proper execute method with the castSpell behavior ID
             return aiBehaviorManager.execute('castSpell', entity, {
@@ -62,11 +59,9 @@ class BehaviorDefinition {
               spellId: finalSpellId
             });
           } else {
-            console.log(`[BEHAVIOR] aiBehaviorManager doesn't have execute method!`);
             return false;
           }
         } else {
-          console.log(`[BEHAVIOR] No aiBehaviorManager found!`);
           return false;
         }
       },
@@ -104,8 +99,6 @@ class BehaviorDefinition {
           }
           
           if (ability) {
-            console.log(`[BEHAVIOR] Using special ability ${abilityId} for ${entity.name || 'Unknown'}`);
-            
             // Call the special ability handler
             if (ability.effect === 'heal') {
               this.handleHealEffect(entity, ability);
@@ -116,7 +109,6 @@ class BehaviorDefinition {
           }
         }
         
-        console.log(`[BEHAVIOR] Special ability ${abilityId} not found for ${entity.name || 'Unknown'}`);
         return false;
       }
     };
@@ -207,7 +199,6 @@ class BehaviorDefinition {
         const dy = targetPositionComp.y - entityPos.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
-        console.log(`[BEHAVIOR] Distance from ${entity.name || 'Unknown'} to ${target.name || 'Unknown'}: ${distance}`);
         return this.compareValues(distance, condition.op, condition.value);
         
       case 'hp':
@@ -289,7 +280,6 @@ class BehaviorDefinition {
         return this.compareValues(cooldown, condition.op, condition.value);
         
       default:
-        console.warn(`Unknown condition type: ${condition.type}`);
         return false;
     }
   }
@@ -322,7 +312,6 @@ class BehaviorDefinition {
               : (entity.components?.ai || null);
     
     if (!ai) {
-      console.log(`[BEHAVIOR] Entity has no AI component: ${entity.name || 'Unknown'}`);
       return false;
     }
     
@@ -331,23 +320,18 @@ class BehaviorDefinition {
     
     // If no behavior is defined, do nothing
     if (!behaviorId) {
-      console.log(`[BEHAVIOR] No behavior ID set for entity: ${entity.name || 'Unknown'}, type: ${ai.behaviorType || 'Unknown'}`);
       return false;
     }
     
     if (!this.behaviors[behaviorId]) {
-      console.log(`[BEHAVIOR] Behavior not found: ${behaviorId} for entity: ${entity.name || 'Unknown'}`);
       return false;
     }
-    
-    console.log(`[BEHAVIOR] Processing behavior ${behaviorId} for ${entity.name || 'Unknown'}, current state: ${ai.currentState || 'none'}`);
     
     const behavior = this.behaviors[behaviorId];
     
     // Process state transitions if defined
     if (ai.currentState && behavior.states && behavior.states[ai.currentState]) {
       const state = behavior.states[ai.currentState];
-      console.log(`[BEHAVIOR] Entity ${entity.name || 'Unknown'} in state: ${ai.currentState}`);
       
       // Check state transitions
       if (state.transitions) {
@@ -362,7 +346,6 @@ class BehaviorDefinition {
           
           for (const condition of conditions) {
             const conditionMet = this.evaluateCondition(condition, context);
-            console.log(`[BEHAVIOR] Checking condition for transition from ${ai.currentState} to ${transition.target}, condition: ${condition.type}, met: ${conditionMet}`);
             
             if (!conditionMet) {
               allConditionsMet = false;
@@ -371,14 +354,12 @@ class BehaviorDefinition {
           }
           
           if (allConditionsMet) {
-            console.log(`[BEHAVIOR] Transitioning from ${ai.currentState} to ${transition.target}`);
             ai.currentState = transition.target;
             
             // Execute onEnter actions for the new state if defined
             const newState = behavior.states[ai.currentState];
             if (newState && newState.onEnter) {
               for (const actionId of newState.onEnter) {
-                console.log(`[BEHAVIOR] Executing onEnter action: ${actionId}`);
                 this.executeAction(entity, actionId, context);
               }
             }
@@ -389,10 +370,7 @@ class BehaviorDefinition {
       
       // Execute state action if defined
       if (state.action) {
-        console.log(`[BEHAVIOR] Executing state action: ${state.action}`);
         return this.executeAction(entity, state.action, context);
-      } else {
-        console.log(`[BEHAVIOR] No action defined for state: ${ai.currentState}`);
       }
     }
     
@@ -428,15 +406,12 @@ class BehaviorDefinition {
    */
   executeAction(entity, actionId, context) {
     if (this.actions[actionId]) {
-      console.log(`[BEHAVIOR] Executing action: ${actionId} for entity: ${entity.name || 'Unknown'}`);
-      
       // Get AI component
       const ai = typeof entity.getComponent === 'function' 
                 ? entity.getComponent('AIComponent') 
                 : (entity.components?.ai || null);
       
       if (!ai) {
-        console.log(`[BEHAVIOR] No AI component found when executing action ${actionId}`);
         return false;
       }
       
@@ -444,16 +419,9 @@ class BehaviorDefinition {
       const behavior = this.behaviors[ai.behaviorId];
       if (behavior && behavior.actionParams && behavior.actionParams[actionId]) {
         context.params = behavior.actionParams[actionId];
-        console.log(`[BEHAVIOR] Action params for ${actionId}: `, context.params);
-      }
-      
-      // For spell casting, make sure we have the target
-      if (actionId === 'castSpell' && context.target) {
-        console.log(`[BEHAVIOR] Casting spell at target: ${context.target.name || 'Unknown'}, spell: ${context.params?.spellId || 'unknown spell'}`);
       }
       
       const result = this.actions[actionId](entity, context);
-      console.log(`[BEHAVIOR] Action ${actionId} result: `, result);
       
       // Update entity state with the result
       if (ai && typeof ai.updateState === 'function') {
@@ -468,7 +436,6 @@ class BehaviorDefinition {
       return result;
     }
     
-    console.log(`[BEHAVIOR] Action not found: ${actionId}`);
     return false;
   }
   

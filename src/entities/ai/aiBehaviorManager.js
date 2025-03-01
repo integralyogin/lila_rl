@@ -171,11 +171,9 @@ class AIBehaviorManager {
             // Check for spellLogic system first, which will let us use the proper player spells
             if (gameState.spellLogic && gameState.spellLogic.hasSpell(context.spellId)) {
                 // Use the real spell implementation with monsterSpellcaster helper
-                console.log(`[AI] ${entity.name} can use the real spell implementation for ${context.spellId}`);
                 return monsterSpellcaster.castRealSpell(entity, context);
             } else {
                 // No real spell implementation, use the hardcoded behavior
-                console.log(`[AI] ${entity.name} using fallback spell implementation for ${context.spellId}`);
                 return this._castHardcodedSpell(entity, context);
             }
         });
@@ -210,195 +208,35 @@ class AIBehaviorManager {
         return false;
     }
 
-    // Hardcoded spell implementation
+    // Simplified fallback for spell implementation
+    // This is only used if the spell isn't defined in the main spell system
     _castHardcodedSpell(entity, context) {
-        // Check if this is a self-targeting spell
-        let spell = null;
-        // Get spell defaults from our list
-        const spellDefaults = {
-            'firebolt': {
-                name: 'Firebolt',
-                manaCost: 5,
-                baseDamage: 8,
-                element: 'fire',
-                range: 6,
-                isSelfTargeting: false,
-                message: 'hurls a bolt of fire at',
-                deathMessage: 'is incinerated by'
-            },
-            'fireball': {
-                name: 'Fireball',
-                manaCost: 12,
-                baseDamage: 14,
-                element: 'fire',
-                range: 6,
-                aoeRadius: 2,
-                isSelfTargeting: false,
-                message: 'hurls a fireball at',
-                deathMessage: 'is incinerated by'
-            },
-            'shockbolt': {
-                name: 'Shock Bolt',
-                manaCost: 5,
-                baseDamage: 6,
-                element: 'lightning',
-                range: 5,
-                isSelfTargeting: false,
-                message: 'sends a bolt of electricity at',
-                deathMessage: 'is electrocuted by'
-            },
-            'icespear': {
-                name: 'Ice Spear',
-                manaCost: 7,
-                baseDamage: 10,
-                element: 'ice',
-                range: 5,
-                isSelfTargeting: false,
-                message: 'launches a spear of ice at',
-                deathMessage: 'is frozen solid by'
-            },
-            'frostaura': {
-                name: 'Frost Aura',
-                manaCost: 2,
-                baseDamage: 2,
-                element: 'ice',
-                range: 1,
-                aoeRadius: 3,
-                duration: 12,
-                isSelfTargeting: true
-            },
-            'healing': {
-                name: 'Minor Healing',
-                manaCost: 8,
-                healAmount: 12,
-                element: 'life',
-                range: 0,
-                isSelfTargeting: true
-            },
-            'summonhydra': {
-                name: 'Summon Hydra',
-                manaCost: 15,
-                baseDamage: 0,
-                element: 'nature',
-                range: 3,
-                isSelfTargeting: false,
-                message: 'summons a hydra near',
-                deathMessage: 'is killed by',
-                // Special flags for summoning
-                isSummoning: true,
-                summonType: 'hydra'
-            },
-            'summon_hydra': {
-                name: 'Summon Hydra',
-                manaCost: 15,
-                baseDamage: 0,
-                element: 'nature',
-                range: 3,
-                isSelfTargeting: false,
-                message: 'summons a hydra near',
-                deathMessage: 'is killed by',
-                // Special flags for summoning
-                isSummoning: true,
-                summonType: 'hydra'
-            },
-            'spawnnewhead': {
-                name: 'Spawn New Head',
-                manaCost: 10,
-                baseDamage: 0,
-                element: 'nature',
-                range: 1,
-                isSelfTargeting: true,
-                message: 'grows a new hydra head',
-                // Special flags for hydra spawning
-                isHydraSpawning: true
-            }
-        };
-        
-        // Look up spell from defaults
-        spell = spellDefaults[context.spellId] || null;
-        const isSelfTargeting = spell && spell.isSelfTargeting;
-        
-        // For non-self-targeting spells, we need a target
-        if (!isSelfTargeting && !context.target) return { success: false };
-        
         // Get components
         const stats = entity.getComponent('StatsComponent');
         const manaComp = entity.getComponent('ManaComponent');
         const spellsComp = entity.getComponent('SpellsComponent');
+        const entityPosComp = entity.getComponent('PositionComponent');
         
-        // For non-self spells, target must have health
-        if (!isSelfTargeting) {
-            const targetHealth = context.target.getComponent('HealthComponent');
-            if (!targetHealth) return { success: false };
-        }
+        if (!stats || !manaComp || !entityPosComp) return { success: false };
         
-        if (!stats || !manaComp) return { success: false };
-        
+        // Get spell info from entity's known spells if available
+        let spell = null;
         if (spellsComp && spellsComp.knownSpells && spellsComp.knownSpells.has(context.spellId)) {
-            // Get the spell from entity's known spells
             spell = spellsComp.knownSpells.get(context.spellId);
-        } else {
-            // Fallback to hardcoded spells if not found
-            const spellDefaults = {
-                'firebolt': {
-                    name: 'Firebolt',
-                    manaCost: 5,
-                    baseDamage: 8,
-                    element: 'fire',
-                    range: 6,
-                    intelligenceScale: 0.5,
-                    message: 'hurls a bolt of fire',
-                    deathMessage: 'is incinerated'
-                },
-                'fireball': {
-                    name: 'Fireball',
-                    manaCost: 12,
-                    baseDamage: 14,
-                    element: 'fire',
-                    range: 6,
-                    aoeRadius: 2,
-                    intelligenceScale: 0.6,
-                    message: 'hurls a fireball',
-                    deathMessage: 'is incinerated'
-                },
-                'shockbolt': {
-                    name: 'Shock Bolt',
-                    manaCost: 5,
-                    baseDamage: 6,
-                    element: 'lightning',
-                    range: 5,
-                    intelligenceScale: 0.7,
-                    message: 'sends a bolt of electricity',
-                    deathMessage: 'is electrocuted'
-                },
-                'icespear': {
-                    name: 'Ice Spear',
-                    manaCost: 7,
-                    baseDamage: 10,
-                    element: 'ice',
-                    range: 5,
-                    intelligenceScale: 0.6,
-                    message: 'launches a spear of ice',
-                    deathMessage: 'is frozen solid'
-                },
-                'summonhydra': {
-                    name: 'Summon Hydra',
-                    manaCost: 15,
-                    baseDamage: 0,
-                    element: 'nature',
-                    range: 3,
-                    isSelfTargeting: false,
-                    message: 'summons a hydra near',
-                    deathMessage: 'is killed by',
-                    // Special flags for summoning
-                    isSummoning: true,
-                    summonType: 'hydra'
-                }
-            };
-            
-            spell = spellDefaults[context.spellId];
-            if (!spell) return { success: false };
         }
+        
+        // If no spell info available, create minimal defaults
+        if (!spell) {
+            spell = {
+                name: context.spellId,
+                manaCost: 5,
+                baseDamage: 8,
+                element: 'magic'
+            };
+        }
+        
+        // Check if we have a target for targeted spells
+        if (!spell.isSelfTargeting && !context.target) return { success: false };
         
         // Check mana cost
         if (manaComp.mana < spell.manaCost) {
@@ -409,106 +247,68 @@ class AIBehaviorManager {
         // Consume mana
         manaComp.mana -= spell.manaCost;
         
-        // Get positions for the spell effect
-        const entityPosComp = entity.getComponent('PositionComponent');
-        const targetPosComponent = context.target?.getComponent('PositionComponent');
-        
-        // Create visual spell effect - only for non-self targeting spells like bolts
-        if (gameState.renderSystem && entityPosComp && !spell.isSelfTargeting && targetPosComponent) {
-            console.log(`[AI] Creating ${spell.element || 'magical'} spell effect for ${entity.name}`);
+        // For targeted spells, apply simple damage
+        if (!spell.isSelfTargeting && context.target) {
+            const targetPosComponent = context.target.getComponent('PositionComponent');
+            const targetHealth = context.target.getComponent('HealthComponent');
             
-            // Create bolt effect
-            gameState.renderSystem.createSpellEffect('bolt', spell.element || 'fire', {
-                sourceX: entityPosComp.x,
-                sourceY: entityPosComp.y,
-                targetX: targetPosComponent.x,
-                targetY: targetPosComponent.y,
-                duration: 500
-            });
-            
-            // Create impact effect after delay
-            setTimeout(() => {
-                gameState.renderSystem.createSpellEffect('impact', spell.element || 'fire', {
-                    x: targetPosComponent.x,
-                    y: targetPosComponent.y,
-                    duration: 600
-                });
-            }, 400);
-        }
-        
-        // Handle special spell types
-        if (spell.isHydraSpawning || context.spellId === 'spawnnewhead') {
-            // Hydra head spawning logic...
-            // (This is simplified for brevity)
-            gameState.addMessage(`${entity.name} tries to grow a new head!`);
-            return { success: true };
-        }
-        
-        if (spell.isSummoning || context.spellId === 'summonhydra' || context.spellId === 'summon_hydra') {
-            // Summoning logic...
-            // (This is simplified for brevity)
-            gameState.addMessage(`${entity.name} tries to summon a hydra!`);
-            return { success: true, spellId: context.spellId };
-        }
-        
-        // For self-targeting spells like auras or healing
-        if (spell.isSelfTargeting) {
-            // Self-targeting spell logic...
-            // (This is simplified for brevity)
-            gameState.addMessage(`${entity.name} casts a self-targeting spell!`);
-            return { success: true, spellId: context.spellId };
-        }
-        
-        // For attack spells
-        // Calculate damage based on intelligence
-        const baseDamage = spell.baseDamage + Math.floor(stats.intelligence * (spell.intelligenceScale || 0.5));
-        
-        // Add damage variance (±20%)
-        const variance = 0.2;
-        const multiplier = 1 + (Math.random() * variance * 2 - variance);
-        const finalDamage = Math.max(1, Math.floor(baseDamage * multiplier));
-        
-        // Get target health again since we know it's not a self-targeting spell
-        const targetHealth = context.target.getComponent('HealthComponent');
-        
-        // Apply damage
-        const result = targetHealth.takeDamage ? 
-            targetHealth.takeDamage(finalDamage) : 
-            { damage: finalDamage, isDead: targetHealth.hp <= finalDamage };
-        
-        // Apply damage manually if takeDamage didn't work
-        if (!result) {
-            targetHealth.hp -= finalDamage;
-            if (targetHealth.hp <= 0) targetHealth.hp = 0;
-        }
-        
-        // Show spell message
-        gameState.addMessage(`${entity.name} ${spell.message || 'casts a spell'} at ${context.target.name} for ${finalDamage} damage!`);
-        
-        // Check if target died
-        const isDead = result?.isDead || targetHealth.hp <= 0;
-        if (isDead) {
-            gameState.addMessage(`${context.target.name} ${spell.deathMessage || 'is slain'} by ${entity.name}'s ${spell.name}!`);
-            
-            // If target is not the player, remove it
-            if (context.target !== gameState.player && !context.inArenaCombat) {
-                gameState.removeEntity(context.target.id);
+            if (targetHealth && targetPosComponent) {
+                // Create visual effect
+                if (gameState.renderSystem) {
+                    // Create bolt effect
+                    gameState.renderSystem.createSpellEffect('bolt', spell.element || 'magic', {
+                        sourceX: entityPosComp.x,
+                        sourceY: entityPosComp.y,
+                        targetX: targetPosComponent.x,
+                        targetY: targetPosComponent.y,
+                        duration: 500
+                    });
+                    
+                    // Create impact effect after delay
+                    setTimeout(() => {
+                        gameState.renderSystem.createSpellEffect('impact', spell.element || 'magic', {
+                            x: targetPosComponent.x,
+                            y: targetPosComponent.y,
+                            duration: 600
+                        });
+                    }, 400);
+                }
+                
+                // Calculate damage
+                const damage = spell.baseDamage + Math.floor(stats.intelligence * 0.5);
+                const isDead = targetHealth.takeDamage(damage);
+                
+                // Show messages
+                gameState.addMessage(`${entity.name} casts ${spell.name} at ${context.target.name} for ${damage} damage!`);
+                
+                if (isDead) {
+                    gameState.addMessage(`${context.target.name} is slain by ${entity.name}'s ${spell.name}!`);
+                    
+                    if (context.target !== gameState.player && !context.inArenaCombat) {
+                        gameState.removeEntity(context.target.id);
+                    }
+                }
+                
+                return { 
+                    success: true, 
+                    damage: damage, 
+                    isDead: isDead,
+                    spellId: context.spellId
+                };
             }
+        } else {
+            // Self-targeting spell
+            gameState.addMessage(`${entity.name} casts ${spell.name}!`);
+            return { success: true, spellId: context.spellId };
         }
         
-        return { 
-            success: true, 
-            damage: finalDamage, 
-            isDead: isDead,
-            spellId: context.spellId
-        };
+        return { success: false };
     }
     
     // Execute a behavior
     execute(behaviorId, entity, context = {}) {
         const behavior = this.behaviors.get(behaviorId);
         if (!behavior) {
-            console.error(`Behavior '${behaviorId}' not found!`);
             return { success: false, reason: 'behaviorNotFound' };
         }
         
