@@ -18,6 +18,9 @@
 - create item
 - create tree that grows
 
+## TODO
+- time and day
+
 ## is WORKING?
 - equipment on monsters that drops on death
 - enemy magic?
