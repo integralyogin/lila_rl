@@ -149,6 +149,17 @@ class InputSystem {
           gameState.gameMode = 'exploration';
           eventBus.emit('arenaClose');
         }
+      },
+      'data_viewer': () => {
+        // If editing text in any input field, don't prevent default behavior
+        if (window.isEditingEntityData) {
+          return;
+        }
+        
+        event.preventDefault();
+        if (key === 'Escape') {
+          eventBus.emit('hideDataViewer');
+        }
       }
     };
     

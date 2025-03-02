@@ -3,6 +3,7 @@ import eventBus from '../core/eventEmitter.js';
 import { targetingSystem } from './targetingSystem.js';
 import tooltipSystem from '../ui/tooltipSystem.js'; 
 import contextMenuUI from '../ui/contextMenuUI.js';
+import dataViewerUI from '../ui/dataViewerUI.js';
 import pathfindingSystem from './pathfindingSystem.js';
 import { TILE_TYPES } from '../constants.js';
 import { getEntityArray, getEntitiesAtPosition } from '../utils/entityUtils.js';
@@ -159,6 +160,14 @@ class MouseSystem {
           }, 50);
         }
       },
+      {
+        label: "View Data",
+        action: () => {
+          setTimeout(() => {
+            eventBus.emit('showDataViewer', gameState.player);
+          }, 50);
+        }
+      },
       { separator: true },
       {
         label: "Wait",
@@ -263,6 +272,16 @@ class MouseSystem {
         }
       });
     }
+    
+    // Always add View Data option for all entities
+    menuItems.push({
+      label: `View Data for ${entity.name}`,
+      action: () => {
+        setTimeout(() => {
+          eventBus.emit('showDataViewer', entity);
+        }, 50);
+      }
+    });
     
     if (menuItems.length > 0) {
       eventBus.emit('showContextMenu', {

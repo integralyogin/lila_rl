@@ -779,3 +779,116 @@ body {
   80% { opacity: 0.9; }
   100% { opacity: 0; }
 }
+
+/* Data Viewer UI */
+.data-viewer-ui {
+  font-family: monospace;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+.data-viewer-component {
+  margin-bottom: 15px;
+}
+
+.data-viewer-component-header {
+  font-weight: bold;
+  background-color: rgba(60, 60, 80, 0.5);
+  padding: 5px;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.data-viewer-properties {
+  margin-left: 15px;
+}
+
+.data-viewer-editor {
+  background-color: rgba(30, 30, 40, 0.7);
+  padding: 10px;
+  border-radius: 3px;
+  max-height: 200px;
+  overflow: auto;
+  white-space: pre-wrap;
+  font-size: 12px;
+  border: 1px solid #555;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+  cursor: text;
+  caret-color: #fff !important;
+  outline: none;
+}
+
+.data-viewer-editor:focus {
+  border-color: #77f !important;
+  box-shadow: 0 0 5px rgba(100, 150, 255, 0.7) !important;
+  background-color: rgba(40, 50, 70, 0.8) !important;
+}
+
+.data-viewer-editor::selection {
+  background-color: rgba(100, 150, 255, 0.4) !important;
+}
+
+.data-viewer-ui input[type="text"] {
+  cursor: text !important;
+  caret-color: #fff !important;
+}
+
+.data-viewer-ui input[type="text"]:focus {
+  border-color: #77f !important;
+  box-shadow: 0 0 5px rgba(100, 150, 255, 0.7) !important;
+}
+
+/* Spell section styling */
+.data-viewer-spells {
+  background-color: rgba(40, 30, 60, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #7755aa;
+}
+
+.data-viewer-spells table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-viewer-spells th {
+  text-align: left;
+  padding: 5px;
+  border-bottom: 1px solid #7755aa;
+  color: #bb99ff;
+}
+
+.data-viewer-spells td {
+  padding: 5px;
+  border-bottom: 1px solid #333;
+}
+
+.data-viewer-spells tr:hover {
+  background-color: rgba(100, 70, 150, 0.2);
+}
+
+/* AI section styling */
+.data-viewer-ai {
+  background-color: rgba(30, 50, 40, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #55aa77;
+}
+
+.ai-info-box {
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.ai-info-box strong {
+  color: #99ffbb;
+  margin-right: 5px;
+}

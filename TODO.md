@@ -1,20 +1,25 @@
 # Lila RL Development Status
 
+### THE IDEAL
+
 
 ### GOALS
 - alchemy
 - crafting
 - skills
 - harvesting resources
-
 - build monsters in game.
 - create object, place, edit obj
 - create spell
 - create item
-
 - proper stat advancement
 
-## FIX
+## is WORKING?
+- equipment on monsters that drops on death
+- enemy magic?
+- is summon magic working
+
+## FIX / BROKEN
 - arena to use behaviourai
 
 ### COMPLEX TEST
@@ -23,15 +28,16 @@
 - phantom limb spell that grants inventory slot
 
 ### SPELLS
-- polymorph
 
 ### COMBAT
 - limb damage and practical implications
 
-## is WORKING?
-- equipment on monsters that drops on death
+
+## DONE
+- polymorph
 
 ### TODO-DONE
+
 
 | Feature | Status | Description |
 |---------|--------|-------------|
@@ -84,3 +90,8 @@
 - ❌ Better separation of rendering and game logic
 - ❌ Event system improvements
 - ❌ Normalize data handling across game systems
+
+
+
+
+

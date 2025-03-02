@@ -15,6 +15,7 @@ import DialogueUI from './ui/dialogueUI.js';
 import CharacterUI from './ui/characterUI.js';
 import ArenaUI from './ui/arenaUI.js';
 import SummoningUI from './ui/summoningUI.js';
+import dataViewerUI from './ui/dataViewerUI.js';
 import GameLoader from './core/gameLoader.js';
 import LevelGenerator from './world/levelGenerator.js';
 import MapLoader from './world/mapLoader.js';
@@ -39,6 +40,10 @@ class Game {
   handleEmergencyReset() {
     ['inventory', 'spellbook', 'character', 'dialogue', 'shop', 'summoning'].forEach(ui => 
       eventBus.emit(`${ui}Closed`));
+    
+    // Hide data viewer if open
+    eventBus.emit('hideDataViewer');
+    
     gameState.gameMode = 'exploration';
   }
   

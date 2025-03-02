@@ -78,8 +78,8 @@ The TODO.md file indicates these primary development goals:
 2. In-game content creation (create monsters, objects, spells, items)
 3. Limb damage with practical effects in combat
 4. Resource harvesting and skill advancement
-5. Complex spell effects like polymorph
 6. Missing features: save/load, character progression, quest system
+
 
 ## Common Tasks and Code Patterns
 
