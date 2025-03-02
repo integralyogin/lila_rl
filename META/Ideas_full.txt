@@ -1,131 +1,139 @@
-object:Game Ideas
-
-classes ::: Game Dev,
-children :::
-branches ::: Game Ideas
-subject class:Game Dev
-
-GAMES WITHIN A GAME (2021-08-05) ::: this came along with the idea of something like math worlds in a game, which was just a plane of existence in the game. Similarly a game of games with the game too entices.
-
-TURING COMPLETENESS (2021-08-05)::: this seems to me very important, its a good measure of potentially fruitful complexity. Wiki - Turning Completeness
-
-CHARACTER SPAWN ::: game starts at one of various temples where a higher soul (human soul) incarnates into a game being.
-
-::: Very interested in doing one after playing Unepic, because it gave a strong initial joy of exploration. I am not sure why the urge died. Oh yes it was the linearness. Fuck that shit. In my game I would like if you could go many places. And there are many ways to get there. Not just kill a to get b to open c. But rather like you can make the jump required to get to a new area if you have high dexterity and acrobatics, or if you have an alteration spell for jumping, flying, or wall jumping, or if you have climbing spikes, or boots of jumping. or winged helm, or the leap skill etc etc forever.
-
-GIANT ROCK ::: if there is a giant rock in the way it can be destroyed with a hammer and massive strength, or 10,000 strikes of a sword(if it didnt break 500 times in the process). it could be exploded with some type of grenade magic, or with an actual bomb. or if you were strong enough you could literally lift it, put it in a bag of holding, bring it to a boss, and throw it at a boss. it would need incredible strength.. ridiculous really. 
-
-::: i would like to be able to choose a starting class or something.. the more customization in the beginning the better. But always at a cost, so that there is still extreme room for growth so that there is a climb to power.
-
-::: i dont want spells held behind the entire game. This is where morrowind was ultra epic. You could work your way doing whatever you needed if getting spells was your first priority.
-
-::: I want a library in the game so that you can learn about the world. Like if you wanted spells.. How would you know how to pursue them? Guilds doesnt sound like a bad idea at all but I dont want to restrict one to having to use it either. There must always be multiple ways.
-
-::: as I was writing about my love for morrowind, it applies especially to the latest zelda game, which was the joys of exploring. For in zelda my favorite thing to do was to try to go to the highest place. that was it. And of course the secrets held there. I trained my stamina completely before I put even a single point in health. MHM
-
-LEVEL CAPS ::: I dislike fucking level caps. Level caps are like lazy programming caps. Make the book require 120 intelligence, but dont make it fucking take level 30. It fucks over someone who only wants that book. If they are willing to trade all that they have. To curse themselves. To take drugs. Just so they can learn to cast the spell. Let them do it MWAHAHA. (but they could have learn and cast requirements, which could be different)
-
-::: spells from books make sense, but how does someone learn how to wall jump? probably from someone up high. someone sitting on top of a wall LOL. of course. but the problem with that is is there only one guy that teaches it? also it must cost heavy stamina. actually I think you can just do it on your own. train on your own that is. But if you find someone to teach you, then from ultima you can get it leveled up way faster. The slowness of leveling is essential to value. Its what makes ultimas leveling so orgasmic. WALL RUN. I WANT.
-
-::: how about the mystery of double jump? is there anyway I can add it to my game? wind magic. yep. thats it.
-
-SHOPKEEPERS ::: shop keepers must sometimes come across ultra valuable items. game changers. uniques even. if a hero is down on his luck and needed to sell it to survive. also if you pay 10% down on a item then he will hold it for you until you have enough to buy it. this also gives an insentive to go to the city of merchants, in the middle of the map. there must be a way to increase the odds of them getting rare items too.
-
-MAGICK ::: I really really want recall and mark. but they must be hard to get obviously. which makes magic so valuable. i mean obviously magic will be amazing in my game. there must be some limitations on it.. similar I suppose to ultima it is hard as fuck to raise. recall too is such a safety skill. ridiculously.
-
-PERMADEATH ::: so the idea is that risk and reward vary such that the questions comes ::: is it worth trying to sneak past the air elementals to get to the strine of wind, for a powerful boost to wind magick or a new wind spell? if you die. thats fucking it. luckily your next character will learn the basics of whatever you choose faster. and the world is still permanently changed such that things are unlocked for your next character but the loss is huge. I like the idea of being able to be a legendary blacksmith that provides armor for a legendary warrior and even if both died, the unique items crafted by him stay in the world. Imagine crafting the sevenleague boots, or some 3 leagues boots or something. you could literally get that as a heirloom if your soul was high enough level MWAHAHAHA. Id say you could drop an item on the ground, but that cant work, cause if someone can get to it, they will, cause uniques can call on people. and the person would have to get to that point. what about a locked house? it would be risky transfering over the key man.. or there needs to be some restriction? if you get a unique or an item worth over $50,000 it unlocks the heir reincarnation trait. but the item must be chosen when the original character dies. they write a quick will. can pass on all items? that would make death really not so bad at all.. hmm. or character must know law? must be of good karma or something. or something.. i guess the bank possesses things usually. it would add huge value to items or potions that give one free life. or something. also high level wizards of a certain path can potentially live without a body, as a spirit, like the skill from D&D.
-
-SHRINES ::: shrines add a huge potential for exploring / pilgrimage. For visiting shrines under certain conditions should add huge boosts, and many potentially can work together, but some oppose and thus their non-existence is a condition for others. An example? Is there a God of Speed? or of Time? if people pray in the game, the God comes forth? and is streng thened? Shrines can be generated by worship?
-
-THE_ARENA ::: I would like an arena with at least two modes. One is where you fight till unconsciousness, or 1 hp. ie there is no death in this form. it costs money to enter, and the reward is money. and a second mode, where you pay with your life, and if you win you get all your opponent gear. plus obviously ridiculous experience or something. the gear could be worth like so much fucking money. also the champion of the regular arena should get a really amazing item. and the winner of the dangerous mode should get.. fuck.. it must be ridiculous. either way like near infinite fame. which has to have some benefit in the game. like you can literally speak to the entire world.
-
-WISHING ::: This game needs a method of wishing, similar to dragon ball, such that what a worthy fucking quest. Also to make it even more amazing, wishes have wish cost. Something like immortality has a wish cost of lets say 3. such that you must have 3 wishes activated at one time and the entities must pool their powers. 3 wishes should grant any item, if someone owns that unique item it is straightly taken away from them. immense skill gain, stat gain, traits, runes, 3 wishes should also grant a rune to particular place. literally. you could wish for a rune marked at hell. crazy. maybe. maybe there should be powers as strong as wishes that can cancel. like divine will perhaps. imagine hunting the dragon balls. that would be fucking insane. this would make speed a useful tool for gathering such wishes. wishes could also be an amazing force for good. or evil.
-
-SUMMONER ::: since this game is a roguelike (ie one life) it adds tremendous value to the summoner class / skill as it allows you to more safety poke monsters. another spell (mindcontrol) is lets say 4 times as effective on something you summoned aswell, so it really allows you to safety go attack shit from far fucking away. it lets you explore dangerous ass places. I really like this idea.
-
-THE_CASTLE ::: had a vision of attacking the castle, to overthrow the king (which is obviously evil) and doing so by shooting arrows while flying. unless they are crazy amazing arrows it wont do shit, as people will run away. but I want it to be possible. originally the killing the king idea came with the concept that if you kill the king, certain people wont stop until you are dead. Holy Knights obviously. But some people will turn over instantly at the threat of death, depending on a particular stat.
-
-ASCII_GRAPHICS ::: also for now perhaps ill use ascii symbols, it will be funny and fucking easy. yay. the graphics could all be mod packs like in dwarf fortress? OH SNAP. SNAP
-
-GAME_COST :::
-
-SHOOTING_THE_FOOT ::: taken from dwarf fortress, I would like to be able to shoot a foot for example, and thus limit somethings mobility. which is a good way to trap someone if you want to try to convert them to an ally or slave. traps would be really cool too but only if they make certain super deadly monsters much more managable. similarly a proper head shot should kill most things.
-
-WIND_MAGIC_ON_THE_MOUNTAIN_OR_HIGH_TOWER ::: with high dex, acrobatics, and some light wind magic the highest point in the game should be ascendable. And at the top will be a very high wind wizard, that can strongly boost wind magick aiding in making the floating city accessible. A related danger on the way are air elementals? But once the top is reached they dont attack you anymore. In fact you could gain summon air elemental spell. WOOT or polymorph into air elemental? meh.
-
-MARRIAGE ::: I really want people to get married in this game. Like people who meet in the game, and then fall in love and get married in real life, but the ceremony is held in the game. AWWWWWWWW. thats so nice. So I want to make the game condusive to building such relationships. Which is why it is not a strict role-playing game. because I want people to be able to talk about themselves. Macro partners?
-
-FLY_SPELL_ON_THE_FLOATING_CITY ::: the floating city is supposed to be the place where one can learn fly? or one needs fly before reaching it? Id rather if one must get there to learn fly, but then how could it be reached? a charged jump from the high mountain, under the influence of wind spells and dexterity potions with jumping gear? perhaps the high jump spell lets you charge a jump, and every x mana doubles the jump height or so? fly takes mana and stamina? L2 trigger locks character in place so you can fly backwards facing the opposite direction (allows for shooting while flying away) fly will benefit alot from mana regen then.
-
-THE_ABYSS ::: Some area where you must descend to get too. Its dark. cramped. scary as fuck. requires light magick or dark magick or incredible will to not become constantly "feared". or high faith. or you must move so fast they dont have a chance to stare at you? or so strong they cant scare you? What treasure is in there?
-
-ROBOT_CHARACTER ::: If the game is going to be ascii symbols then there is no reason why I cant make a robot player character. It will be hard as fuck to play as one, but if you get to play as one they have to be easily able to do things like fly? and replace limbs. ek. so much work though. well id have to figure out where the parts come from. oh i guess ud have to unlock that discipline in the world. and be a strong enough magician to be able to possess the robot body on death. then of course other people should appear as robot bodies slowly or something. It can be figured out.
-
-REGENERATION ::: I want regeneration to not be the normal state of the character, or rather like ridiculously slow. Which will make it so valuable to get. I want regeneration to be able to get in multiple ways. Several obviously are RNG related. but more ideally id like them to be dropped by certain people such that if getting regen is a primary concern it can be gotten without endless grinding. trolls blood sounds good. Which is great if there is a troll colony somewhere. Alternative is white magick. Passive regen comes perhaps naturally from the active regen spell? or from points in white magic in general? points in vitality increase regen? willpower increase regen slightly. killing white mages in the game will probably drop regen items, but that has to be some dark corrupting shit or something.
-
-CORRUPTION_/_TURNING_EVIL_/_BLOOD_MAGICK ::: I really want the temptation to go evil to be strong in the game, but it has to be something of a counter until one dies. Like I dont want it to be as bad as DOOM in ADOM but like, there have to be characters that come after you if you kill priests and shit.. there has to be. plus, turning evil must having something else.. similar perhaps to corruption. like a dark wizard that gives power for like the eyes of the oracle, or blood of priests. some fucked up shit, way to get really strong quick but.. corrupts the soul? mind control spells. take over someone permanently.. which is not "dying" like normally but rather staying on this plane in spirit form or something.
-
-THE_SOUL ::: did I want to add the soul to this platformer? Making deaths at least not so fucking awful. what mechanic could work? items in the shop for sure. relating to this I like the idea of doing a blood magick ritual, killing oneself and permanently taking over another body ::: o but keeping the blood magick skill tree or something?
-
-ALCHEMIST ::: is this game I want alchemy to be as useful as anything else, much more useful then ultima. I want to be able to make stat boosters. Permanent or temporary? Do I want to go around the occurance in morrowind where you get level 210000000 of any stat? probably. Oh like, a beginners potion of strength will temporarily raise strength, a masters potion of strength may permanently raise strength up to a certain point, and will temporarily raise stength aswell up to a certain point. It has to take way longer to raise then in morrowind. OH I want a draw back to potion taking in most cases. Like, drugs. after the potion wears off, you are weaker for sometime. or something. I want every class to have a God potential of some sort tho, also you can only take so much of a potion at a time. Also if you take too much something bad happens. Based on what you can handle mhm.. So unlike morrowind if you quaff 40 potions of raise intelligence, be prepared to die. Literally. You will die. You will have more mana then you can spend, which does damage over time. You need high life regen to survive such surges. drools. also a limitation is that shops wont have tons of reagrants. So you cant just make 1000 potions in a row. But there must be ways to farm them of course. Whether growing, going to a bigger town, finding where they grow(with knowledge assistance in game) or harvesting them from creatures or whatever. But what was the God potential in this class? Also if you drink enough potions I want to be able to form "stronger gut" which allows one to better handle pots? Again what was the God potential in this class? To learn how to make the potions, id like there to be multiple methods, such as studying the potion after finding it somewhere and having the adequate skill in distillation or something. Or someone teaches you it. or you randomly mix them together. Something is off about the random method.. I think always at least one potion must be distilled perhaps, otherwise, the knowledge online is enough. Potion of gain attributes. Potion of skill gain? Potion of literacy. Potion of immortality. Level 130 alchemist can transmit any metal to gold? alchemist guild must be a hidden one? the guildmaster has some GM fucking potions on him. They can be stolen, he can be killed, he may give them if he respects you, or if he fears you. Close to death he will offer them for his life. But he has to be tough for sure. He can in theory teach any skill, but why would he? Plus one must be at a similar skill level of sorts. Specific and general skill levels. The grandmaster alchemist must be like a super being perhaps. A deity of alchemy can also exist though he must really fucking take like forever to see. like fucking forever. or something. I like it. The grandmaster alchemist is immortal. LOL. AHAHA. so if you attack him.. get ready to fucking die or run lol. AHAHAHAHA I love it. of course how could a thief even get close I wonder then... he can also see invisible.. obviously. this man has had the bestest potions in the world, basically whatever ones he wants. I like the idea that though he is immortal, a certain dark/time wizard could literally trap him elsewhere permanently. In which it he could very possibily trade you for his freedom.. actually.. I dont think he would break. but other people would break to such techniques. A dark / time wizard could be ridiculous. Actually if the dark-time wizard cant break him with a spell like that, then someone could potentially use necromancy and mind control him. But that would really need to be a near max level version.. and there must be a strong cost to that skill tree. some soul cost. like no soul experience. 
-
-ASSASSIN_CLASS ::: oh thank God. yes. walk silent > run silent, hide > stealth, fatal blow (requires anatomy skill), backstab, poison(boost from alchemy, obviously alchemy to make)
-
-DARK_TIME_WIZARD_CLASS ::: I came up with this idea as a means to try to get the potions from the grandmaster alchemist via sanctuary entrapment. But it wouldnt work on his constitution. A
-
-MEANS_OF_GETTING_INFORMATION ::: I want multiple methods of being able to get information in game, like if you wanted to kill the strongest boss, finding out who that is should be attainable by going to the library, or asking npcs. or when it goes online players.
-
-WHAT_WOULD_I_WANT_TO_DO_IN_THIS_GAME? ::: normally I like to increase my run speed, jump speed, (mobility) including wind magicks, so that I can more quickly and easily explore the world. I would work to get recall and mark, so I could save the high spots and most important spots relating to my goal / fun. Then where would I go? Air magick is practically useless in the Abyss. YESSSSS. But it has to have some use? The flying city. Is that the coolest spot? Where Sri Aurobindo is? The AI? ooh. The guy who has all information relating to the game? THERE WE GO. FUCK YEAH. he tells you to go into the abyss lol. He grants light? Once I have all knowledge? how do i want to change the world? give others the knowledge too? so they can smartly shape it? I also kinda want time magick. time magick + wind magick is literally going to be ridiculously fast. like a slingshot. he would probably be almost able to change into a different state or something. into light? or energy? lightning? basically everything else would also start to go passively slow. literally unresistable slow because its relative speed. also ill want some strength, bare handed fighting, or daggers or some weapon or bow, or magick so that I can attack things. then ill want to kill bosses if they are the best way to get the best gear. cause they are the things that have killed players and taken their stuff, equiping great stuff to minions and keeping the best for them that supplement their class. or oppositely aid it. blink through walls for escaping. need that shit. random long range blink too. in the game evil will be such an appealing option that there will be many players and npc's that choose the various paths and thus become forces worth stopping. imagine if your town was under attack from a player. and he was a vampire and just killed as many as possible for the ultra boosted experience. some people wouldnt want to play anymore, I guess there have to be realms of greater and greater safety. But evil could theoretically become strong enough to attack even the safest zone, but there is a serious chance of dying there. There are symbiotic guardians that all make each other strong. what would happen if that city was ransacked? then people would incarnate more likely elsewhere? and spirits would start growing stronger as they fought against it. it would make the light stronger. it would actually make it worth while to help streng then npcs.. I could be a protector of the towns. a guardian. if my character gained telepathy I could cast it on scouts or sentries from each town, and get alerted when "the town is under attack" if a town is broke by assault, casting a warp gate many people will run through it to save their life if they are in danger. which can be evil depending.. certain evil characters could pay money for powerful slave material.. eww. or beautiful beings.. eww.
-
-::: I guess if there is actually such evil, then hearing about it, it would be worth stopping. imagine if players actually got trapped.. oh fuck. that is so awful. I hope to God heroes would try to save them. Imagine you have to create a new character, and go around asking strong people go on a quest to save your main from entrapment.. jeez. while entrapped the keeper grows stronger? eww. they are living ontop of a drain life sigil perhaps. Time Wizard needs a time scout spell, so he can send copies. such that he can go places he shouldnt. or he can have a rewind spell. that would protect against decrepify. moving the speed of light should also remove all status effects
-
-THE_NECROMANCER ::: okay so I would like the necromancer to be able to cast a spell called something like "decrepify" which just like starts to drain all your stats at a medium speed. Like you will most likely die from it. As soon as any stat reaches 0 you die. The panic and terror of being hit with that spell.. oh man. even if you recall... a new fucking game has started. try to find a cure. imagine having like 20 minutes or something. where can it get cured? from ultra rare healing potions, from high priests, from high level white mages mostly. praying at certain altars. there must be a way of making marked runes harder to get or more valuable then in ultima.. ahh. runes are super rare in stores. runes are super rare. there we go. a player can more easily create a mark in memory rather then on a rune that someone else can use. so someone would have to bring you there. which means they must have been there. this is where being in a guild would help a lot. mattering most is the level of the guildmaster. , I would also like the necromancer, as noted in "owrpg" that he can mind control, temp or permanently. if it is temp then you literally cant use it till the spell fades, if it is permanent you can choose to just watch your old character praying someone kills the necromancer before killing you. or you can always choose to leave your body anytime. and reincarnate. Also there is death touch.. imagine even a death plague spell.. no.. it would have to require like the blood of so many death creatures or something to cast. its too OP. white magicians would be told it was going around.. also the highest white mages could resist or cure it. and it would have a long count down timer hopefully. or variable timer based on the character composition.
-
-ABSOLUTE_VAMPIRE ::: this isnt really a vampire, its a person like syler from heroes, who can steal skills, traits, qualities.. would that include immortality if someone had it? oh actually I guess thats sylars dad. mhm. there must be other trumps against immortality for sure. like dark-time magick.
-
-PIETY ::: This game must reward real piety in a big way. So far my major thoughts of it are like more soul experience. If "everyone dies eventually" then it makes a big difference to go good and gain more soul experience or go bad and gain the smallest fraction perhaps? there is something off with that method though..
-
-WHAT_ELSE_IS_THERE_TO_DO_IN_THIS_GAME? ::: build a guild. I am not sure why yet but that is going to be important, probably for big raids. I need to create a good/evil balance counter or something. Which is a means of progression for the characters souls? what else to do? OHHHHHHHH!!! so theres global immortality quest.. amazing anything else? I mean there will always be evil, because the universe will work such that the more good there is the more incentive to be evil. or something.
-
-TOWER_DEFENSE ::: I would like an element of tower defense in the structures of cities, such that if there is a orc raiding party or something, there is some strategy of defending the town. Makes sense of course to bottle neck.
-
-THE_GLOBAL_IMMORTALITY_QUEST ::: I had the idea before but now I remember, which is to a quest to kill Death, and bring humans immortality, making the game.. no longer.. a roguelike.. holy fuck. But of course there are multiple servers and some will always be roguelike.. but others are not. But death still must have a cost. But still. Imagine your team unlocking immortality in your server? FUCK. so many lost in that mission. but their next lives are permanent YAY! happiness forever.
-
-BRING_BACK_DEATH ::: can someone bring Death back? imagine turning off immortality? oh my god. what an awful quest.
-
-REBIRTH_INTO_A_GUILD? :::
-
-UNIVERSAL_REBIRTH ::: If the server becomes all good..? then it shortly after respawns even larger and more evil? for a greater victory of good? does good last forever?
-
-WORLD_GENERATION ::: this game will borrow heavily from dwarf fortress. including world generation. which is crazy.
-
-THE_STORY_AND_THE_PLOT ::: not sure what to do with this yet. perhaps the keys lay in Savitri.
-
-DO_I_WANT_TO_PLAY_THIS_GAME? ::: in the end this game is to be the open world rpg vr AI. and the answer is probably a yes.
-
-GAME_POTENTIAL ::: I forgot to write down the option of playing as a God and as a Man. A God gets to build worlds, and parts for worlds, and Man gets to live them. Experience as a God has impact on a mans experience except in how he made the world or parts for the world.
-
-STEALING_AND_ITEM_DESTRUCTION ::: I like the idea that anything can be stolen. Except for example a cursed item or Holy Bound item. But alternative the part of the body it is stuck to can be ripped off or cut off and taken that way. like ripping off someones finger seems possible and worth it. Items can also be destroyed. oh man. imagine getting hit with a item destruction spell. oooooo
-
-SCRYING_ORB_AND_HUNTING_PLAYERS_FOR_GOD_ITEMS ::: I fucking love the idea of someone who has like 2 Godly set pieces together and they wish for a Scrying Orb, which can tell them the location of any object or person. And they can use it to potentiall find the rest of their set pieces.. they can stalk theyre prey and try to hunt them for the item. oh man.. so fucking legit. imagine he recognizes his prey in like a main town, warps there and attacks him immediately. Warps his target to another location with a anti-magic field, then warps elsewhere, polymorphs into a giant physical beast of sorts and then warps to the anti-magic field to kill his prey. or teleports him somewhere dangerous like "blender world?" but of course it should actually be near impossible to teleport someone else far away against their will. to do so you would need to cast gate and mind control or something. and mind control is like an ultra evil spell. it turns you perma red.
-
-STEALING_A_GOD_ITEM_BY_WISH_IS_IMPOSSIBLE ::: wishes are not stronger then divine will.
-
-UNLOCKING_MAGICK ::: What about the idea that on a server there isnt even magick until it is unlocked from somewhere? that would be fucked. as mentioned elsewhere I want magick to also be hidden if possible from people with low intelligence or wisdom etc.
-
-PLEDGES_OR_VOWS ::: I like the idea of going to a monk shrine and pleding to never wear anymore then the lightest of armor and never use a weapon. And the effect is like slowly over time, the longer you dont use a weapon or break the pledge the more you get buffs to whatever you asked for. Something like that. Or there could be a monk skill tree. On the note of the monk, I want phase gloves or phase katars or something. oh man. or actually there could be a high level monk skill that just allows the force of the attack to negate any defense. I like that better. like chi blasts.
-
-FAILURE OF OTHER GAMES ::: So ive played hollow knight, dead cells, unepic but they all seem to be lacking. There is no game I know of yet with a morrowind/ultima online/ff3 style progression, with the morrowind acrobatics. Maybe this blasphemous game, but its not quite out yet. So in this games construction, actually I suppose I should turn to "gm" and talk about it there..
-
-HOME-DEFENSE ::: can grow food at ones house (if you have the land), but monster will come, so you can build turrets and androids, have companions or slaves to guard it. weak monsters may or may not be able to break in regardless, a thief may be able to pick, a strong monster may be able to break through. hohoho. with playbacks for when you return home. cybersecurity passed by hackers or heavy rock door that requires strength or a small hole trolls cant fit through or an entrance way that requires flight to reach or psychic activation of a lever, walls can be teleported through unless anti-magic runes or something
-
-HOME ENSLAVEMENT PROCESS ::: bear traps, laser turrets aimed at feet and arms, wizard vampires do rounds of mass dispel, weaken, paralyze and dominate and seduce or puts creature in torture chamber, once broken and dominated, to med bay to fix back up, then sold, or trained or used to be trained on depending on quality, make and model. then haste, white magic supported attribute training and combat training at training center, or if to be trained in magic to academy or put to work in the mines etc. also enhanced with cybernetics and enchantments when most useful, like intelligence, will, wisdom enhancement on promising new wizard so they level faster or regeneration necklaces for miners or something. monsters can also be stored away and later used for parts for surgical / magical chimera grafting
-
-   since clerics are hardest to break they are most whats left in torture chambers, and thus are used to train surgeons
-
-terrible idea-3 ::: unicorn, quickling, troll and giant blood farms
-
-MECHANIC ::: if there are all sorts of NPCS, could they go out and try to map the world, to set up lightposts? it would be cool if the available maps came from them(cartographer, white wizard, warrior, ninja, summoner, wizard, engineer)
-
-BEAUTIFUL WORLD ::: since it is mostly covered in darkness, there is limited realstate. But if places get reclaimed from the darkness, a good agricultural system, biology, ecology and such could allow for beautiful terraformed landscapes ideally.
-
+# Game Ideas
+
+## Core Design Philosophies
+
+### Game Structure
+- **Games Within a Game (2021-08-05)**: Implement math worlds and other planes of existence within the main game
+- **Turing Completeness (2021-08-05)**: Aim for systems with sufficient complexity to be Turing complete
+- **Character Spawn**: Game starts at various temples where a higher soul (human soul) incarnates into a game being
+- **Non-Linearity**: Allow multiple paths and approaches to areas and challenges (unlike Unepic's linearity)
+- **Multiple Solutions**: Design obstacles that can be overcome through various means (e.g., giant rocks can be destroyed with strength, hammers, magic, explosives, or moved with supernatural strength)
+- **Customization**: Extensive starting customization with room for growth
+- **Accessibility**: Don't lock important elements like spells behind late-game progression
+- **In-Game Knowledge**: Implement a library system where players can learn about the world
+- **Exploration Freedom**: Draw inspiration from Zelda's joy of exploration and climbing to high places
+- **No Level Caps**: Replace arbitrary level restrictions with skill/stat requirements
+- **Learning Systems**: Multiple ways to acquire skills (self-training, mentors, books, shrines)
+
+### Gameplay Elements
+- **Shopkeepers**: Occasional ultra-valuable/unique items, layaway system (10% down holds items)
+- **Magic Systems**: Include mark/recall spells, but make them challenging to acquire
+- **Permadeath**: High-risk, high-reward decisions with permanent consequences
+- **Legacy System**: Items created by legendary characters remain in the world
+- **Inheritance**: Allow passing items to new characters through wills/banks/heirs
+- **Shrines**: Create pilgrimage destinations that provide boosts under certain conditions
+- **Arena**: Two modes - non-lethal with money rewards, and lethal with gear rewards
+- **Wishing**: Dragon Ball-inspired wish system with "wish cost" for powerful effects
+- **Summoner Class**: Safety advantage in a permadeath world
+- **Castle Siege**: Option to overthrow the king through various means
+- **ASCII Graphics**: Initially use ASCII for simplicity, with potential mod support like Dwarf Fortress
+- **Combat Mechanics**: Targeted strikes (feet, head), combat-altering injuries
+- **Environmental Effects**: Wind magic more powerful at high altitudes
+- **Social Features**: In-game marriage and relationship building
+- **Mobility Magic**: Flying, jumping, teleportation with strategic requirements
+- **The Abyss**: Dark, cramped area requiring light/dark magic or high will/faith to navigate
+- **Alternative Characters**: Robot option with unique abilities and challenges
+- **Regeneration**: Make health regeneration valuable and rare, not the default state
+- **Moral Choices**: Strong temptation to go evil balanced with consequences
+- **Soul System**: Spiritual progression that persists beyond character death
+
+## Class Systems
+
+### Alchemist
+- Potions offering both temporary and permanent stat boosts
+- Drawbacks to potion consumption (weakness after effects wear off)
+- Limits on potion consumption based on character's constitution
+- Multiple ways to learn recipes (study, teaching, experimentation)
+- Special potions: gain attributes, skill gain, literacy, immortality
+- High-level transmutation abilities
+- Hidden alchemist guild with powerful guildmaster
+
+### Assassin
+- Stealth progression: walk silent → run silent, hide → stealth
+- Fatal blow (requires anatomy skill)
+- Backstab
+- Poison creation and use (synergy with alchemy)
+
+### Dark Time Wizard
+- Sanctuary entrapment spells
+- Temporal manipulation
+- Can potentially counter immortality
+
+### Necromancer
+- "Decrepify" spell that drains stats until death
+- Mind control (temporary or permanent)
+- Death touch
+- Death plague spell (extremely rare/difficult to cast)
+- Raising undead
+
+### Absolute Vampire
+- Sylar-like ability to steal skills, traits, qualities
+- Potential counter to immortality
+
+### Other Classes/Specializations
+- Monk: Light armor, unarmed combat, chi abilities
+- Phase attack abilities (bypassing defenses)
+- Holy Knights: Relentless pursuers if king is killed
+
+## World Systems
+
+### Information Systems
+- Multiple methods to acquire information (library, NPCs, players)
+- Time Wizard's "time scout" spell for reconnaissance
+
+### Morality Systems
+- Piety rewards: soul experience, karmic benefits
+- Good/evil balance counter affecting reincarnation
+- Evil incentives increase as good proliferates
+
+### Defensive Systems
+- Tower defense elements for cities
+- Bottleneck strategies
+- Home defense: turrets, androids, companions, traps
+- Security options: physical barriers, magic wards, biometric locks
+
+### Quests & Storylines
+- **Global Immortality Quest**: Kill Death to bring immortality to all
+- **Bring Back Death**: Counter-quest to restore mortality
+- **Guild Rebirth**: Reincarnate into established guilds
+- **Universal Rebirth**: Server-wide reset when good triumphs completely
+
+### World Generation
+- Dwarf Fortress-inspired procedural generation
+- Living environments that respond to player actions
+- Light vs. darkness as territorial mechanic
+
+### Item Systems
+- Stealing mechanics: nearly all items can be stolen except cursed/bound items
+- Item destruction spells and mechanics
+- Scrying orbs to locate specific items/people
+- Divine will prevents wishing for god-tier items
+
+### Magic Systems
+- Server-wide magic unlocking
+- Pledges/vows for special abilities
+- Power sites (shrines, high places) enhancing specific magic
+
+### Home & Territory
+- Food cultivation
+- Monster attacks
+- Security systems: traps, turrets, magic wards
+- Enslavement processes for captured creatures
+- Torture chambers and breaking mechanisms
+- Enhancement facilities for training/modifying captives
+- Blood farms for rare creature types
+
+### World Exploration
+- NPC cartographers mapping the darkness
+- Lightposts expanding safe territory
+- Reclaiming areas from darkness
+- Terraforming and ecological development
+
+## Game Potential
+- Dual roles: Play as Gods (world-builders) or as Mortals (adventurers)
+- Ultimate evolution into open world RPG VR AI
+- Beautiful world emerging from darkness through player efforts
+
+## Failures of Other Games to Learn From
+- Hollow Knight, Dead Cells, Unepic lacking progression depth
+- Need to combine Morrowind/Ultima Online/FF3 progression with Morrowind's acrobatics

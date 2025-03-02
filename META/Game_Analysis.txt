@@ -1,181 +1,194 @@
-object:Game Analysis
-object:GA
+# Game Analysis (GA)
 
-Tier 1 ::: The Universe
-Tier 2 ::: Savitri
-Tier 3 ::: 
+## Hierarchy
 
---- MINE
-livegrid ::: 
+- **Tier 1**: The Universe
+- **Tier 2**: Savitri
+- **Tier 3**: TBD
 
-play 3d :::
+## Original Projects
+- **LiveGrid**: TBD
+- **Play 3D**: TBD
+- **Play4** (2.5D top-down grid): TBD
 
-play4 (2.5 top down grid) ::: 
+## Analyzed Games
 
+### Advanced D&D: Eye of the Beholder
+- **Combat System**: Strategic positioning allows free hits on monsters
+- **Information Design**: Limited HP info creates interesting challenge in party management
+- **Magic System**: "Petition" for spells which characters auto-cast while resting
 
+### Pokemon Red
+- **Progression**: Evolution creates rewarding development path
+- **Exploration**: Finding rare Pokemon makes exploration rewarding
+- **Aesthetics**: Good enough graphics, memorable music
 
+### Smash Bros Series
+- **64**: Flow-inducing gameplay, rolls, side dodge, double jump, wall cling, recovery moves
+- **Melee**: [Notes to be added]
 
---- NEW
-  advanced D&D:eye of the beholder
-    just smoked but so far this game is really good. 2 particular notes.
-      movement and attacking, its tricky at first but you can get free hits on monsters.. very fucking sick.
-      no hp info.. very interesting. its annoying because I want to know who has the highest max and put them in front but I can only guess. for that reason im going to start over and keep track. since it only tells you in the beginning. it doesnt give u info on race either seriously fucked.
-      what sucks is no magic yet. I havent figured it out at least. but some games are like this. oh my lord.. you have to "petition" for spells and then once you know them... your characters autocast while resting. brooooo.
+### Paper Mario
+- **Dungeon Design**: Infinite dungeon with strong reward mechanisms
 
-OTHER MEDIA
-  MAGIC THE GATHERING
-  check animes? HxH?
+### Ultima Online
+- **Skill System**: Anatomy, magery, snooping
+- **Player Economy**: Stealing from other players
+- **Environment**: Deep, scary dungeons with difficult monsters
+- **Combat Strategy**: Exploiting weaknesses (e.g., killing titans with poison)
+- **Progression**: Slow but satisfying character growth, skill training per use (intuitive)
+- **World Design**: Varied world with distinct towns
+- **Spell System**: Paralyze, polymorph, summon (horse, blade spirits, energy vortex, greater demon), poison, teleport, mark, recall, gate
+- **Death Mechanics**: Ghost form with unique potential
 
---- VIDEO GAMES
-  list of games to analyze ::: pokemon, terraria (21 hour record yo), final fantasy?, diablo 1, diablo 2, the asian RPG with fast running and perhaps flying, ff tactics, smash bros, tower defence games, paper mario, armored core, zelda I, zelda II, castlevania, secret of mana?, baldurs gate, rimworld, dwarf fortress
-  games to analyze 2 ::: idle games (itrtg), MTG
+### Diablo 1
+- **Progression**: Experience/leveling system
+- **Rewards**: Finding spellbooks, altars with potential gains
 
-  POKEMON RED ::: graphics were good enough
-    evolving pokemon..
-    some cool ones makes exploring rewarding for finding stuff and leveling.
-    music
+### Princess.Loot.Repeat
+- **Item System**: Artifact combinations
+- **Character Development**: Progressive power scaling
+- **Rewards**: High-value +1 stat items creating significant impact
 
-  SMASH BROS 64 ::: flow inducing, rolls, side dodge, double jump, wall cling, up+b
-  SMASH MELEE ::: 
+### MagicMaker
+- **Customization**: Deep customization elements
+- **Abilities**: Teleport, seeking, piercing, split shot, turret
+- **Economy**: Good use of scarcity to enhance rewards
 
-  PAPER MARIO ::: infinite dungeon thing (also super rewarding but cant remember why)
+### Diablo 2
+- **Item System**: Uniques, sets, runewords, socketing, stat rerolls
+- **Character Development**: Skill trees with synergies (ensures different playthroughs)
+- **Crafting**: Runewords, passive items, sets
 
-  ULTIMA ONLINE :::
-    skills ::: anatomy, magery, snooping
-    stealing mass cash from human players
-    mickey / mouse
-     deep insanely scary dungeons
-     monsters are hard
-    killing powerful titans with poison. (ie taking advantage of weaknesses)
-    ! macro training (waking up and checking my levels)
-    the slowness of character growth? magic takes forever to max out, stealing,
-    always something to do?
-    money is scarce but useful
-    pking and looting their corpse
-    stealth.
-    train per use (intuitive)
-    amazing varied world - amazing towns
-    spells ::: paralyze, polymorph, summon(horse, blade spirits, energy vortex, greater demon!), poison, teleport, mark, recall, gate
-    when you die you become a ghost. it has some potential.
+### Disgaea
+- **Progression**: Extreme level caps
+- **Item Development**: Leveling items
+- **Gameplay Variety**: Puzzles
+- **Tone**: Humor
+- **Engagement**: Uniquely addictive progression loops
 
-  DIABLO 1 ::: gaining experience and leveling up
-    finding spellbooks
-    finding altars? ie potential gain
+### Spelunky
+- **Items**: Jetpack
+- **Interactions**: Shop robberies
+- **Level Design**: Secret areas
 
-  PRINCESS.LOOT.REPEAT ::: artifact combos
-    guy becoming OP
-    that amazing +1 stat item (ie amazing rewards)
+### Final Fantasy 5
+- **Class System**: Job system
+- **Unique Classes**: Blue Mage
+- **Customization**: Dual classing
 
-  magicmaker ::: that customizing element obviously
-  teleport
-  seeking, piercing, split shot, turret
-  other ::: good use of scarcity and rewarding
+### Final Fantasy Tactics
+- **Job System**: Diverse classes including Squire, Chemist, Arithmetician, Knight, White Mage, Dark Knight, Archer, Black Mage, Mime, Monk, Mystic, Ninja, Thief, TimeMage, Onion Knight, Dragoon, Orator, Samurai, Geomancer, Summoner, Dancer, Bard
+- **Mechanics**: Stealing, tactical positioning
 
-  DIABLO 2 :::
-    amazing items
-    uniques, sets, runewords, socketing, reroll stat,
-     skill trees (also ensures each play through is different) and synergy
-    runewords
-    passive items
-    sets
+### Terraria
+- **Crafting**: Advanced crafting system
+- **Items**: Diverse and powerful items
+- **Movement**: Mounts
+- **World Design**: Open world exploration
 
-  DISGAEA :::
-    obscene level caps
-    level items
-    puzzles
-    funny
-    very oddly addictive (the cardio machine)
+### Rogue Legacy
+- **Genre Fusion**: Side-scrolling rogue-like RPG
+- **Progression**: New Game+ mechanics
 
-  splelunky ::: jetpack
-  robbing shops
-  secret areas
+### ADOM (Ancient Domains of Mystery)
+- **Special Mechanics**: Wishes (including early-game pool wish)
+- **Items**: Potions (troll's blood, gain attribute), holy water, girdle of giant strength, cloak of invisibility, rings of regeneration, artifacts, eternium tower shields, scrolls of education
+- **Classes**: Mindcrafter, Monk (fast movement), Beastfighter, Wizard, Duelist (with enchanted phase dagger), Halfling Archer, Troll Healer
+- **Races**: Quickling, Demons, Golems, Elementals, Ogres, Giants, Titans, Dragons, Ghouls
+- **Spells**: Magic map, teleport, fireball, magic shovel, farsight, heal, acid ball
+- **Economy**: Shops with rare items (DELUX books, ring of djinni summoning), potions, shop raids
+- **Difficulty**: Steep learning curve creating replayability
+- **Atmosphere**: Tense/scary environments
+- **Unique Mechanics**: Stat gain through eating corpses
+- **Monster Design**: Diverse and challenging
+- **Stat System**: Strength (damage, hit chance, carry capacity), Dexterity (hit chance, DV, speed), Toughness (HP, PV), Willpower (spell impact), Perception (vision range), Learning, Mana (spell damage), Charisma (prices and companions), Appearance (prices and chaos resistance), Speed, PV, DV, HP, MP
+- **Progression**: Feats, weapon training, skills
+- **Skills**: Swimming, detect traps, dodge, regeneration, archery, alchemy, athletics, concentration, literacy, herbalism
+- **Core Mechanics**: Speed + energy, corruption, shields, birthsigns
+- **Design Philosophy**: Complex enough for proper customization, no useless elements
+- **Replayability**: Each playthrough different but with player agency
+- **Exploration**: Water features, vaults, rewarding locations (strange dungeon, dwarftown, chaosforge, bug temple, underwater cavern, casino)
+- **Drawbacks**: Heavy RNG for item drops, limited alchemy and enchanting
 
-  FINAL FANTASY 5 ::: job class system
-  blue mage
-  dual classing
+### Binding of Isaac
+- **Level Design**: Gold rooms
+- **Risk/Reward**: Devil pacts
+- **Items**: Powerful artifact combinations (homing lasers)
 
-  FINAL FANTASY TACTICS :::
-  jobs ::: Squire, Chemist, Arithmetician, Knight, White Mage, Dark Knight, Archer, Black Mage, Mime, Monk, Mystic, Ninja, Thief, TimeMage, Onion Knight, Dragoon, Orator, Samurai, Geomancer, Summoner, Dancer, Bard
-  other ::: stealing
+### Elder Scrolls: Morrowind
+- **Crafting**: Overpowered enchanting and alchemy systems
+- **Movement**: Acrobatics skills (jumping on houses, over walls)
+- **Level Design**: Diverse dungeons
+- **Combat**: Archery system
+- **Character Development**: Meditation mechanic
+- **Cons**: Limited replayability
 
-  terraria ::: amazing crafting system
-  amazing items!!
-  mounts
-  open world
-  rogue legacy ::: side scrolling, rogue rpg
-  new game +
+### Legend of Zelda Series
+- **Ocarina of Time**: Immense, beautiful world
+- **Original**: Rewarding exploration, progression through items, automapping, memorable music
+- **Zelda II**: Music, leveling system
 
-  ADOM :::
-    wishes
-    also beginners early game pool wish haha
-    items; potions of trolls blood, potions of gain attribute, holy water, girdle of giants stength, cloak of invisiblity, rings of regen, artifacts, eternium tower shields, scrolls of education
-    classes(mindcrafter, monk(fast movement), beastfighter, wizard(obviously), fast duelist with enchanted +5/+5 phase dagger), halfing archer killing things with rocks, troll healers
-    races(quickling, demons, golems, elementals, orges, giants, titans, dragons, ghouls)
-    spells ::: magic map, teleport, fireball, magic shovel, farsight, heal, acid ball
-    shops ::: shop keepers carrying DELUX books or rings(ring of djinni summoning), potions of str/tou/dex/int/will, water + (shop raids)
-    steep difficulty (ie replayability)
-    scary
-    stat gain through eating corpses
-    many amazing monsters
-    stats ::: strength(dmg, to-hit, carry capacity), dexterity(to-hit, DV, spd), toughness(max hp, PV), willpower(spell impact ranges), perception(vision range), learning, mana(spell damage), charisma(prices and companions), appearance(prices and chaos resistance), speed, PV, DV, HP, MP
-    feats ::: increase stats, speed, dmg, to-hit, regen rate, inc spell dmg, start with rare item + almost anything which is its high merit imo, prices etc
-    weapon training ::: increases dmg and to hit, reduces energy cost which is secret best(makes fighting enemies more rewarding)
-    skills ::: swimming, dectect traps, dodge, regen, archery, alchemy, athletics, concentration(mp regen), literacy, herbalism(healing, food, stat training, antidote),
-    mechanics-1 ::: game is complicated enough that it allows for proper customization
-    mechanics-2 ::: speed + energy, corruption, effectiveness of shields, birthsign, almost everything has a use or nothing is useless
-    mechanics-3 ::: each playthrough is different (via item drop, feature generation etc), but similar in that you can control your shaping of character, and where you go
-    levels ::: high chance to increase many trained states at once, increase damage, milestone level perma unlocks
-    other ::: grave looting
-    exploration ::: water feature, lesser and greater vaults, many places are rewarding enough to visit on replays(strange dungeon(high instance rate + town), dwarftown(shop,altar), chaosforge(old school raid(weapons, armor(red dragon scale mail), pools, xp), bug temple(high danger xp), underwater cavern, the casino(cashing in on so much hard work)
-    potential drawbacks ::: mostly random item drops(makes thief not as good as could be), alchemy has nothing on morrowinds alchemy, no enchanting with spells
+### NetHack
+- **Items**: Enemy-sensing necklace
 
-  binding of issac ::: gold rooms
-  pacts with devil
-  op artifact combos (like beams of homing lasers)
+### Caves of Qud
+- **Technology**: Solar-celled enginrifle turrets
+- **Character Development**: Mutations (domination, temporal clones, multiple limbs, teleport, foresight, mind blast)
+- **Build Variety**: Adrenal 4-legged temporal clones, sense enemy phase raider
+- **Items**: Shotgun, carbine
+- **Skills**: Tinkering
 
-  ELDER SCROLLS MORROWIND  :::
-    OP enchanting
-    OP alchemy
-    acrobatics skills (jumping on houses, over walls)
-    dungeons
-    archery
-    meditation?
-    cons
-    replayability?
+### Dwarf Fortress
+- **Combat System**: Detailed limb damage
+- **AI**: Emergent behavior
+- **Construction**: Building options (above/below ground, mushroom structures, towers, labyrinths)
+- **Defenses**: Drawbridges, traps
 
-  ZELDA 64 OCARINA OF TIME ::: immense beautiful world
+### RimWorld
+- **Economy**: Slavery, organ harvesting
+- **Skill Development**: Training medicine through leg replacements
+- **Technology**: Cybernetic implants, turrets
+- **Survival**: Food growth, trap mechanisms
 
-  zelda 1 ::: fun to explore
-  finding new items
-  automapping(rewards exploration), music(good music can carry a game)
+### Stoneshard
+- **Survival Systems**: Complex bio-mental reactions (hunger, thirst, morale, sanity, pain, intoxication)
+- **Injury System**: Limb-specific injuries
+- **Risk/Reward**: High-stakes gameplay
+- **Items**: Rare, valuable spellbooks
 
-  zelda II ::: music, leveling
+## Other Media Analysis
 
-  nethack :::
-  items ::: necklace lets you sense enemies
+### Magic: The Gathering
+- [Notes to be added]
 
-  CAVES OF QUD :::
-    solar-celled enginrifle turrets
-    some pretty amazing mutations ::: domination, temporal clones, multiple arms, multiple legs, teleport, foresight thing, mind blast
-    potential builds ::: adrenal 4 legged temporal clones, sense enemy phase raider
-    items ::: shotgun, carbine
-    skills ::: tinkering
+### Anime Influences
+- Hunter x Hunter
+- [Additional anime to be analyzed]
 
-  DWARF FORTRESS :::
-    hack-off able limbs, dwarven daycare, kick someones head and it explodes, traps, build above or below ground (a mushroom, tower, labyrinth, draw bridge over a pit of spikes
+## Games To Analyze
 
-  RIMWORLD :::
-    sell slaves, harvest organs, fast train medicine by installing and removing peg legs, cybernetic implants and replacements, turrets, grow food, trap raiders in burning structure
+### List 1
+- Pokemon
+- Terraria
+- Final Fantasy series
+- Diablo 1 & 2
+- [Unnamed Asian RPG with fast running and flying]
+- Final Fantasy Tactics
+- Smash Bros
+- Tower Defense games
+- Paper Mario
+- Armored Core
+- Zelda I & II
+- Castlevania
+- Secret of Mana
+- Baldur's Gate
+- RimWorld
+- Dwarf Fortress
 
-  STONESHARD ::: complex bio-mental reactions (hunger, thirst, morale, sanity, pain, intoxication etc), limb injuries, high risk + reward, spellbooks hard to find and useful.
+### List 2
+- Idle games (ITRTG)
+- Magic: The Gathering
 
-see also ::: games, minimum viable fun
-
-
-subject class:Game Dev
-class:videogame
-class:analysis
-
-see also ::: games, minimum_viable_fun
-
-
+## Related Documents
+- Games
+- Minimum Viable Fun

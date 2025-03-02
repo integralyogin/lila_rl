@@ -1,292 +1,386 @@
-object:Game
-object:the Game
-object:OWRPGRLVRSS
-object:OW
+# OWRPGRLVRSS (Open World RPG Roguelike VR School Savitri)
 
---- IMPORTANT OTHERS:
-    Game Analysis, Game Dev, Game Concepts
+## Project Overview
 
---- WHY:
-    the new mission statement
+**Mission Statement:**
+Create a fun, challenging (hooking) RPG that will make a strong profit and achieve a positive response. The goal is to expand beyond its currently limited scope until it evolves into an open world RPG VR experience.
 
---- OLD MISSION STATEMENT:
-    so the goal is to create an fun, challenging (hooking) RPG that will make a strong profit and achieve a positive response such that it will go on to be expanded beyond its currently limited scope, ideally this process can continue indefinitely until it lives as open world RPG VR.
+**Inspiration Sources:**
+- Magic: The Gathering (MTG)
+- TOME (items, bosses)
+- World of Warcraft (spells, bosses)
+- Dungeons & Dragons (spells and classes)
+- Diablo II (items, character progression)
+- Tactical RPGs
 
---- NEW PRIORITIES:
---- INSPIRATION:
-    checkout MTG, TOME(items, bosses), WOW(spells, bosses), D&D (spells and classes), ("vg") for all my favorite shit. also add tactics in there?
-
-ESSENTIAL:
-<h2 id="stats"> - STATS - </h2>
-    wisdom ::: increases xp in some way, resist magic, resist evil, resist corruption, protection illusion, improve white magic potency, + MP, + WP
-    willpower ::: increases gain in some way, extends magic duration, + WP, extand range of some spells, psychic resistance?, psychic potency, sorcery potency?, MP?
-    intelligence ::: increases xp gain in some way, learning, hacking, tinkering, robotics, some form of resistance, MP?
-    strength ::: damage/power, heavy weapons requirements. resistance of some sort
-    vitality ::: resistance of some sort, HP
-    dexterity ::: evasion, speed, crits, accuracy
-    others ::: HP, MP, Time Bar?, perception/awareness?, >and 1 hidden stat (agro?), speed?, status effects,  equipment effects, temperature?, fire elemental > void elemental.. slow > frozen.
-
-<h2 id="class1"> - CLASSES (GENERAL): - </h2>
-    white wizard - white / holy / light magic/miracles - priest
-    rogue / assassin / ninja / archer?(speed, tricks, disrupt/disable, criticals)
-    knight / samurai / guard:defensive, protective, thick. strong.
-    psychic / mindcraft
-    time / space (gravity)
-    dark / necrotic / blood / corruption
-    elemental (air, water, fire, earth/material)
-    barbarism / savagery
-    Cartographer, Engineer(based on any skill(each skill is a skill tree?))
-    others? like a standard thing everyone would borrow from?
-
-<h2 id="magick"> - MAGICK: - </h2>
-    SPACE/TIME ::: phase(att/def), gravity, haste, interrupt(counter)(dirtyy as a gambit!), revert(slows time around you to speed yourself up), blink, teleport
-    AIR ::: increase speed, air cutter, levitation, double jump, fly, summon air familiar
-    ARCANE ::: arcane blast, arcane beam, arcane turret, arcane forms, summon arcane spirit
-    FIRE ::: flame wave, summon fire vortex, fly(obsenely hard to do)
-    ILLUSION:
-    ALTERATION ::: increase stat(ego projection), alter property(for weapons or w/e), make permanent(must have HEAVY costs esp for persons), something that lets you add tails or wings or arms?
-    SUMMONING:
-    EARTH ::: summon earth giant(based on environment?), can cast lightly other elements? high elemental resistances?, shape earth-yay!
-    WHITE ::: protection, warding, light, revive, dispel, light-beam, exorcise, boosting? bless? summon avatar, identify?, true sight
-    PSYCHIC ::: sense consciousness, mind blast, psychic protection, dominate(linked with dark?)
-- mind blast: go as deep as you can and destroy as much as possible. full hit is "you destroyed its sense of self, it has no idea what is going on."
-- psychokinetic crush and strangle: attempt to crush and strangle the target with telekinetic force. full hit is "the enemy could not resist your crushing force and has been repeatedly folded in on itself, in a quick but truly grueling death. there isnt much left.". Lesser hits could be physical crippling and paralysis.
-- dominate: unmericisely dominate the mind of the target, effectively turning it into a hijacked npc that will mindlessly follow orders. full hit is "you have dominated the target, your victim has been helplessly enslaved against their will." Repeated use opens dark magic tree?
-    NECROMANCY/DARK ::: paralyzed aura, drain stat, drain health/mana, drain life, corrupt, drain time, poison cloud, compell, raise dead, summon demon/spirit, possess/dominate,  - 6 people sacrificing their lives and many others to summon a horrid evil, which immediately requires food.
-
-<h2 id="skills"> - SKILLS AND SKILL TREES - </h2>
-    concentration(reduces magic time costs, increases learning speed), meditation(increase MP/WP rate), alchemy, kata, 
-- cartography
-    diablo 2 sorceress has 10 skills per tree, ie 30 skills for sorceress. 
-    there is something i need to do with my class set up because elemental for example would take 40 and holy only 10. 
-    stat requirements for particular skills. like mindcontrol or most high magic probably requires ridiculous willpower. but is it better to add requirements in the skill allocation itself or in other mechanic, such that without high willpower, one wont have enough MP to cast the spell in the first place. also adding requirements is extra work. 
-    a cooldown system?
-
-    Spells(is this not under skills):
-    chainlightning? or recurring lightning? 
-    regen, 
-    check MTG for inspiration 
-    mirror image? 
-    self-destruct? see mels fire mage build 
-    paladin auras?
-NPCS
-    healers, trainers, builders, explorers, warriors, farmers, shopkeepers
-
-<h2 id="bosses1"> - BOSSES (OVERVIEW) - </h2>
-    check TOME for boss ideas. 
-    fast bosses run away but no drops if they run. 
-    name, class, stat / skill distro, equipment + gambits
-    Archon*
-    Necromancer
-    Manticore?
-    vampire?
-    Titan?
-    Light Stalker of sorts
-    hell demon of sorts
-    Temporal Horror of sorts
-    Ice drake?
-    dream monster of sorts
-    goblin king?
-    metal golem?
-    fire/void elemental?
-    dark or psychic master assassin
-    slime
-    giant fucking snake, giant eyeball creature 
-    cultists that sacrifice themselves to summon a giant fucking monster? 
-    alchemist of sorts?(super temp and perma buff)
-
-<h2 id="monsters"> - MONSTERS: - </h2>
-    blind-jumpers ::: blind (senses ideally through smell and noise), climbs, fast (and scary af), jump, dig, hunt, call?
-    tunnel tentacles:
-    eye-wall-tenticle monsters ::: (eyes that appear in any object with shadow tentacles with stealth checks), drain (plants, animals(leeches from animals for strength, leaving their corpses.. shit)), slow, poison, immobile, traps? (they need to be rare then, else..)
-    spawn gate:
-    zombies, hookers:
-    hijacking/possessing spirits and corrupting spirits:
-    dark time mages ::: opens spawn gates (time tears), instability grants him power (or rather temporal horrors do?)
-    necromancers ::: necromancy, blood magic, absorbtion spells, curses
-    sight based creatures ::: eye stalker
-    flying creatures ::: floating eye, planet-sized floating eye, insects?, birds?
-    lesser demons ::: enslave minds(has minions of any npc class?)
-
-<h2 id="multi"> - MULTICLASSING / TITLES - </h2>
-    holy/black ::: the cursed, 
-    rogue/psychic ::: psyblade, 
-    dark/rogue ::: shadow?, 
-    white/knight ::: paladin?, 
-    death knight? 
-    monk? druid? (polymorph) warrior? 
-    physical counter for rogue 
-    counter as from MTG blue. 
-    gunslinger? 
-    monkey fighter? martial artist? 
-    summoner?
-
---- FIGHTS / BATTLES
-
-<h2 id="mechanics"> - MECHANICS - </h2>
-    GAMBITS / technical points ::: requires practicing the thing enough times until you can do it automatically? or by points or spell? by simple coding?
-    FUNNESS ::: difficult but rewarding, so much to explore, freedom / lack of
-    COMBAT MECHANICS ::: shooting the foot, combos (interupt with attack while backstepping or autoshoot w autoretreat w autododge)
-    LOTS OF PREP AND CUSTOMIZATION ::: with the ideal of people spending time outside of game contemplating methods (walking thinking of d2)
-    LIVING ENVIRONMENT ::: growing mushrooms, npcs rebuilding walls / going to work, animals living
-    SOUL:permastats?
-    POTENTIAL MECHS ::: insanity
-    UNSORTED ::: all stat increases are fractional from one?, permadeath, horror game, light radius, GM/God, Dieties, Universe / World / Nature, npcs including good/neutral/evil and animals, AI, timer, zero to hero progression
-
-    this section was added for the question of... 
-    making the victories worth while? not just like 
-    gambits? 
-    funness? because the PC's start at level 100, how to integrate some form of progression which is the backbone of RPG enjoyment? the grinding has been taking out which is a miracle. 
-    movement() 
-    smart bosses go for healer?
-
-<h2 id="items"> - EQUIPMENT / ITEMS: - </h2>
-    head, amulet, chest, rings, gloves, pants, boots. 
-    items are currently off. 
-    bosses often carry an item which is dropped on kill? which is a fun concept but a lot of work. 
-    armory / shop 
-    tarnhelm. +1 all skills HEHE 
-    diablo 2 is the king of items I think. what are my favorite items from the game?
-    disgaea had some lessons on this perhaps, as did D1
 ---
-<h2 id="world"> - WORLD/PLACES: - </h2>
-    The Academy, The Library, The Curriculum, The Temple, The Path, The Aim, Gods, God, The Player, The Character Sheet, Classes, Home, My Room, My Desk, My Workshop, The Quest, The World Map, The Order, The Palace?, The Bank?, The Town Center, The City, The Call, The Marketplace, The Clubhouse*, The Underground, The Forum?, The Lab?, The Playground, The Void?, The Courthouse?, The Residence, The Abyss, The Darkness, The Light, The Agency?, The World, The Heavens, Heaven, The Infinite? Tower, The Infinite? Dungeon
-    heaven > world, world > heaven; + heaven ::: where the gods design and build the universe.  help players ?!
-    city of darkness > the abyss/night > heaven ::: make city of darkness twisted and fucking scary. "welcome to heavens shadow"
-    hell
-    space? > temple of time
-    minotaurs lair > labyrinth > mountain > mountain-top / air shrine > mountain-valley > the white tower + city in the air
-    forest? > graveyard > crypt > hidden > blood altar?
-    the eastern desert > the black tower > between worlds < white tower
-    main town ::: (on top of mountain? (ie safer from evil?) in a cave? dwarf fortress style?) or located where the light can still reach
-    main town > badtown > assassins guild > undertown? (maybe not in main town)
-    + guilds, the castle, market, academy, library, temple, arena
-    + outside of town?
-    + dark underground town (less dark then the CoD)(beings is essentially slaves of a lesser demon?) (demons can manifest easiest in darkness?)
-    + mages guild, alchemy guild, shrines, city of pyramids,
-    + dungeonsSTORY:
 
-<h2 id="class2"> - CLASSES (Specific): - </h2>
-    PRIEST
-        holy, regen,
+## Game Systems
 
-    WIZARD
-        fire, ice, lightning, arcane? 
-        arcane: magic missle, explosions? see TOME 
-        see morrowind for things like alteration 
-        warlock? chaos? 
-        taming? polymorph 
-        
-    traps, poison, explosions? where do explosions go? in wow, dps monk is fast? plate armor / heal / protect thief, stealth, pickpocketing, ambush, backstabbing dual wielding, fast. bleed, disable. silence.
+### Character Stats
 
-    NECROTIC, DARK, BLOOD, CORRUPTION    
-        primary stats required: willpower, intelligence 
-        secondary stats?: vitality? wisdom? str? dex? 
-        
-        SKILLS:
-        curses 
-        life steal - blood, necrotic? 
-        stat drain - necrotic 
-        summon undead 
-        summon dead 
-        corpse magic? 
-        life/death? 
-        corruption 
-        bone magic? -dmg. trap, defense 
-        shapeshifting? 
-        
-        ultimates?:
+| Stat | Effects |
+|------|---------|
+| **Wisdom** | Increases XP gain, magic resistance, evil resistance, corruption resistance, illusion protection, white magic potency, MP & WP bonuses |
+| **Willpower** | Increases gain rates, extends magic duration, WP bonus, extends spell range, psychic resistance/potency, sorcery potency, possible MP effects |
+| **Intelligence** | Increases XP gain, learning, hacking, tinkering, robotics, certain resistances, possible MP effects |
+| **Strength** | Damage/power, heavy weapons requirements, resistance bonuses |
+| **Vitality** | Various resistances, HP bonus |
+| **Dexterity** | Evasion, speed, critical hits, accuracy |
 
-<h2 id="bosses2"> - BOSSES (SPECIFIC) - </h2>
-    NECROMANCER BOSS FIGHT:
-        name? skills? stats? equipment? class? trouble? difficulty?(ultimates, puzzle) solution? 
-        Class ::: primary: dark/necro/blood/corruption secondary?: psychic? 
-        trouble/difficulty ::: raise undead, temp stat drain. life steal. 
-        ultimates ::: corpse explosion, raise dead, absorb being    
-        solution? ::: 
-        
---- TODO:
-    todo list located under 't:Game Dev'
+**Additional Stats:**
+- HP (Health Points)
+- MP (Mana Points)
+- Time Bar
+- Perception/Awareness
+- Hidden stat (Aggro?)
+- Speed
+- Status effects
+- Equipment effects
+- Temperature
+- Elemental affinities (Fire to Void)
+- Status continuums (Slow to Frozen)
 
-    Todo (update?):
-    do research into other games. figuring out their mechanics. check out TOME for stats. ADOM. 
-    d2 for items 
-    check out wow for spells and bosses. 
-    link and synthesize with other videogames pages("vg")? 
-    organize the vidya page? find some inspiration in there? 
-    write as a means to find inspiration? 
-    class descriptions, spell descriptions etc. mtg metatext 
-    check unsorted, questions 
-    play like 10 different mmos?
+---
 
-    General/Overview?:
+### Classes
 
-    TIME:
-    100 bosses will take about 2-3 weeks? at 5-7 bosses per day? but for the prototype for kickstarter we dont need anywhere near as many bosses. more important would be like 15 solid engaging Fights.
+#### General Class Types
 
-    Problems:
-    staying within a practicable scope. 
-    staying inspired. to this point its probably best to design all the dopest shit first.
+1. **White Wizard / Priest**
+   - White/Holy/Light magic, Miracles
 
-FEATURES:
-    life, npcs, buildings, artifacts, players, AI, nature
-    portals
-    entrance to inside temple of time
-    items:Savitri
+2. **Rogue / Assassin / Ninja / Archer**
+   - Speed, tricks, disruption/disabling, critical hits
 
-QUESTIONS:
-    how many equipment slots should there be?
-    kickstarter chance %? estimated return range?
-    is this current design viable?
-    making the victories worth while? making the game hooking.
-    how long do I expect it will take to roughly design the game? how long to design a fight?
-    how can heroes blah blah blah?
-    races?
-    what do you think about for drewRPG: the idea of being able to steal a bosses item once he is weakened then equip it in the match? on that note would be changing around inventory while in a match?
+3. **Knight / Samurai / Guard**
+   - Defensive, protective, resilient, strong
 
---- WISHLIST
-    group casting 
-    polymorph spell
-    unsorted
+4. **Psychic / Mindcraft Specialist**
+   - Mental abilities, psychic attacks
 
-    races?
-    demo for kickstarter? 
-    shrines in ultima, as a means perhaps of classing, or shifting from peasant to hero to avatar or something.
-OLD PRIORITIES:
-    design one solid engaging Fight.
-    create company name
-    respond to drews proposal
-    create a proposal for dad? or update him / discuss with him?
-    figure out scope?
-    make a todo list?
-    what should i work on next?
-past projects ::: GAME.cpp, GAME.gml, j-rl (pa2.rkt)
-see also ::: Game Dev, oldOWRPG.txt, Game Analysis, game dev challenge, MVF, Game Concepts Analysis, the Story, PC, the World, Sylvie and Bruno Foreward
-class:project
-subject class:Game Dev
-class:project
-class:work
-class:videogames
-alt names ::: Open-World Role Playing Game Roguelike Virtual Reality School Savitri, game-dev-main, game dev, GAME, GAME DEV, racket game engine
-main ::: why
-parts ::: game engine, map editor, spells, monster+npc builder, spell builder,
-intent ::: make it easier/more fun/efficient/rewarding to make a game
+5. **Time/Space Manipulator**
+   - Gravity and temporal manipulation
 
+6. **Dark Wizard / Necromancer / Blood Mage**
+   - Dark/Necrotic/Blood/Corruption magic
 
+7. **Elemental Mage**
+   - Air, Water, Fire, Earth/Material manipulation
 
+8. **Barbarian / Savage**
+   - Primal combat, rage powers
 
+9. **Specialist / Technical**
+   - Cartographer, Engineer (skill-tree based)
 
+#### Specific Class Details
 
+**Priest**
+- Holy magic, regeneration
 
+**Wizard**
+- Fire, ice, lightning, arcane specializations
+- Arcane abilities: magic missile, explosions
+- Alteration magic (from Morrowind)
+- Potential variants: warlock, chaos mage
+- Additional abilities: taming, polymorph
 
+**Dark Magic Specialist**
+- Primary stats: Willpower, Intelligence
+- Secondary stats: Vitality, Wisdom, Strength, Dexterity
+- Skills: Curses, life steal, stat drain, undead summoning, corpse magic, corruption, bone magic, shapeshifting
+- Ultimate abilities TBD
 
+---
 
+### Magic System
 
+#### Schools of Magic
 
+**Space/Time Magic**
+- Phase (attack/defense), gravity manipulation, haste, interrupt/counter, revert (time slow), blink, teleport
 
+**Air Magic**
+- Speed increase, air cutter, levitation, double jump, flight, air familiar summoning
 
+**Arcane Magic**
+- Arcane blast, arcane beam, arcane turret, arcane forms, arcane spirit summoning
 
+**Fire Magic**
+- Flame wave, fire vortex summoning, flight (extremely difficult)
 
+**Illusion Magic**
+- Various deception and perception manipulation
 
+**Alteration Magic**
+- Stat increase (ego projection), property alteration (for weapons), permanent alterations (high cost), physical transformations (tails, wings, etc.)
 
+**Summoning Magic**
+- Various entity summoning abilities
 
+**Earth Magic**
+- Earth giant summoning (environment-dependent), minor control of other elements, high elemental resistance, earth shaping
+
+**White Magic**
+- Protection, warding, light, revival, dispelling, light-beam, exorcism, boosting, blessing, avatar summoning, identification, true sight
+
+**Psychic Magic**
+- Consciousness sensing, mind blast, psychic protection, domination (linked with dark magic)
+- Mind Blast: Deep mental destruction, full hit causes complete loss of self
+- Psychokinetic Crush: Telekinetic crushing and strangling, full hit causes fatal compression
+- Dominate: Mind control, turns target into a controllable NPC (repeated use may unlock dark magic)
+
+**Necromancy/Dark Magic**
+- Paralysis aura, stat/health/mana/life/time drain, corruption, poison cloud, compulsion, raising dead, demon/spirit summoning, possession/domination, ritual summoning
+
+---
+
+### Skills & Skill Trees
+
+- Concentration (reduces magic time costs, increases learning speed)
+- Meditation (increases MP/WP regeneration)
+- Alchemy
+- Kata
+- Cartography
+
+**Skill System Notes:**
+- Similar to Diablo II's skill trees (10 skills per tree)
+- Current imbalance: elemental would take 40 skills while holy only 10
+- Considering stat requirements for high-level skills
+- Potential cooldown system
+
+**Spell Examples:**
+- Chain/recurring lightning
+- Regeneration
+- Mirror image
+- Self-destruct
+- Paladin auras
+
+---
+
+### Creatures
+
+#### NPCs
+- Healers, trainers, builders, explorers, warriors, farmers, shopkeepers
+
+#### Bosses (Overview)
+- Archon
+- Necromancer
+- Manticore
+- Vampire
+- Titan
+- Light Stalker
+- Hell Demon
+- Temporal Horror
+- Ice Drake
+- Dream Monster
+- Goblin King
+- Metal Golem
+- Fire/Void Elemental
+- Dark/Psychic Master Assassin
+- Slime
+- Giant Snake
+- Giant Eyeball Creature
+- Cultist Group (summoning ritual)
+- Alchemist (buff specialist)
+
+#### Specific Boss Examples
+
+**Necromancer Boss**
+- Class: Dark/Necro/Blood/Corruption (secondary: Psychic?)
+- Abilities: Raise undead, temporary stat drain, life steal
+- Ultimate abilities: Corpse explosion, raise dead, absorb being
+- Solution strategy: TBD
+
+#### Monsters
+- **Blind-Jumpers**: Blind creatures that sense through smell and noise, fast climbers, diggers and hunters
+- **Tunnel Tentacles**: Underground ambush predators
+- **Eye-Wall-Tentacle Monsters**: Shadow entities with eyes and tentacles, drain life, slow movement, poison capabilities, primarily immobile
+- **Spawn Gates**: Monster-summoning portals
+- **Zombies & Hookers**: Undead entities
+- **Hijacking/Possessing Spirits**: Corruption-based entities
+- **Dark Time Mages**: Create spawn gates (time tears), draw power from instability
+- **Necromancers**: Practice necromancy, blood magic, absorption, curses
+- **Sight-Based Creatures**: Eye stalkers
+- **Flying Creatures**: Floating eyes (including planet-sized), insects, birds
+- **Lesser Demons**: Mind enslavers with varied minions
+
+---
+
+### Multiclassing & Titles
+
+- Holy/Black: "The Cursed"
+- Rogue/Psychic: "Psyblade"
+- Dark/Rogue: "Shadow"
+- White/Knight: "Paladin"
+- Other potential combinations: Death Knight, Monk, Druid, Warrior, Gunslinger, Martial Artist, Summoner
+
+---
+
+### Game Mechanics
+
+#### Combat & Gameplay Systems
+- **Gambits/Technical Points**: Automation through practice or points
+- **Fun Factor**: Difficult but rewarding, extensive exploration, freedom
+- **Combat Mechanics**: Targeted strikes, combos, interrupts, strategic movement
+- **Preparation & Customization**: Encouraging out-of-game strategizing
+- **Living Environment**: Dynamic world elements (growing plants, NPCs with routines, wildlife)
+- **Soul System**: Permanent stat progression
+- **Potential Mechanics**: Insanity system
+- **Miscellaneous**: Fractional stat increases, permadeath option, horror elements, light radius, deities, world-building, NPC alignment, AI systems, timers, zero-to-hero progression
+
+#### Battle Design Considerations
+- Making victories worthwhile
+- Implementing gambits effectively
+- Ensuring fun factor with high-level characters
+- Movement mechanics
+- Intelligent boss behavior (targeting healers)
+
+---
+
+### Items & Equipment
+
+#### Equipment Slots
+- Head, Amulet, Chest, Rings, Gloves, Pants, Boots
+
+#### Item System Notes
+- Boss-dropped unique items
+- Shop/Armory system
+- Tarnhelm (+1 to all skills)
+- Drawing inspiration from Diablo II's item system
+- Considering lessons from Disgaea and Diablo I
+
+---
+
+### World & Locations
+
+- **The Academy**
+- **The Library**
+- **The Curriculum**
+- **The Temple**
+- **The Path**
+- **The Aim**
+- **Gods/God**
+- **The Player**
+- **Character Sheet**
+- **Classes**
+- **Home/Room/Desk/Workshop**
+- **The Quest**
+- **World Map**
+- **The Order**
+- **The Palace**
+- **The Bank**
+- **Town Center**
+- **The City**
+- **The Call**
+- **The Marketplace**
+- **The Clubhouse**
+- **The Underground**
+- **The Forum**
+- **The Lab**
+- **The Playground**
+- **The Void**
+- **The Courthouse**
+- **The Residence**
+- **The Abyss**
+- **The Darkness**
+- **The Light**
+- **The Agency**
+- **The World**
+- **The Heavens/Heaven**
+- **The Infinite Tower**
+- **The Infinite Dungeon**
+
+#### Realm Structure
+- Heaven > World, World > Heaven
+  - Heaven: Where gods design and build the universe
+- City of Darkness > The Abyss/Night > Heaven
+  - City of Darkness: "Welcome to Heaven's Shadow"
+- Hell
+- Space? > Temple of Time
+- Minotaur's Lair > Labyrinth > Mountain > Mountain-top/Air Shrine > Mountain-valley > The White Tower + City in the Air
+- Forest? > Graveyard > Crypt > Hidden > Blood Altar?
+- The Eastern Desert > The Black Tower > Between Worlds < White Tower
+
+#### Main Town Features
+- Potential locations: Mountaintop (safer from evil), cave (dwarf fortress style), or where light can reach
+- Areas: Guilds, Castle, Market, Academy, Library, Temple, Arena
+- Outside areas
+- Dark underground town (less dark than City of Darkness)
+  - Inhabitants essentially slaves of lesser demons
+  - Demons manifest easiest in darkness
+- Specialized locations: Mages Guild, Alchemy Guild, Shrines, City of Pyramids, Dungeons
+
+---
+
+## Development Roadmap
+
+### Features
+- Life simulations, NPCs, buildings, artifacts, players, AI, nature
+- Portal systems
+- Temple of Time entry
+- Items: Savitri
+
+### Todo List
+- Research other games' mechanics (TOME for stats, ADOM, Diablo II for items)
+- Study WoW for spells and bosses
+- Synthesize with existing video game research
+- Organize reference materials
+- Write class/spell descriptions (MTG-style flavor text)
+- Check unsorted questions
+- Play multiple MMOs for inspiration
+
+### Project Timeline
+- 100 bosses: ~2-3 weeks at 5-7 bosses per day
+- For kickstarter prototype: Focus on ~15 solid engaging fights
+
+### Development Challenges
+- Maintaining practicable scope
+- Sustaining inspiration (design the most engaging content first)
+- Kickstarter viability assessment
+- Making victories worthwhile and the game engaging
+- Estimating design timeline
+- Addressing race system questions
+- Evaluating the concept of stealing and equipping boss items mid-fight
+
+### Wishlist Features
+- Group casting
+- Polymorph spell
+- Race system
+- Kickstarter demo
+- Shrine system (similar to Ultima, for classing or progression)
+
+### Priority Tasks
+- Design one solid, engaging fight
+- Create company name
+- Respond to Drew's proposal
+- Update/discuss with Dad
+- Define project scope
+- Create detailed todo list
+- Determine next development focus
+
+### Past Projects & Related Materials
+- GAME.cpp
+- GAME.gml
+- j-rl (pa2.rkt)
+- Game Dev documentation
+- oldOWRPG.txt
+- Game Analysis
+- Game dev challenge
+- MVF
+- Game Concepts Analysis
+- The Story
+- PC
+- The World
+- Sylvie and Bruno Foreward
+
+## Technical Components
+- Game engine
+- Map editor
+- Spell system
+- Monster/NPC builder
+- Spell builder
+
+## Project Intent
+Make game development easier, more fun, efficient, and rewarding.
