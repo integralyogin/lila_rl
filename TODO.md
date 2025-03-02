@@ -1,5 +1,4 @@
 # Lila RL Development Status
-
 ### THE IDEAL
 
 
@@ -9,10 +8,15 @@
 - skills
 - harvesting resources
 - build monsters in game.
+- proper stat advancement (exercise/abuse stats)
+
+## CREATE
+- the creation of objects/tiles, beings, enemies, items, spells, maps being done in game forces components to be data driven
+- create magic wand with charges test
 - create object, place, edit obj
 - create spell
 - create item
-- proper stat advancement (exercise/abuse stats)
+- create tree that grows
 
 ## is WORKING?
 - equipment on monsters that drops on death
@@ -22,11 +26,15 @@
 ## FIX / BROKEN
 - arena broken.  arena to use behaviourai
 
-### COMPLEX TEST
+### COMPLEX MISSING
 - lich vs wizard proper in arena
 - item that grants aura on equip etc
 - phantom limb spell that grants inventory slot
 - wizard shopkeeper robbing and dying from test
+- create a dragon in game with fire breath, create knight in game
+- grass > seed > plant > tree > fruit + plant = potion
+
+
 
 ### SPELLS
 

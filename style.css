@@ -930,3 +930,45 @@ body {
 .data-viewer-tile-info tr:hover {
   background-color: rgba(150, 150, 50, 0.2);
 }
+
+/* Creator UI */
+.creator-ui {
+  font-family: monospace;
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+.creator-ui input,
+.creator-ui select,
+.creator-ui textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
+}
+
+.creator-ui button {
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.creator-ui button:hover {
+  filter: brightness(1.1);
+}
+
+.creator-ui button:active {
+  transform: scale(0.98);
+}
+
+.creator-ui .form-fields {
+  margin-bottom: 15px;
+}
+
+/* Set window.isEditingEntityData when editing fields in Creator UI */
+.creator-ui input:focus,
+.creator-ui select:focus,
+.creator-ui textarea:focus {
+  outline: 2px solid #77aaff;
+}

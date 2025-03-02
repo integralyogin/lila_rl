@@ -5,6 +5,7 @@ import combatSystem from './combatSystem.js';
 import aiSystem from './aiSystem.js';
 import { getEntityArray } from '../utils/entityUtils.js';
 import pathfindingSystem from './pathfindingSystem.js';
+import creatorUI from '../ui/creatorUI.js';
 
 class InputSystem {
   constructor() {
@@ -160,6 +161,29 @@ class InputSystem {
         if (key === 'Escape') {
           eventBus.emit('hideDataViewer');
         }
+      },
+      'creator': () => {
+        // Allow typing in form fields in creator mode
+        if (window.isEditingEntityData) {
+          return;
+        }
+        
+        event.preventDefault();
+        if (key === 'Escape') {
+          // Hide creator UI and force game back to exploration
+          creatorUI.hide();
+          
+          // Double check that game mode is reset
+          setTimeout(() => {
+            if (gameState.gameMode !== 'exploration') {
+              console.log('InputSystem: Force resetting game mode to exploration');
+              gameState.gameMode = 'exploration';
+              eventBus.emit('fovUpdated');
+            }
+          }, 100);
+        } else {
+          eventBus.emit('creatorKeyPressed', key);
+        }
       }
     };
     
@@ -234,6 +258,11 @@ class InputSystem {
           } else {
             eventBus.emit('logMessage', { message: "No path to follow", type: 'info' });
           }
+          handled = true;
+          break;
+        case 'F2':
+          gameState.gameMode = 'creator';
+          eventBus.emit('showCreator');
           handled = true;
           break;
       }

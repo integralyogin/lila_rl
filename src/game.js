@@ -16,6 +16,7 @@ import CharacterUI from './ui/characterUI.js';
 import ArenaUI from './ui/arenaUI.js';
 import SummoningUI from './ui/summoningUI.js';
 import dataViewerUI from './ui/dataViewerUI.js';
+import creatorUI from './ui/creatorUI.js';
 import GameLoader from './core/gameLoader.js';
 import LevelGenerator from './world/levelGenerator.js';
 import MapLoader from './world/mapLoader.js';
@@ -38,13 +39,23 @@ class Game {
   }
   
   handleEmergencyReset() {
-    ['inventory', 'spellbook', 'character', 'dialogue', 'shop', 'summoning'].forEach(ui => 
+    ['inventory', 'spellbook', 'character', 'dialogue', 'shop', 'summoning', 'creator'].forEach(ui => 
       eventBus.emit(`${ui}Closed`));
     
     // Hide data viewer if open
     eventBus.emit('hideDataViewer');
     
+    // Hide creator if open
+    eventBus.emit('hideCreator');
+    
+    // Reset any input flags
+    window.isEditingEntityData = false;
+    
+    // Force restore game mode
     gameState.gameMode = 'exploration';
+    gameState.creatorMode = false;
+    
+    console.log('Emergency reset performed, game mode: exploration');
   }
   
   async initialize() {
@@ -110,8 +121,12 @@ class Game {
       dialogue: new DialogueUI(),
       character: new CharacterUI(),
       arena: new ArenaUI(),
-      summoning: SummoningUI
+      summoning: SummoningUI,
+      creator: creatorUI
     };
+    
+    // Set entity factory reference for creator UI
+    this.ui.creator.setEntityFactory(this.entityFactory);
     
     import('./ui/contextMenuUI.js');
     
@@ -123,6 +138,7 @@ class Game {
       window.game = window.game || {};
       window.game.shopUI = this.ui.shop;
       window.game.summoningUI = this.ui.summoning;
+      window.game.creatorUI = this.ui.creator;
     });
   }
   

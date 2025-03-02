@@ -6,7 +6,7 @@ class GameState {
         this.player = null;
         this.map = null;
         this.currentLevel = 1;
-        this.gameMode = 'exploration'; // exploration, inventory, targeting, etc.
+        this.gameMode = 'exploration'; // exploration, inventory, targeting, creator, etc.
         this.turn = 0;
         this.messages = [];
         this.visibleTiles = new Set();
@@ -15,6 +15,7 @@ class GameState {
         this.location = 'town'; // 'town' or 'dungeon'
         this.systems = new Map(); // Store references to game systems
         this.currentTargetingHighlight = null; // For tracking mouseover highlighting
+        this.creatorMode = false; // Flag to track if creator mode is active
     }
     
     // Register a system with the game state
