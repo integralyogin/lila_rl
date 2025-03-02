@@ -119,6 +119,9 @@ class MouseSystem {
       
       if (clickableEntity) {
         this.showEntityContextMenu(event, clickableEntity, tilePos);
+      } else {
+        // If no clickable entity, show tile context menu
+        this.showTileContextMenu(event, tilePos);
       }
     } else if (gameState.gameMode === 'targeting') {
       targetingSystem.cancelTargeting();
@@ -288,6 +291,182 @@ class MouseSystem {
         x: event.clientX,
         y: event.clientY,
         target: entity,
+        items: menuItems
+      });
+    }
+  }
+  
+  showTileContextMenu(event, tilePos) {
+    const x = tilePos.x;
+    const y = tilePos.y;
+    const tile = gameState.map.getTile(x, y);
+    
+    if (!tile) return;
+    
+    // Determine tile name based on type
+    let tileName = "Unknown";
+    let tileLabel = "Unknown Tile";
+    
+    switch(tile.type) {
+      case TILE_TYPES.WALL:
+        tileName = "Wall";
+        tileLabel = "Wall";
+        break;
+      case TILE_TYPES.FLOOR:
+        tileName = "Floor";
+        tileLabel = "Floor";
+        break;
+      case TILE_TYPES.DOOR:
+        tileName = "Door";
+        tileLabel = tile.isOpen ? "Open Door" : "Closed Door";
+        break;
+      case TILE_TYPES.STAIRS_DOWN:
+        tileName = "StairsDown";
+        tileLabel = "Stairs Down";
+        break;
+      case TILE_TYPES.STAIRS_UP:
+        tileName = "StairsUp";
+        tileLabel = "Stairs Up";
+        break;
+      case TILE_TYPES.AREA_EXIT:
+        tileName = "AreaExit";
+        tileLabel = tile.exitInfo?.name ? `Exit to ${tile.exitInfo.name}` : "Area Exit";
+        break;
+      case TILE_TYPES.DUNGEON_ENTRANCE:
+        tileName = "DungeonEntrance";
+        tileLabel = "Dungeon Entrance";
+        break;
+      case TILE_TYPES.TOWN_FLOOR:
+        tileName = "TownFloor";
+        tileLabel = "Town Floor";
+        break;
+      case TILE_TYPES.BUILDING:
+        tileName = "Building";
+        tileLabel = "Building";
+        break;
+      default:
+        tileName = `Tile${tile.type}`;
+        tileLabel = `Tile Type ${tile.type}`;
+    }
+    
+    const menuItems = [];
+    
+    // Check if tile is special (stairs, door, exit)
+    const isSpecialTile = [
+      TILE_TYPES.STAIRS_DOWN, 
+      TILE_TYPES.STAIRS_UP, 
+      TILE_TYPES.AREA_EXIT, 
+      TILE_TYPES.DUNGEON_ENTRANCE
+    ].includes(tile.type);
+    
+    if (isSpecialTile) {
+      const playerX = Math.floor(gameState.player.position.x);
+      const playerY = Math.floor(gameState.player.position.y);
+      const isPlayerAdjacent = Math.abs(playerX - x) <= 1 && Math.abs(playerY - y) <= 1;
+      
+      if (isPlayerAdjacent) {
+        let actionLabel = "Use Stairs";
+        
+        if (tile.type === TILE_TYPES.STAIRS_DOWN) actionLabel = "Descend Stairs";
+        if (tile.type === TILE_TYPES.STAIRS_UP) actionLabel = "Ascend Stairs";
+        if (tile.type === TILE_TYPES.AREA_EXIT) actionLabel = `Exit to ${tile.exitInfo?.name || 'another area'}`;
+        if (tile.type === TILE_TYPES.DUNGEON_ENTRANCE) actionLabel = "Enter Dungeon";
+        
+        menuItems.push({
+          label: actionLabel,
+          key: ">",
+          action: () => {
+            setTimeout(() => {
+              // First move to the tile if not already on it
+              if (playerX !== x || playerY !== y) {
+                const moveX = x - playerX;
+                const moveY = y - playerY;
+                eventBus.emit('movePlayer', { dx: moveX, dy: moveY });
+              }
+              
+              // Then use the stairs/exit
+              setTimeout(() => {
+                eventBus.emit('useStairs');
+              }, 100);
+            }, 50);
+          }
+        });
+      }
+    }
+    
+    // Add door open/close option
+    if (tile.type === TILE_TYPES.DOOR) {
+      const playerX = Math.floor(gameState.player.position.x);
+      const playerY = Math.floor(gameState.player.position.y);
+      const isPlayerAdjacent = Math.abs(playerX - x) <= 1 && Math.abs(playerY - y) <= 1;
+      
+      if (isPlayerAdjacent) {
+        const doorAction = tile.isOpen ? "Close Door" : "Open Door";
+        menuItems.push({
+          label: doorAction,
+          action: () => {
+            setTimeout(() => {
+              // Toggle door state
+              tile.isOpen = !tile.isOpen;
+              tile.blocked = !tile.isOpen;
+              eventBus.emit('doorToggled', { x, y, isOpen: tile.isOpen });
+              eventBus.emit('turnProcessed');
+            }, 50);
+          }
+        });
+      }
+    }
+    
+    // Add View Tile Data option
+    menuItems.push({
+      label: `View Data for ${tileLabel}`,
+      action: () => {
+        setTimeout(() => {
+          // Create a pseudo-entity to represent the tile
+          const tileEntity = {
+            id: `tile_${x}_${y}`,
+            name: tileLabel,
+            components: new Map(),
+            tile: tile,
+            position: { x, y },
+            isTile: true
+          };
+          
+          // Add tile data as components
+          const tileDataComponent = {
+            type: tile.type,
+            typeName: tileName,
+            blocked: tile.blocked,
+            blocksSight: tile.blocksSight,
+            visible: tile.visible,
+            explored: tile.explored,
+            x: x,
+            y: y,
+            entity: tileEntity
+          };
+          
+          // Add exitInfo if it exists
+          if (tile.exitInfo) {
+            tileDataComponent.exitInfo = tile.exitInfo;
+          }
+          
+          // Add special properties specific to tile types
+          if (tile.type === TILE_TYPES.DOOR) {
+            tileDataComponent.isOpen = tile.isOpen || false;
+          }
+          
+          tileEntity.components.set('TileDataComponent', tileDataComponent);
+          
+          eventBus.emit('showDataViewer', tileEntity);
+        }, 50);
+      }
+    });
+    
+    if (menuItems.length > 0) {
+      eventBus.emit('showContextMenu', {
+        x: event.clientX,
+        y: event.clientY,
+        target: { type: 'tile', x, y },
         items: menuItems
       });
     }

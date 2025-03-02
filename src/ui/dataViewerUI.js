@@ -1,5 +1,6 @@
 import gameState from '../core/gameState.js';
 import eventBus from '../core/eventEmitter.js';
+import { TILE_TYPES } from '../constants.js';
 
 /**
  * DataViewerUI - Handles viewing and editing entity data
@@ -127,8 +128,16 @@ class DataViewerUI {
         header.style.justifyContent = 'space-between';
         header.style.alignItems = 'center';
         
+        // Check if we're dealing with a tile entity
+        const isTile = this.currentEntity.isTile || false;
+        
         const title = document.createElement('h2');
-        title.textContent = `Entity: ${this.currentEntity.name} (ID: ${this.currentEntity.id})`;
+        if (isTile) {
+            const pos = this.currentEntity.position;
+            title.textContent = `Tile: ${this.currentEntity.name} (${pos.x},${pos.y})`;
+        } else {
+            title.textContent = `Entity: ${this.currentEntity.name} (ID: ${this.currentEntity.id})`;
+        }
         title.style.margin = '0';
         title.style.color = '#fff';
         
@@ -192,7 +201,127 @@ class DataViewerUI {
         
         basicInfo.appendChild(nameLabel);
         basicInfo.appendChild(nameInput);
+        
+        // Add position info if it exists
+        if (this.currentEntity.position) {
+            const posDiv = document.createElement('div');
+            posDiv.style.marginTop = '5px';
+            
+            const posLabel = document.createElement('div');
+            posLabel.textContent = 'Position:';
+            posLabel.style.fontWeight = 'bold';
+            posLabel.style.display = 'inline-block';
+            posLabel.style.width = '80px';
+            
+            const posValue = document.createElement('span');
+            posValue.textContent = `(${this.currentEntity.position.x}, ${this.currentEntity.position.y})`;
+            posValue.style.color = '#aaf';
+            
+            posDiv.appendChild(posLabel);
+            posDiv.appendChild(posValue);
+            basicInfo.appendChild(posDiv);
+        }
+        
         this.uiElement.appendChild(basicInfo);
+        
+        // If this is a tile entity, add tile type reference
+        if (isTile && this.currentEntity.tile) {
+            const tileInfoSection = document.createElement('div');
+            tileInfoSection.className = 'data-viewer-tile-info';
+            tileInfoSection.style.backgroundColor = 'rgba(50, 50, 30, 0.3)';
+            tileInfoSection.style.border = '1px solid #aaaa55';
+            tileInfoSection.style.borderRadius = '5px';
+            tileInfoSection.style.padding = '10px';
+            tileInfoSection.style.marginBottom = '20px';
+            
+            const tileInfoHeader = document.createElement('h3');
+            tileInfoHeader.textContent = 'Tile Type Reference';
+            tileInfoHeader.style.borderBottom = '1px solid #aaaa55';
+            tileInfoHeader.style.paddingBottom = '5px';
+            tileInfoHeader.style.marginBottom = '10px';
+            tileInfoHeader.style.color = '#ffff99';
+            tileInfoSection.appendChild(tileInfoHeader);
+            
+            // Create tile type reference table
+            const tileTypeTable = document.createElement('table');
+            tileTypeTable.style.width = '100%';
+            tileTypeTable.style.borderCollapse = 'collapse';
+            tileTypeTable.style.marginBottom = '10px';
+            tileTypeTable.innerHTML = `
+                <tr>
+                    <th style="text-align: center; padding: 5px; border-bottom: 1px solid #555; color: #ffdd55;">Type Value</th>
+                    <th style="text-align: left; padding: 5px; border-bottom: 1px solid #555; color: #ffdd55;">Description</th>
+                    <th style="text-align: center; padding: 5px; border-bottom: 1px solid #555; color: #ffdd55;">Blocked?</th>
+                    <th style="text-align: center; padding: 5px; border-bottom: 1px solid #555; color: #ffdd55;">Blocks Sight?</th>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">0</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Wall</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Yes</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Yes</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">1</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Floor</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">2</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Stairs Down</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">3</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Door</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Varies</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Varies</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">4</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Town Floor</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">5</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Building</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Yes</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">Yes</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">6</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Dungeon Entrance</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">7</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Area Exit</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">8</td>
+                    <td style="padding: 5px; border-bottom: 1px solid #333;">Stairs Up</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                    <td style="text-align: center; padding: 5px; border-bottom: 1px solid #333;">No</td>
+                </tr>
+            `;
+            tileInfoSection.appendChild(tileTypeTable);
+            
+            // Add help text
+            const tileHelpText = document.createElement('div');
+            tileHelpText.style.fontSize = '12px';
+            tileHelpText.style.color = '#aaf';
+            tileHelpText.style.fontStyle = 'italic';
+            tileHelpText.style.marginTop = '10px';
+            tileHelpText.textContent = 'To change this tile, edit the "type" value in the TileDataComponent below. Changes will take effect immediately.';
+            tileInfoSection.appendChild(tileHelpText);
+            
+            this.uiElement.appendChild(tileInfoSection);
+        }
         
         // Create components section
         const componentsSection = document.createElement('div');
@@ -530,6 +659,42 @@ class DataViewerUI {
         for (const key in data) {
             if (key !== 'entity' && typeof component[key] !== 'function') {
                 component[key] = data[key];
+                
+                // Special handling for tile data - update the actual tile in the map
+                if (component.entity && component.entity.isTile && component.entity.tile) {
+                    const tile = component.entity.tile;
+                    const pos = component.entity.position;
+                    
+                    // Apply changes directly to the tile object
+                    if (key === 'blocked') tile.blocked = data[key];
+                    if (key === 'blocksSight') tile.blocksSight = data[key];
+                    if (key === 'isOpen' && tile.type === TILE_TYPES.DOOR) {
+                        tile.isOpen = data[key];
+                        tile.blocked = !data[key]; // Update blocked state based on door open/closed
+                    }
+                    
+                    // If changing type, update the tile in the map
+                    if (key === 'type' && data[key] !== tile.type) {
+                        gameState.map.setTile(pos.x, pos.y, data[key]);
+                        
+                        // Update entity name to match new tile type
+                        switch(data[key]) {
+                            case TILE_TYPES.WALL: component.entity.name = "Wall"; break;
+                            case TILE_TYPES.FLOOR: component.entity.name = "Floor"; break;
+                            case TILE_TYPES.DOOR: component.entity.name = "Door"; break;
+                            case TILE_TYPES.STAIRS_DOWN: component.entity.name = "Stairs Down"; break;
+                            case TILE_TYPES.STAIRS_UP: component.entity.name = "Stairs Up"; break;
+                            case TILE_TYPES.AREA_EXIT: component.entity.name = "Area Exit"; break;
+                            case TILE_TYPES.DUNGEON_ENTRANCE: component.entity.name = "Dungeon Entrance"; break;
+                            case TILE_TYPES.TOWN_FLOOR: component.entity.name = "Town Floor"; break;
+                            case TILE_TYPES.BUILDING: component.entity.name = "Building"; break;
+                            default: component.entity.name = `Tile Type ${data[key]}`;
+                        }
+                        
+                        // Refresh FOV to reflect changes
+                        eventBus.emit('refreshFOV');
+                    }
+                }
             }
         }
     }

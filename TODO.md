@@ -12,7 +12,7 @@
 - create object, place, edit obj
 - create spell
 - create item
-- proper stat advancement
+- proper stat advancement (exercise/abuse stats)
 
 ## is WORKING?
 - equipment on monsters that drops on death

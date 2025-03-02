@@ -892,3 +892,41 @@ body {
   color: #99ffbb;
   margin-right: 5px;
 }
+
+/* Tile info styling */
+.data-viewer-tile-info {
+  background-color: rgba(50, 50, 30, 0.3);
+  border: 1px solid #aaaa55;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.data-viewer-tile-info h3 {
+  color: #ffff99;
+  border-bottom: 1px solid #aaaa55;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+.data-viewer-tile-info table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.data-viewer-tile-info th {
+  text-align: left;
+  padding: 5px;
+  border-bottom: 1px solid #aaaa55;
+  color: #ffdd55;
+}
+
+.data-viewer-tile-info td {
+  padding: 5px;
+  border-bottom: 1px solid #333;
+}
+
+.data-viewer-tile-info tr:hover {
+  background-color: rgba(150, 150, 50, 0.2);
+}
