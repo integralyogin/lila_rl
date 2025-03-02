@@ -3,6 +3,7 @@ import gameState from '../core/gameState.js';
 import eventBus from '../core/eventEmitter.js';
 import ItemCreator from './creators/itemCreator.js';
 import SpellCreator from './creators/spellCreator.js';
+import MonsterCreator from './creators/monsterCreator.js';
 
 class CreatorUI {
     constructor() {
@@ -231,7 +232,7 @@ class CreatorUI {
                 SpellCreator.show(contentContainer, this.entityFactory);
                 break;
             case 'monsters':
-                this.showPlaceholder(contentContainer, 'Monster creator coming soon...');
+                MonsterCreator.show(contentContainer, this.entityFactory);
                 break;
             case 'tiles':
                 this.showPlaceholder(contentContainer, 'Tile editor coming soon... For now, you can right-click on a tile and select "View Data" to edit it.');
@@ -251,9 +252,10 @@ class CreatorUI {
     // Method to set the entity factory reference
     setEntityFactory(factory) {
         this.entityFactory = factory;
-        // Pass the factory to item creator as well
+        // Pass the factory to all creators
         ItemCreator.setEntityFactory(factory);
         SpellCreator.setEntityFactory(factory);
+        MonsterCreator.setEntityFactory(factory);
     }
 }
 

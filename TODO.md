@@ -10,13 +10,22 @@
 - build monsters in game.
 - proper stat advancement (exercise/abuse stats)
 
-## CREATE
+### ROADMAP
+alpha 0 - main structure, could make most of a roguelike from this through data change alone via llm gen or procedural gen.
+alpha 1 - integrate philosophy and religion, Savitri [masters]
+alpha 2 - hide philosophy and religion
+alpha 3 - full structure and data for any and all [school] (could make any roguelike from it)
+alpha 4 - 
+
+## CREATE  [ createUI -- item, spell, monster, tile, map ]
 - the creation of objects/tiles, beings, enemies, items, spells, maps being done in game forces components to be data driven
 - create magic wand with charges test
 - create object, place, edit obj
 - create spell
 - create item
 - create tree that grows
+- add item load to createItem, 
+- 
 
 ## TODO
 - time and day
