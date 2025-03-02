@@ -20,7 +20,7 @@
 - is summon magic working
 
 ## FIX / BROKEN
-- arena to use behaviourai
+- arena broken.  arena to use behaviourai
 
 ### COMPLEX TEST
 - lich vs wizard proper in arena

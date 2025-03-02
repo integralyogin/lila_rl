@@ -12,8 +12,21 @@ This project is licensed under the [Creative Commons Attribution-NonCommercial 4
 https://github.com/integralyogin/lila_rl/blob/master/LICENSE.md
 
 ## Screenshot
-![Lila RL Game Screenshot](screenshot.png)
+<div align="center">
+  <a href="/SCREENSHOTS/magic.png">
+    <img src="/SCREENSHOTS/magic.png" alt="Magic" width="200"/>
+  </a>
+  <a href="/SCREENSHOTS/spellbook.png">
+    <img src="/SCREENSHOTS/spellbook.png" alt="Spellbook" width="200"/>
+  </a>
+  <a href="/SCREENSHOTS/shop.png">
+    <img src="/SCREENSHOTS/shop.png" alt="Shop" width="200"/>
+  </a>
+  <a href="/SCREENSHOTS/viewdata.png">
+    <img src="/SCREENSHOTS/viewdata.png" alt="ViewDataUI" width="200"/>
+  </a>
 
+</div>
 
 ## Play Online
 Play Lila RL at: [The Infinite Library](http://theinfinitelibrary.net/games/lila_rl/)
@@ -278,3 +291,4 @@ Example spell JSON structure:
 ```
 
 The spell_logic.js file handles all the logic for targeting and casting spells, so you only need to implement the spell's effects there without modifying the UI code.
+
