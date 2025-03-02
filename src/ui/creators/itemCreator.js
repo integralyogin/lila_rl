@@ -30,6 +30,9 @@ class ItemCreator {
         header.style.marginBottom = '15px';
         form.appendChild(header);
         
+        // Add item selector section - New Addition
+        this.addItemSelector(form);
+        
         // Create inputs for basic properties
         const fields = [
             { name: 'id', label: 'ID', placeholder: 'unique_item_id', required: true },
@@ -63,6 +66,7 @@ class ItemCreator {
             if (field.type === 'select') {
                 input = document.createElement('select');
                 input.name = field.name;
+                input.id = field.name; // Add ID for easier selection
                 input.required = field.required;
                 field.options.forEach(option => {
                     const optElement = document.createElement('option');
@@ -74,10 +78,12 @@ class ItemCreator {
                 input = document.createElement('input');
                 input.type = 'checkbox';
                 input.name = field.name;
+                input.id = field.name; // Add ID for easier selection
             } else {
                 input = document.createElement('input');
                 input.type = field.type || 'text';
                 input.name = field.name;
+                input.id = field.name; // Add ID for easier selection
                 input.placeholder = field.placeholder || '';
                 input.required = field.required;
                 if (field.type === 'number') input.min = 0;
@@ -146,6 +152,7 @@ class ItemCreator {
             const input = document.createElement('input');
             input.type = 'number';
             input.name = `statModifier_${stat.name}`;
+            input.id = `statModifier_${stat.name}`; // Add ID for easier selection
             input.placeholder = '0';
             input.min = -10;
             input.max = 10;
@@ -198,6 +205,22 @@ class ItemCreator {
         buttonContainer.style.justifyContent = 'space-between';
         buttonContainer.style.marginTop = '20px';
         
+        const resetButton = document.createElement('button');
+        resetButton.textContent = 'Reset Form';
+        resetButton.style.padding = '8px 16px';
+        resetButton.style.backgroundColor = '#a62';
+        resetButton.style.border = 'none';
+        resetButton.style.borderRadius = '3px';
+        resetButton.style.color = '#fff';
+        resetButton.style.cursor = 'pointer';
+        resetButton.addEventListener('click', () => {
+            form.querySelectorAll('input, select').forEach(input => {
+                if (input.type === 'checkbox') input.checked = false;
+                else input.value = '';
+            });
+            this.updateItemPreview(form);
+        });
+        
         const createButton = document.createElement('button');
         createButton.textContent = 'Create Item';
         createButton.style.padding = '8px 16px';
@@ -220,22 +243,6 @@ class ItemCreator {
             const result = this.createItemTemplate(form, true);
             if (!result) return;
             setTimeout(() => eventBus.emit('hideCreator'), 200);
-        });
-        
-        const resetButton = document.createElement('button');
-        resetButton.textContent = 'Reset Form';
-        resetButton.style.padding = '8px 16px';
-        resetButton.style.backgroundColor = '#a62';
-        resetButton.style.border = 'none';
-        resetButton.style.borderRadius = '3px';
-        resetButton.style.color = '#fff';
-        resetButton.style.cursor = 'pointer';
-        resetButton.addEventListener('click', () => {
-            form.querySelectorAll('input, select').forEach(input => {
-                if (input.type === 'checkbox') input.checked = false;
-                else input.value = '';
-            });
-            this.updateItemPreview(form);
         });
         
         buttonContainer.appendChild(resetButton);
@@ -266,12 +273,206 @@ class ItemCreator {
         this.updateItemPreview(form);
     }
     
+    // New method to add item selector
+    addItemSelector(form) {
+        // Create container for item selector
+        const section = document.createElement('div');
+        section.style.marginBottom = '20px';
+        section.style.padding = '10px';
+        section.style.backgroundColor = 'rgba(40, 60, 90, 0.2)';
+        section.style.border = '1px solid #447788';
+        section.style.borderRadius = '5px';
+        
+        // Create label
+        const label = document.createElement('label');
+        label.textContent = 'Load existing item:';
+        label.style.fontWeight = 'bold';
+        label.style.display = 'block';
+        label.style.marginBottom = '5px';
+        
+        // Create dropdown
+        const select = document.createElement('select');
+        select.id = 'item-selector';
+        select.style.width = '100%';
+        select.style.padding = '8px';
+        select.style.margin = '5px 0';
+        select.style.backgroundColor = 'rgba(40, 40, 60, 0.7)';
+        select.style.color = '#fff';
+        select.style.border = '1px solid #555';
+        select.style.borderRadius = '3px';
+        
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = '-- Select an item --';
+        select.appendChild(defaultOption);
+        
+        // Get items from different possible sources
+        const items = this.getItemTemplates();
+        
+        if (items) {
+            // Sort items alphabetically
+            const sortedItems = Object.entries(items)
+                .map(([id, item]) => ({ id, name: item.name || id }))
+                .sort((a, b) => a.name.localeCompare(b.name));
+            
+            // Add item options to dropdown
+            sortedItems.forEach(({ id, name }) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+        }
+        
+        // Create load button
+        const loadBtn = document.createElement('button');
+        loadBtn.textContent = 'Load Item';
+        loadBtn.style.width = '100%';
+        loadBtn.style.padding = '8px';
+        loadBtn.style.margin = '5px 0';
+        loadBtn.style.backgroundColor = '#5577cc';
+        loadBtn.style.color = '#fff';
+        loadBtn.style.border = 'none';
+        loadBtn.style.borderRadius = '3px';
+        loadBtn.style.cursor = 'pointer';
+        
+        // Load button click handler
+        loadBtn.addEventListener('click', () => {
+            const itemId = select.value;
+            if (!itemId) {
+                alert('Please select an item to load');
+                return;
+            }
+            
+            const item = items[itemId];
+            if (item) {
+                this.populateForm(form, item);
+            } else {
+                alert('Error: Could not find the selected item');
+            }
+        });
+        
+        // Create duplicate button
+        const dupBtn = document.createElement('button');
+        dupBtn.textContent = 'Duplicate & Modify';
+        dupBtn.style.width = '100%';
+        dupBtn.style.padding = '8px';
+        dupBtn.style.margin = '5px 0';
+        dupBtn.style.backgroundColor = '#557799';
+        dupBtn.style.color = '#fff';
+        dupBtn.style.border = 'none';
+        dupBtn.style.borderRadius = '3px';
+        dupBtn.style.cursor = 'pointer';
+        
+        // Duplicate button click handler
+        dupBtn.addEventListener('click', () => {
+            const itemId = select.value;
+            if (!itemId) {
+                alert('Please select an item to duplicate');
+                return;
+            }
+            
+            const item = items[itemId];
+            if (item) {
+                // Create duplicate with modified ID
+                const duplicate = JSON.parse(JSON.stringify(item));
+                duplicate.id = `${item.id}_copy`;
+                duplicate.name = `${item.name} (Copy)`;
+                
+                // Populate form with duplicate
+                this.populateForm(form, duplicate);
+            } else {
+                alert('Error: Could not find the selected item');
+            }
+        });
+        
+        // Add elements to container
+        section.appendChild(label);
+        section.appendChild(select);
+        section.appendChild(loadBtn);
+        section.appendChild(dupBtn);
+        form.appendChild(section);
+    }
+    
+    // New method to populate form with item data
+    populateForm(form, itemData) {
+        console.log('Loading item data:', itemData);
+        
+        // Reset form first
+        form.querySelectorAll('input, select').forEach(input => {
+            if (input.type === 'checkbox') input.checked = false;
+            else input.value = '';
+        });
+        
+        // Set basic fields
+        Object.entries(itemData).forEach(([key, value]) => {
+            const input = form.querySelector(`#${key}`);
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = !!value;
+                } else {
+                    input.value = value;
+                }
+            }
+        });
+        
+        // Set stat modifiers if they exist
+        if (itemData.statModifiers) {
+            Object.entries(itemData.statModifiers).forEach(([stat, value]) => {
+                const input = form.querySelector(`#statModifier_${stat}`);
+                if (input) {
+                    input.value = value;
+                }
+            });
+        }
+        
+        // Show/hide conditional fields
+        const typeSelect = form.querySelector('select[name="type"]');
+        if (typeSelect) {
+            const value = typeSelect.value;
+            form.querySelectorAll('[data-condition="type"]').forEach(el => {
+                const validValues = el.dataset.conditionValues.split(',');
+                el.style.display = validValues.includes(value) ? '' : 'none';
+            });
+        }
+        
+        // Update preview
+        this.updateItemPreview(form);
+    }
+    
+    // New method to get item templates
+    getItemTemplates() {
+        // Try to get items from entityFactory
+        if (this.entityFactory && this.entityFactory.itemTemplates) {
+            return this.entityFactory.itemTemplates;
+        }
+        
+        // Try to get from window.game
+        if (window.game && window.game.entityFactory && window.game.entityFactory.itemTemplates) {
+            return window.game.entityFactory.itemTemplates;
+        }
+        
+        // Try to get from gameState
+        if (gameState.data && gameState.data.items) {
+            const templates = {};
+            gameState.data.items.forEach(item => {
+                templates[item.id] = item;
+            });
+            return templates;
+        }
+        
+        console.warn('Could not find any item templates');
+        return null;
+    }
+    
     updateItemPreview(form) {
         const formData = {};
         
         // Get basic fields
         form.querySelectorAll('input, select').forEach(input => {
             if (input.name.startsWith('statModifier_')) return;
+            if (input.id === 'item-selector') return;
             
             if (input.type === 'checkbox') formData[input.name] = input.checked;
             else if (input.type === 'number' && input.value) formData[input.name] = parseFloat(input.value);
@@ -308,6 +509,7 @@ class ItemCreator {
         // Get basic fields
         form.querySelectorAll('input, select').forEach(input => {
             if (input.name.startsWith('statModifier_')) return;
+            if (input.id === 'item-selector') return;
             
             if (input.type === 'checkbox') formData[input.name] = input.checked;
             else if (input.type === 'number' && input.value) formData[input.name] = parseFloat(input.value);
