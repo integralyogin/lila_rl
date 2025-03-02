@@ -38,8 +38,10 @@
 - grass > seed > plant > tree > fruit + plant = potion
 
 
-
 ### SPELLS
+- cone for breath
+- beam
+
 
 ### COMBAT
 - limb damage and practical implications
