@@ -4,6 +4,7 @@ import eventBus from '../core/eventEmitter.js';
 import ItemCreator from './creators/itemCreator.js';
 import SpellCreator from './creators/spellCreator.js';
 import MonsterCreator from './creators/monsterCreator.js';
+import TileCreator from './creators/tileCreator.js';
 
 class CreatorUI {
     constructor() {
@@ -235,7 +236,9 @@ class CreatorUI {
                 MonsterCreator.show(contentContainer, this.entityFactory);
                 break;
             case 'tiles':
-                this.showPlaceholder(contentContainer, 'Tile editor coming soon... For now, you can right-click on a tile and select "View Data" to edit it.');
+			//this.showPlaceholder(contentContainer, 'Tile editor coming soon... For now, you can right-click on a tile and select "View Data" to edit it.');
+
+                TileCreator.show(contentContainer, this.entityFactory);
                 break;
         }
     }
