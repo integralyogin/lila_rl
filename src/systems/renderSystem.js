@@ -214,6 +214,43 @@ class RenderSystem {
   _renderTile(cellElement, tile, dimmed = false) {
     cellElement.classList.remove('stairs-down', 'stairs-up', 'area-exit', 'dungeon-entrance');
     
+    // If tile has a char and color defined from JSON, use those
+    if (tile.char && tile.color) {
+      cellElement.textContent = tile.char;
+      
+      // Adjust colors based on visibility
+      if (dimmed) {
+        // Create a dimmed version of the color
+        const color = tile.color.startsWith('#') ? 
+          this._dimColor(tile.color) : 
+          tile.color;
+        cellElement.style.color = color;
+      } else {
+        cellElement.style.color = tile.color;
+      }
+      
+      // Add special classes for interactive tiles
+      if (!dimmed) {
+        switch (tile.type) {
+          case TILE_TYPES.STAIRS_DOWN:
+            cellElement.classList.add('stairs-down');
+            break;
+          case TILE_TYPES.STAIRS_UP:
+            cellElement.classList.add('stairs-up');
+            break;
+          case TILE_TYPES.AREA_EXIT:
+            cellElement.classList.add('area-exit');
+            break;
+          case TILE_TYPES.DUNGEON_ENTRANCE:
+            cellElement.classList.add('dungeon-entrance');
+            break;
+        }
+      }
+      
+      return;
+    }
+    
+    // Fallback to old switch case if tile doesn't have char/color
     switch (tile.type) {
       case TILE_TYPES.WALL:
         cellElement.textContent = '#';
@@ -621,6 +658,31 @@ class RenderSystem {
     }, duration);
     
     return effectElement;
+  }
+  
+  /**
+   * Dim a hex color to make it darker (for non-visible but explored tiles)
+   * @param {string} color - A hex color like '#ff0000'
+   * @returns {string} A dimmed version of the color
+   */
+  _dimColor(color) {
+    // If not a hex color, return as is
+    if (!color.startsWith('#')) return color;
+    
+    // Remove # and convert to RGB
+    const hex = color.substring(1);
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Dim by reducing brightness
+    const dimFactor = 0.4; // How much to dim (0-1)
+    const dimR = Math.floor(r * dimFactor);
+    const dimG = Math.floor(g * dimFactor);
+    const dimB = Math.floor(b * dimFactor);
+    
+    // Convert back to hex
+    return `#${dimR.toString(16).padStart(2, '0')}${dimG.toString(16).padStart(2, '0')}${dimB.toString(16).padStart(2, '0')}`;
   }
 }
 

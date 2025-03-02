@@ -1,4 +1,5 @@
 import { TILE_TYPES } from '../constants.js';
+import tileManager from './tileManager.js';
 
 class Map {
     constructor(width, height) {
@@ -9,18 +10,18 @@ class Map {
         this.initialized = false;
     }
     
-    initialize() {
+    async initialize() {
+        // Make sure tile manager is initialized first
+        if (!tileManager.initialized) {
+            await tileManager.initialize();
+        }
+        
         // Create empty map filled with walls
         for (let y = 0; y < this.height; y++) {
             const row = [];
             for (let x = 0; x < this.width; x++) {
-                row.push({
-                    type: TILE_TYPES.WALL,
-                    blocked: true,
-                    blocksSight: true,
-                    visible: false,
-                    explored: false
-                });
+                // Create a wall tile from the definition
+                row.push(tileManager.createTile(TILE_TYPES.WALL));
             }
             this.tiles.push(row);
         }
@@ -44,20 +45,14 @@ class Map {
         }
     }
     
-    fill(tileType) {
+    async fill(tileType) {
         if (!this.initialized) {
-            this.initialize();
+            await this.initialize();
         }
-        
-        const isWall = tileType === TILE_TYPES.WALL;
         
         for (let y = 0; y < this.height; y++) {
             for (let x = 0; x < this.width; x++) {
-                this.tiles[y][x] = {
-                    type: tileType,
-                    blocked: isWall,
-                    blocksSight: isWall
-                };
+                this.tiles[y][x] = tileManager.createTile(tileType);
             }
         }
     }
@@ -78,16 +73,8 @@ class Map {
             return false;
         }
         
-        const isWall = tileType === TILE_TYPES.WALL;
-        const isDoor = tileType === TILE_TYPES.DOOR;
-        const isBlocked = isWall; // Doors are not blocked so player can walk through them
-        const blocksSight = isWall; // Only walls block sight
-        
-        this.tiles[y][x] = {
-            type: tileType,
-            blocked: isBlocked,
-            blocksSight: blocksSight
-        };
+        // Create the tile from the definition
+        this.tiles[y][x] = tileManager.createTile(tileType);
         
         return true;
     }
@@ -133,30 +120,35 @@ class Map {
             let row = '';
             for (let x = 0; x < this.width; x++) {
                 const tile = this.tiles[y][x];
-                switch (tile.type) {
-                    case TILE_TYPES.WALL:
-                        row += '#';
-                        break;
-                    case TILE_TYPES.FLOOR:
-                        row += '.';
-                        break;
-                    case TILE_TYPES.STAIRS_DOWN:
-                        row += '>';
-                        break;
-                    case TILE_TYPES.DOOR:
-                        row += '+';
-                        break;
-                    case TILE_TYPES.TOWN_FLOOR:
-                        row += ',';
-                        break;
-                    case TILE_TYPES.BUILDING:
-                        row += 'B';
-                        break;
-                    case TILE_TYPES.DUNGEON_ENTRANCE:
-                        row += '>';
-                        break;
-                    default:
-                        row += '?';
+                // Use tile character if available, otherwise fall back to defaults
+                if (tile.char) {
+                    row += tile.char;
+                } else {
+                    switch (tile.type) {
+                        case TILE_TYPES.WALL:
+                            row += '#';
+                            break;
+                        case TILE_TYPES.FLOOR:
+                            row += '.';
+                            break;
+                        case TILE_TYPES.STAIRS_DOWN:
+                            row += '>';
+                            break;
+                        case TILE_TYPES.DOOR:
+                            row += '+';
+                            break;
+                        case TILE_TYPES.TOWN_FLOOR:
+                            row += ',';
+                            break;
+                        case TILE_TYPES.BUILDING:
+                            row += 'B';
+                            break;
+                        case TILE_TYPES.DUNGEON_ENTRANCE:
+                            row += '>';
+                            break;
+                        default:
+                            row += '?';
+                    }
                 }
             }
             output += row + '\n';

@@ -66,7 +66,7 @@ class Game {
       window.gameState = gameState;
       window.aiBehaviorManager = window.aiBehaviorManager || null;
       
-      this.newGame();
+      await this.newGame();
       
       eventBus.emit('gameInitialized');
       this.updateSpellLogic();
@@ -312,7 +312,7 @@ class Game {
       if (gameState.location === 'dungeon') {
         await this.nextLevel();
       } else if (gameState.location === 'town') {
-        this.enterDungeon();
+        await this.enterDungeon();
       }
     });
     
@@ -327,7 +327,7 @@ class Game {
     });
   }
   
-  newGame() {
+  async newGame() {
     Object.assign(gameState, {
       currentLevel: 1,
       score: 0,
@@ -337,12 +337,12 @@ class Game {
       location: 'town'
     });
     
-    this.generateTown();
+    await this.generateTown();
     gameState.addMessage("Welcome to town! Use arrow keys to move. Find the dungeon entrance.", "important");
   }
   
-  generateTown() {
-    const result = this.levelGenerator.generateTown(this.gameData.townData);
+  async generateTown() {
+    const result = await this.levelGenerator.generateTown(this.gameData.townData);
     
     if (!result?.map) {
       console.error("Failed to generate town!");
@@ -380,13 +380,13 @@ class Game {
     return result;
   }
   
-  enterDungeon() {
+  async enterDungeon() {
     const entranceInfo = this.getCurrentExit();
     
     gameState.location = 'dungeon';
     gameState.currentLevel = 1;
     
-    const result = this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
+    const result = await this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
     
     if (!result?.map) {
       console.error("Failed to generate dungeon!");
@@ -445,7 +445,7 @@ class Game {
         return;
       } else if (gameState.currentLevel > 1) {
         gameState.currentLevel--;
-        const result = this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
+        const result = await this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
         
         if (result?.map) {
           this.setupLevel(result, `You ascend to level ${gameState.currentLevel} of the dungeon.`);
@@ -455,7 +455,7 @@ class Game {
     }
     else if (tile.type === TILE_TYPES.STAIRS_DOWN) {
       gameState.currentLevel++;
-      const result = this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
+      const result = await this.levelGenerator.generateDungeon(this.gameData.dungeonConfig);
       
       if (result?.map) {
         this.setupLevel(result, `You descend to level ${gameState.currentLevel} of the dungeon.`);
@@ -486,7 +486,7 @@ class Game {
   async returnToTown(currentExit = null) {
     gameState.location = 'town';
     
-    const result = this.generateTown();
+    const result = await this.generateTown();
     
     if (result?.map) {
       const centerX = Math.floor(GAME_WIDTH / 2);
@@ -540,8 +540,8 @@ class Game {
       
       const isDungeonStyle = areaData.roomMinSize !== undefined && areaData.roomMaxSize !== undefined;
       const result = isDungeonStyle ? 
-        this.levelGenerator.generateDungeon(areaData) : 
-        this.levelGenerator.generateTown(areaData);
+        await this.levelGenerator.generateDungeon(areaData) : 
+        await this.levelGenerator.generateTown(areaData);
       
       if (!result?.map) {
         throw new Error(`Failed to generate ${areaName} map!`);

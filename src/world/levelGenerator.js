@@ -25,7 +25,7 @@ class LevelGenerator {
      * @param {Object} townData - Town configuration data
      * @returns {Object} The generated town map and starting position
      */
-    generateTown(townData) {
+    async generateTown(townData) {
         console.log("Generating town...");
         
         // Create a town generator with town data
@@ -41,7 +41,7 @@ class LevelGenerator {
         );
         
         // Generate the town
-        const result = townGenerator.generate();
+        const result = await townGenerator.generate();
         
         if (!result || !result.map) {
             console.error("Failed to generate town map!");
@@ -56,7 +56,7 @@ class LevelGenerator {
      * @param {Object} dungeonConfig - Dungeon configuration 
      * @returns {Object} The generated dungeon and starting position
      */
-    generateDungeon(dungeonConfig) {
+    async generateDungeon(dungeonConfig) {
         console.log("Generating new dungeon level...");
         
         // Create a dungeon generator with configuration
@@ -79,7 +79,7 @@ class LevelGenerator {
         );
         
         // Generate a new dungeon
-        const result = dungeonGenerator.generate();
+        const result = await dungeonGenerator.generate();
         
         if (!result || !result.map) {
             console.error("Failed to generate dungeon map!");

@@ -26,6 +26,7 @@
 - lich vs wizard proper in arena
 - item that grants aura on equip etc
 - phantom limb spell that grants inventory slot
+- wizard shopkeeper robbing and dying from test
 
 ### SPELLS
 

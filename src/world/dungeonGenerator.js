@@ -44,10 +44,10 @@ class DungeonGenerator {
         console.log(`Dungeon generator initialized: ${width}x${height}`);
     }
     
-    generate() {
+    async generate() {
         // Create empty map filled with walls
         const map = new Map(this.width, this.height);
-        map.initialize();
+        await map.initialize();
         
         const rooms = [];
         

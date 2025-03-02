@@ -694,6 +694,14 @@ class DataViewerUI {
                         // Refresh FOV to reflect changes
                         eventBus.emit('refreshFOV');
                     }
+                    
+                    // Update other tile properties from JSON if they exist
+                    if (key === 'char' || key === 'color' || key === 'description' || 
+                        key === 'name' || key === 'interactive' || key === 'actionName' ||
+                        key === 'movementCost') {
+                        // Apply directly to the tile
+                        tile[key] = data[key];
+                    }
                 }
             }
         }

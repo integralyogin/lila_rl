@@ -8,13 +8,13 @@ class TownGenerator {
         this.townData = townData;
     }
 
-    generate() {
+    async generate() {
         // Create a new map
         const map = new Map(this.width, this.height);
-        map.initialize();
+        await map.initialize();
         
         // Fill the map with town floor tiles
-        map.fill(TILE_TYPES.TOWN_FLOOR);
+        await map.fill(TILE_TYPES.TOWN_FLOOR);
         
         // Create building outlines
         if (this.townData && this.townData.buildings) {

@@ -1,0 +1,161 @@
+{
+  "tiles": [
+    {
+      "id": "wall",
+      "typeId": 0,
+      "name": "Wall",
+      "char": "#",
+      "color": "#888888",
+      "blocked": true,
+      "blocksSight": true,
+      "description": "A solid wall. Cannot be walked through."
+    },
+    {
+      "id": "floor",
+      "typeId": 1,
+      "name": "Floor",
+      "char": ".",
+      "color": "#666666",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "A stone floor. Can be walked on."
+    },
+    {
+      "id": "stairs_down",
+      "typeId": 2,
+      "name": "Stairs Down",
+      "char": ">",
+      "color": "#aaaaff",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "Stairs leading down to a lower level.",
+      "interactive": true,
+      "actionName": "descend"
+    },
+    {
+      "id": "door",
+      "typeId": 3,
+      "name": "Door",
+      "char": "+",
+      "color": "#aa8855",
+      "blocked": true,
+      "blocksSight": true,
+      "description": "A wooden door. Can be opened and closed.",
+      "states": [
+        {
+          "id": "closed",
+          "name": "Closed Door",
+          "char": "+",
+          "blocked": true,
+          "blocksSight": true
+        },
+        {
+          "id": "open",
+          "name": "Open Door",
+          "char": "'",
+          "blocked": false,
+          "blocksSight": false
+        }
+      ],
+      "interactive": true
+    },
+    {
+      "id": "town_floor",
+      "typeId": 4,
+      "name": "Town Floor",
+      "char": ".",
+      "color": "#556655",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "A packed dirt path in town."
+    },
+    {
+      "id": "building",
+      "typeId": 5,
+      "name": "Building",
+      "char": "#",
+      "color": "#aa7755",
+      "blocked": true,
+      "blocksSight": true,
+      "description": "The wall of a building. Cannot be walked through."
+    },
+    {
+      "id": "dungeon_entrance",
+      "typeId": 6,
+      "name": "Dungeon Entrance",
+      "char": "∩",
+      "color": "#dd5555",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "An entrance to a dungeon.",
+      "interactive": true,
+      "actionName": "enter"
+    },
+    {
+      "id": "area_exit",
+      "typeId": 7,
+      "name": "Area Exit",
+      "char": "⌂",
+      "color": "#55dd55",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "An exit to another area.",
+      "interactive": true,
+      "actionName": "travel"
+    },
+    {
+      "id": "stairs_up",
+      "typeId": 8,
+      "name": "Stairs Up",
+      "char": "<",
+      "color": "#aaaaff",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "Stairs leading up to a higher level.",
+      "interactive": true,
+      "actionName": "ascend"
+    },
+    {
+      "id": "shallow_water",
+      "typeId": 9,
+      "name": "Shallow Water",
+      "char": "~",
+      "color": "#5599ee",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "Shallow water that can be walked through.",
+      "movementCost": 2.0
+    },
+    {
+      "id": "deep_water",
+      "typeId": 10,
+      "name": "Deep Water",
+      "char": "≈",
+      "color": "#3377cc",
+      "blocked": true,
+      "blocksSight": false,
+      "description": "Deep water that cannot be walked through without swimming."
+    },
+    {
+      "id": "grass",
+      "typeId": 11,
+      "name": "Grass",
+      "char": "\"",
+      "color": "#55aa55",
+      "blocked": false,
+      "blocksSight": false,
+      "description": "Grassy terrain.",
+      "movementCost": 1.2
+    },
+    {
+      "id": "tree",
+      "typeId": 12,
+      "name": "Tree",
+      "char": "♣",
+      "color": "#338833",
+      "blocked": true,
+      "blocksSight": true,
+      "description": "A tree that blocks movement and sight."
+    }
+  ]
+}

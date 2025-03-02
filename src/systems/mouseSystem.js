@@ -406,10 +406,13 @@ class MouseSystem {
           label: doorAction,
           action: () => {
             setTimeout(() => {
-              // Toggle door state
-              tile.isOpen = !tile.isOpen;
-              tile.blocked = !tile.isOpen;
-              eventBus.emit('doorToggled', { x, y, isOpen: tile.isOpen });
+              // Toggle door state using tile manager
+              import('../world/tileManager.js').then(module => {
+                const tileManager = module.default;
+                const newState = tile.isOpen ? 'closed' : 'open';
+                tileManager.setTileState(tile, newState);
+                eventBus.emit('doorToggled', { x, y, isOpen: tile.isOpen });
+              });
               eventBus.emit('turnProcessed');
             }, 50);
           }
@@ -444,6 +447,44 @@ class MouseSystem {
             y: y,
             entity: tileEntity
           };
+          
+          // Include JSON tile info if available
+          if (tile.id) {
+            tileDataComponent.id = tile.id;
+          }
+          
+          if (tile.name) {
+            tileDataComponent.name = tile.name;
+          }
+          
+          if (tile.description) {
+            tileDataComponent.description = tile.description;
+          }
+          
+          if (tile.char) {
+            tileDataComponent.char = tile.char;
+          }
+          
+          if (tile.color) {
+            tileDataComponent.color = tile.color;
+          }
+          
+          if (tile.interactive) {
+            tileDataComponent.interactive = true;
+            
+            if (tile.actionName) {
+              tileDataComponent.actionName = tile.actionName;
+            }
+          }
+          
+          if (tile.hasStates) {
+            tileDataComponent.hasStates = true;
+            tileDataComponent.currentState = tile.currentState;
+          }
+          
+          if (tile.movementCost) {
+            tileDataComponent.movementCost = tile.movementCost;
+          }
           
           // Add exitInfo if it exists
           if (tile.exitInfo) {
