@@ -5,6 +5,7 @@ import ItemCreator from './creators/itemCreator.js';
 import SpellCreator from './creators/spellCreator.js';
 import MonsterCreator from './creators/monsterCreator.js';
 import TileCreator from './creators/tileCreator.js';
+import MapCreator from './creators/mapCreator.js';
 
 class CreatorUI {
     constructor() {
@@ -173,7 +174,8 @@ class CreatorUI {
             { id: 'items', label: 'Create Item' },
             { id: 'spells', label: 'Create Spell' },
             { id: 'monsters', label: 'Create Monster' },
-            { id: 'tiles', label: 'Edit Tile' }
+            { id: 'tiles', label: 'Edit Tile' },
+	    { id: 'maps', label: 'Edit Map' }  // Add this line
         ];
         
         // Create tab buttons
@@ -221,28 +223,33 @@ class CreatorUI {
         tabs.querySelector('.creator-tab').click();
     }
     
-    showTabContent(tabId) {
-        const contentContainer = document.getElementById('creator-content');
-        contentContainer.innerHTML = '';
-        
-        switch(tabId) {
-            case 'items':
-                ItemCreator.show(contentContainer, this.entityFactory);
-                break;
-            case 'spells':
-                SpellCreator.show(contentContainer, this.entityFactory);
-                break;
-            case 'monsters':
-                MonsterCreator.show(contentContainer, this.entityFactory);
-                break;
-            case 'tiles':
-			//this.showPlaceholder(contentContainer, 'Tile editor coming soon... For now, you can right-click on a tile and select "View Data" to edit it.');
+     
 
-                TileCreator.show(contentContainer, this.entityFactory);
-                break;
-        }
-    }
+// Finally, update the showTabContent method:
+showTabContent(tabId) {
+    const contentContainer = document.getElementById('creator-content');
+    contentContainer.innerHTML = '';
     
+    switch(tabId) {
+        case 'items':
+            ItemCreator.show(contentContainer, this.entityFactory);
+            break;
+        case 'spells':
+            SpellCreator.show(contentContainer, this.entityFactory);
+            break;
+        case 'monsters':
+            MonsterCreator.show(contentContainer, this.entityFactory);
+            break;
+        case 'tiles':
+            TileCreator.show(contentContainer);
+            break;
+        case 'maps':
+            MapCreator.show(contentContainer);  // Add this case
+            break;
+    }
+}
+
+
     showPlaceholder(container, message) {
         const placeholder = document.createElement('p');
         placeholder.textContent = message;

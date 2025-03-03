@@ -55,6 +55,9 @@ alpha 4 -
 ### COMBAT
 - limb damage and practical implications
 
+### FROM GAMES
+SC - campaign editor
+
 
 ## DONE
 - polymorph
